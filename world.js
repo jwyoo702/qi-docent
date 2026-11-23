@@ -280,7 +280,7 @@ import * as THREE from './vendor/three/three.module.js';
     const e = EXHMAP[id]; if (!e) return; shownAt[id] = performance.now(); const c = $('#itemcard');
     c.querySelector('img').src = EXH_IMG(id); c.querySelector('b').textContent = L(e.name); c.querySelector('em').textContent = t('nations')[e.nation]; c.querySelector('p').textContent = L(e.note); c.classList.add('on'); clearTimeout(cardTimer); cardTimer = setTimeout(() => c.classList.remove('on'), 9000);
     if (!S.prog[id]) { S.prog[id] = { date: new Date().toLocaleDateString(S.set.lang === 'en' ? 'en-US' : S.set.lang, { month: 'short', day: 'numeric' }), seen: true }; save(); log('seen: ' + id); }
-    if (!S.speaking) speak(L(e.name) + '. ' + L(e.note), null, NVOICE[e.nation]);
+    if (!(window.qiIntroduce && qiIntroduce(id)) && !S.speaking && !S.chatMini) speak(L(e.name) + '. ' + L(e.note), null, NVOICE[e.nation]);
   }
   function updateAgentLink(dt) {
     camera.getWorldDirection(FWD);
