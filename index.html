@@ -418,6 +418,20 @@ button:focus-visible, input:focus-visible { outline:2px solid var(--primary-mid)
 .sheet { border-radius:24px 24px 0 0; background:#fff; } .sw { background:#D1D6DB; } .sw.on { background:var(--primary); } .seg { background:var(--chip); } .seg button.on { background:#fff; color:var(--primary-strong); }
 .dangerbtn { color:var(--danger); } #v-card { background:var(--bg); } #v-card .btn, .btn.primary { background:var(--primary); color:#fff; box-shadow:none; border-radius:16px; height:56px; } .btn { border-radius:16px; box-shadow:none; }
 #timechip, #nowplaying, #top, #orb, .scr#v-splash, #v-chat, #v-quiz, #v-puzzle, #v-collected { display:none !important; } #legacy { display:none !important; }
+
+/* ---- 3D icons (유물 정리/…/3D 아이콘) ---- */
+.ico { display:block; width:100%; height:100%; object-fit:contain; animation:icofloat 5s ease-in-out infinite; filter:drop-shadow(0 8px 10px rgba(25,31,40,.14)); }
+@keyframes icofloat { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-3px); } }
+#dexgrid { padding:0 0 24px; } .dx .im { height:auto; margin:0; aspect-ratio:1; } .dx { min-height:0; gap:4px; border:0; } .dx.lock, .dx.prog { background:#fff; border:0; }
+.dhero { margin:0; } .dsec { padding:0; } .dx small { font-size:12px; }
+.dx .im.ic { background:var(--bg); padding:8px; } .dx .im.ic .ico { animation:none; filter:drop-shadow(0 4px 5px rgba(25,31,40,.14)); }
+.dhero.ic { background:var(--primary-soft); height:260px; padding:20px; position:relative; display:block; } .dhero.ic .ico { filter:drop-shadow(0 14px 16px rgba(25,31,40,.18)); }
+.dhero .real { position:absolute; right:14px; bottom:14px; width:56px; height:56px; border-radius:14px; border:2px solid #fff; object-fit:cover; box-shadow:0 2px 8px rgba(25,31,40,.12); }
+.card-art .stage { position:relative; height:200px; background:var(--primary-soft); padding:16px; box-sizing:border-box; } .card-art .stage .ico { position:relative; }
+.card-art .stage .real { position:absolute; right:12px; bottom:12px; width:48px; height:48px; border-radius:12px; border:2px solid #fff; object-fit:cover; box-shadow:0 2px 8px rgba(25,31,40,.12); }
+.card-get .art.ic { background:var(--primary-soft); padding:14px; box-sizing:border-box; } .card-get .art.ic .ico { object-fit:contain; }
+.msg.chdiv img.icon { object-fit:contain; background:var(--primary-soft); padding:3px; box-sizing:border-box; }
+@media (prefers-reduced-motion:reduce) { .ico { animation:none; } }
 </style>
 </head>
 <body>
@@ -1557,7 +1571,7 @@ function removeNudge() { if (nudgeEl) { nudgeEl.remove(); nudgeEl = null; } }
 function setActions(list) {          // the old "question" prompt becomes a card in the thread
   removeNudge(); if (!list || !list.length) return; const s = S.lastSay || { a: '', b: '' }, q = S.state === 'question' && ART[S.near];
   const c = mk('div', 'tcard card-nudge'); const lead = q ? t('nudgeLead') : s.b; if (lead) c.appendChild(mk('div', 'lead', esc(lead)));
-  c.appendChild(mk('div', 'ntxt', esc(q ? `${L(ART[S.near].name)}\n${t('q')}` : s.a))); const row = mk('div', 'acts'); list.forEach(o => row.appendChild(mkBtn(o.label, o.cls === 'primary' ? 'primary' : 'weak', o.fn))); c.appendChild(row); nudgeEl = put(c);
+  c.appendChild(mk('div', 'ntxt', esc(q ? `${L(ART[S.near].name)}\n${t('q')}` : s.a))); if (q && S.camOn && CAM.lm) c.appendChild(mk('p', 'nsub', esc(t('qHint')))); const row = mk('div', 'acts'); list.forEach(o => row.appendChild(mkBtn(o.label, o.cls === 'primary' ? 'primary' : 'weak', o.fn))); c.appendChild(row); nudgeEl = put(c);
 }
 function showConsent() {
   if (consentEl) consentEl.remove(); const c = mk('div', 'tcard card-nudge'); c.appendChild(mk('div', 'ntxt', esc(t('consentTitle')))); c.appendChild(mk('p', 'nsub', esc(t('consentBody'))));
@@ -1580,6 +1594,7 @@ function renderStatus() {
   phone.dataset.started = S.started ? '1' : '0'; let s = '';
   if (S.started) { if (S.quiz && !S.quiz.done) s = t('stQuiz'); else if (S.puz && !S.puz.over) s = t('stPuzzle'); else if (S.chat && !S.chat.finished) s = t('stExplain')(Math.min(S.chat.idx + 1, S.chat.total), S.chat.total);
     else if (S.speaking) s = t('stSpeaking'); else if (['observe', 'signal', 'guide', 'question'].includes(S.state)) s = t('stLooking'); else s = t('stListening'); }
+  if (s && S.camOn) s += ' · ' + ({ en: 'Camera on', ko: '카메라 켜짐', ja: 'カメラ オン', zh: '摄像头已开' }[S.set.lang] || 'Camera on');
   const e = $('#hstat'); if (e && e.textContent !== s) e.textContent = s;
   const c = S.chat; if (c && c.bar && c.bar.isConnected) { const lines = (ART[c.id].story[S.set.lang] || ART[c.id].story.en).length; let frac = c.finished ? 1 : (c.idx + (c.cur ? Math.min(1, (performance.now() - c.cur.start) / Math.max(1, c.cur.est)) : 0)) / lines; c.bar.querySelector('.bar i').style.width = Math.min(100, frac * 100) + '%'; }
 }
@@ -1600,7 +1615,7 @@ function startFree() {
 function plan() { startFree(); }
 
 /* ---- story ---- */
-function chatDivider(id) { const a = ART[id], im = dexImg(id); addMsg('chdiv', `${im ? `<img src="${im}" alt="">` : '<span class="ph32"></span>'}<div><b>${esc(L(a.name))}</b><span>${esc(t('nations')[id])}</span></div>`, false); }
+function chatDivider(id) { const a = ART[id], im = dexImg(id); addMsg('chdiv', `${iconImg(id) ? `<img class="icon" src="${iconImg(id)}" alt="">` : im ? `<img src="${im}" alt="">` : '<span class="ph32"></span>'}<div><b>${esc(L(a.name))}</b><span>${esc(t('nations')[id])}</span></div>`, false); }
 function npBar(c) {
   const b = mk('div', 'tcard card-np'); b.innerHTML = `<button class="pp" aria-label="play">${ICON_PAUSE}</button><div class="meta"><span class="lbl"></span><div class="bar"><i></i></div></div>`;
   b.querySelector('.pp').onclick = e => { e.stopPropagation(); unlockAudio(); if (c.finished) { c.finished = false; c.idx = 0; c.dur = 0; setPP(true); renderNP(); narrateNext(c); return; } const p = S.chatPlaying !== false; pauseSpeak(p); setPP(!p); renderNP(); }; return b;
@@ -1649,7 +1664,7 @@ function awardDex(id) {
   const a = ART[id], p = S.prog[id] = S.prog[id] || {}; if (p.date) return; const pts = 120 + (p.quiz || 0) * 20 + (pcs(id).puz ? 30 : 0);
   p.date = new Date().toLocaleDateString(S.set.lang === 'en' ? 'en-US' : S.set.lang, { month: 'short', day: 'numeric' }); p.pts = pts; S.done.add(id); save(); renderCourse(); renderTime(); play('ok', 1); haptic([30, 40, 30], .3);
   const msg = t('pieceDone'); addMsg('qa', msg); speak(msg, null, a.voice); const im = dexImg(id), c = mk('div', 'tcard card-get');
-  c.innerHTML = `<em>${esc(t('dexGot'))}</em><div class="art">${im ? `<img src="${im}" alt="">` : ''}</div><div><small>No. ${String(a.no).padStart(3, '0')} · ${esc(t('nations')[id])}</small><h3>${esc(L(a.name))}</h3><p>${esc(t('types')[id])}</p></div>`;
+  c.innerHTML = `<em>${esc(t('dexGot'))}</em><div class="art${iconImg(id) ? ' ic' : ''}">${iconImg(id) ? icoTag(id) : im ? `<img src="${im}" alt="">` : ''}</div><div><small>No. ${String(a.no).padStart(3, '0')} · ${esc(t('nations')[id])}</small><h3>${esc(L(a.name))}</h3><p>${esc(t('types')[id])}</p></div>`;
   const row = mk('div', 'acts'); row.style.width = '100%'; row.appendChild(mkBtn(t('viewDex'), 'primary', () => openDex())); row.appendChild(mkBtn(t('keepTalking'), 'weak', () => { row.remove(); askChips(id, false); })); c.appendChild(row); put(c);
 }
 
@@ -1714,25 +1729,28 @@ function finishQuiz() {} function renderQuiz() {} function renderPuzzle() {} fun
 function qiIntroduce(id) {
   const e = EXHMAP[id]; if (!e || !S.started || S.view !== 'agent') return false; if (!['idle', 'observe', 'cooldown', 'quiet'].includes(S.state) || (S.speaking && !S.intro)) return false;
   const tok = S.introTok = (S.introTok || 0) + 1; S.intro = true; const c = mk('div', 'tcard card-art');
-  c.innerHTML = `<img src="${EXH_IMG(id)}" alt=""><div class="body"><div class="tag"><b>${esc(t('nations')[e.nation])}</b></div><h3>${esc(L(e.name))}</h3><p>${esc(L(e.note))}</p></div>`; put(c);
+  c.innerHTML = `<div class="stage">${icoTag(id)}<img class="real" src="${EXH_IMG(id)}" alt=""></div><div class="body"><div class="tag"><b>${esc(t('nations')[e.nation])}</b></div><h3>${esc(L(e.name))}</h3><p>${esc(L(e.note))}</p></div>`; put(c);
   speak(L(e.name) + '. ' + L(e.note), () => { if (S.introTok === tok) S.intro = false; }, NVOICE[e.nation] || QIVOICE); log('QI introduced free exhibit: ' + id); return true;
 }
 
 /* ---- Dex screen + detail ---- */
+const ICONS = new Set(['baek','silla','absent']); EXH.forEach(e => ICONS.add(e.id));
+function iconImg(id) { return ICONS.has(id) ? 'assets/icons/' + id + '.webp' : null; }
+const icoTag = id => `<img class="ico" src="${iconImg(id)}" alt="" draggable="false">`;
 function openDex() { closeSheets(); setView('dex'); renderDex(); }
 function renderDex() {
   const ids = dexIds(), got = ids.filter(dexGot).length; $('#dex-count').textContent = t('dexCount')(got, ids.length); $('#dex-bar').style.width = Math.max(2, got / ids.length * 100) + '%';
   const f = $('#dex-filters'); f.innerHTML = ''; FILTERS.forEach(([k]) => { const b = mk('button', 'chipx' + (S.dexFilter === k ? ' on' : '')); b.textContent = k === 'all' ? t('all') : t('nations')[k]; b.onclick = () => { S.dexFilter = k; renderDex(); }; f.appendChild(b); });
   const grid = $('#dexgrid'); grid.innerHTML = '';
   ids.forEach((id, i) => { if (S.dexFilter !== 'all' && dexNation(id) !== S.dexFilter) return; const no = 'No. ' + String(i + 1).padStart(3, '0'), el = mk('button', 'dx');
-    if (dexGot(id)) { const img = dexImg(id); el.innerHTML = `<div class="im">${img ? `<img src="${img}" alt="">` : ''}</div><small>${no}</small><b></b>`; el.querySelector('b').textContent = dexName(id); el.onclick = () => openDetail(id); }
+    if (dexGot(id)) { const img = dexImg(id), ic = iconImg(id); el.innerHTML = `<div class="im${ic ? ' ic' : ''}">${ic ? icoTag(id) : img ? `<img src="${img}" alt="">` : ''}</div><small>${no}</small><b></b>`; el.querySelector('b').textContent = dexName(id); el.onclick = () => openDetail(id); }
     else { const n = ART[id] ? pcount(id) : 0; el.className = 'dx ' + (n ? 'prog' : 'lock'); el.innerHTML = `<div class="im">?</div><small>${no}</small><b>${n ? esc(t('pieceN')(n)) : esc(t('notFound'))}</b>`; }
     grid.appendChild(el); });
 }
 function openDetail(id) { S.detailId = id; setView('detail'); renderDetail(id); }
 function renderDetail(id) {
   if (!id) return; const ex = EXHMAP[id], a = ART[id], p = S.prog[id] || {}, ids = dexIds(), no = 'No. ' + String(ids.indexOf(id) + 1).padStart(3, '0'), im = dexImg(id);
-  $('#det-hero').innerHTML = im ? `<img src="${im}" alt="">` : ''; $('#det-no').textContent = `${no} · ${t('collectedOn')(p.date || '')}`; $('#det-name').textContent = dexName(id);
+  { const ic = iconImg(id), h = $('#det-hero'); h.className = 'dhero' + (ic ? ' ic' : ''); h.innerHTML = ic ? icoTag(id) + (im ? `<img class="real" src="${im}" alt="">` : '') : im ? `<img src="${im}" alt="">` : ''; } $('#det-no').textContent = `${no} · ${t('collectedOn')(p.date || '')}`; $('#det-name').textContent = dexName(id);
   $('#det-tags').innerHTML = ex ? `<span>${esc(t('nations')[ex.nation])}</span>` : `<span>${esc(t('nations')[id])}</span><span>${esc(t('types')[id])}</span>${a.absent ? `<span>${esc(t('elsewhere'))}</span>` : ''}`;
   $('#det-story').textContent = ex ? L(ex.note) : (a.story[S.set.lang] || a.story.en).join('\n'); const pc = $('#det-pieces'); if (a) { pc.style.display = ''; fillProgress(pc, id); } else pc.style.display = 'none';
 }
