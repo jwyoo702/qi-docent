@@ -25,7 +25,7 @@ import * as THREE from './vendor/three/three.module.js';
   const H = 5, HH = 11, EYE = 1.62, ZE = -152;                      // wing ceiling / great-hall ceiling / eye height / far end
   const HALL = { x0: -14, x1: 8, z0: ZE, z1: 8 }, WING = { x0: 8, x1: 32, z0: ZE, z1: -10 };
   const ROOMS = [
-    { no: '101', ko: '구석기', en: 'Paleolithic', z0: -12, z1: -17, theme: 'dark' }, { no: '102', ko: '신석기', en: 'Neolithic', z0: -17, z1: -22, theme: 'dark' },
+    { no: '101-102', ko: '구석기·신석기', en: 'Paleolithic · Neolithic', z0: -12, z1: -22, theme: 'dark' },
     { no: '103', ko: '청동기', en: 'Bronze Age', z0: -22, z1: -27, theme: 'dark' }, { no: '104', ko: '고조선·부여·삼한', en: 'Gojoseon · Buyeo · Samhan', z0: -27, z1: -32, theme: 'dark' },
     { no: '105', key: 'gogu', z0: -32, z1: -64, theme: 'gogu' }, { no: '106', key: 'baek', z0: -64, z1: -96, theme: 'baek' },
     { no: '107', key: 'gaya', z0: -96, z1: -112, theme: 'dark' }, { no: '108-110', key: 'silla', z0: -112, z1: ZE, theme: 'silla' } ];
@@ -93,7 +93,7 @@ import * as THREE from './vendor/three/three.module.js';
   /* walls + collision obstacles */
   const OBST = [];
   function wall(x, z, w, d, mats, solid = true, h = H) { box(w, h, d, x, h / 2, z, mats); if (solid) OBST.push({ x0: x - w / 2 - .3, x1: x + w / 2 + .3, z0: z - d / 2 - .3, z1: z + d / 2 + .3 }); }
-  wall(-14, (HALL.z0 + HALL.z1) / 2, .4, HALL.z1 - HALL.z0, hallStone, false, HH); wall(0, HALL.z0, 22, .4, hallStone, false, HH);
+  wall(-14, (HALL.z0 + HALL.z1) / 2, .4, HALL.z1 - HALL.z0, hallStone, false, HH); wall(-3, HALL.z0, 22, .4, hallStone, false, HH);
   wall(-9, HALL.z1, 10, .4, hallStone, false, HH); wall(6, HALL.z1, 4, .4, hallStone, false, HH); box(8, HH - 4, .4, 0, (HH + 4) / 2, HALL.z1, hallStone);
   wall(20, WING.z1, 24, .4, DARK, false); wall(20, WING.z0, 24, .4, THEME.silla.wall, false);
   ROOMS.forEach(r => { const len = r.z0 - r.z1, mz = (r.z0 + r.z1) / 2; wall(32, mz, .4, len, THEME[r.theme].wall, false); });
@@ -105,13 +105,13 @@ import * as THREE from './vendor/three/three.module.js';
     for (const [a, b] of OPEN) { const two = [DARK, hallStone, DARK, DARK, DARK, DARK]; box(.6, HH - H, a - b, 8, (HH + H) / 2, (a + b) / 2, two); box(.62, .9, a - b, 8, H - .45, (a + b) / 2, DARK); } }
   for (const z of DIV) { wall(12, z, 8, .5, DARK); wall(28, z, 8, .5, DARK); box(8, 1.5, .5, 20, H - .75, z, DARK); }
   box(8, 1.2, .5, 20, H - .6, -12, DARK);
-  for (let zz = -22; zz > -146; zz -= 14) { const z = zz; const n = new THREE.Mesh(new THREE.PlaneGeometry(3.2, 4.2), new THREE.MeshStandardMaterial({ color: '#6b5f50', roughness: 1 })); n.rotation.y = Math.PI / 2; add(n, -13.78, 3.4, z); const ln = new THREE.Mesh(new THREE.PlaneGeometry(3.2, .08), GLOW); ln.rotation.y = Math.PI / 2; add(ln, -13.76, 5.5, z); }
+  /* hall wall panels removed: plain travertine walls */
 
   /* hall dressing: recessed tall windows in the stone walls, balcony + glazed end wall, sun patches under the skylights, wall spots */
   { const FR = mat('#c3b193', { roughness: .6 }), INS = new THREE.MeshStandardMaterial({ color: '#8a7f70', roughness: .9, emissive: '#fff1d6', emissiveIntensity: .18 });
     const recess = (x, z, facing) => { const w = 1.5, h = 3.4, y = 7.2, f = facing; box(.5, .22, w + .5, x, y + h / 2 + .1, z, FR); box(.5, .22, w + .5, x, y - h / 2 - .1, z, FR); box(.5, h, .25, x, y, z + (w / 2 + .12), FR); box(.5, h, .25, x, y, z - (w / 2 + .12), FR);
       const p = new THREE.Mesh(new THREE.PlaneGeometry(w, h), INS); p.rotation.y = f > 0 ? (Math.PI / 2) : -(Math.PI / 2); add(p, x + f * .02, y, z); };
-    for (let z = -6; z > -150; z -= 7.5) { recess(-13.55, z, 1); if (!OPEN.some(([a, b]) => z < a + 1 && z > b - 1)) recess(7.45, z, -1); }
+    /* wall recess frames removed (read as ambiguous windows/artworks) */
     // balcony + glass end wall (far end of the hall, like the 2F gallery seen above the pagoda in the photo)
     box(22, .4, 6, -3, 5.1, ZE + 3.4, mat('#cdbd9f')); box(22, 1.1, .08, -3, 5.8, ZE + 6.4, new THREE.MeshStandardMaterial({ color: '#cfe4f2', transparent: true, opacity: .25, roughness: .05, depthWrite: false }));
     box(22, .06, .08, -3, 6.35, ZE + 6.4, TRIM); for (let x = -13; x <= 7; x += 2) box(.05, 1.1, .05, x, 5.8, ZE + 6.4, TRIM);
@@ -128,6 +128,11 @@ import * as THREE from './vendor/three/three.module.js';
   function roomSignText(sg) { const nation = sg.key ? t('nations')[sg.key] : (S.set.lang === 'ko' ? sg.ko : sg.en); const sub = sg.key ? '' : (S.set.lang === 'ko' ? sg.en : sg.ko); return [{ text: `${sg.no}`, size: 44, y: 48, color: '#a8a8a2' }, { text: nation, size: 62, y: 118 }].concat(sub ? [{ text: sub, size: 32, y: 170, color: '#a8a8a2' }] : []); }
   for (const sg of SIGNS) { const light = sg.theme === 'baek'; const m = new THREE.Mesh(new THREE.PlaneGeometry(5.2, 1.3), new THREE.MeshBasicMaterial({ map: labelTex(roomSignText(sg), 640, 200, light ? { bg: '#ececea', fg: '#202225' } : {}) })); m.position.set(20, H - .75, sg.z0 + .28); scene.add(m); sg.mesh = m; }
   { const es = new THREE.Mesh(new THREE.PlaneGeometry(8.4, 1), new THREE.MeshBasicMaterial({ map: labelTex([{ text: '국립중앙박물관 · National Museum of Korea', size: 46, y: 70 }], 1024, 140, { bg: '#e6dac6', fg: '#2a2723' }) })); es.position.set(0, 4.6, HALL.z1 - .3); es.rotation.y = Math.PI; scene.add(es); }
+  /* entrance signage: "선사·고대관" over the doorway to room 101 + a hanging sign seen from the hall entrance */
+  { const mkSign = (w, h) => labelTex([{ text: '선사·고대관  →', size: 92, y: 96 }, { text: 'Prehistory & Ancient History · 101–110', size: 40, y: 172, color: '#c9c9c3' }], w, h, { bg: '#17181a' });
+    const wallSign = new THREE.Mesh(new THREE.PlaneGeometry(9, 1.9), new THREE.MeshBasicMaterial({ map: mkSign(1024, 216) })); wallSign.rotation.y = -Math.PI / 2; add(wallSign, 7.62, 7.4, -17);
+    const hang = new THREE.Mesh(new THREE.PlaneGeometry(7, 1.48), new THREE.MeshBasicMaterial({ map: mkSign(1024, 216) })); add(hang, 2.5, 7.3, -8); const back = hang.clone(); back.rotation.y = Math.PI; back.position.z = -8.02; scene.add(back);
+    for (const dx of [-3, 3]) box(.05, HH - 8, .05, 2.5 + dx, (HH + 8) / 2, -8, TRIM); }
   const bandTex = canvasTex(512, 96, (g, w, h) => { g.fillStyle = '#d5d6d3'; g.fillRect(0, 0, w, h); g.fillStyle = '#3a3b3e'; g.fillRect(14, 12, 150, 16); g.fillStyle = '#8c8e8a'; for (let r = 0; r < 4; r++) for (let c = 0; c < 3; c++) g.fillRect(14 + c * 168, 38 + r * 12, 150 - (r * 13) % 40, 5); });
   const bandMat = new THREE.MeshBasicMaterial({ map: bandTex, color: '#bfc0bc' });
   for (const z of [-14.5, -19.5, -24.5, -29.5, -104]) { const b = new THREE.Mesh(new THREE.PlaneGeometry(4, 1.6), bandMat); b.rotation.y = -Math.PI / 2; add(b, 31.78, 1.9, z); }
@@ -177,8 +182,8 @@ import * as THREE from './vendor/three/three.module.js';
     const INF = 1e4, d = new Float32Array(GN * GN); for (let i = 0; i < GN * GN; i++) d[i] = px[i * 4 + 3] > 110 ? INF : 0;
     for (let y = 0; y < GN; y++) for (let x = 0; x < GN; x++) { const i = y * GN + x; if (!d[i]) continue; let v = d[i]; if (x === 0 || y === 0 || x === GN - 1 || y === GN - 1) v = 1; if (x > 0) v = Math.min(v, d[i - 1] + 1); if (y > 0) v = Math.min(v, d[i - GN] + 1); if (x > 0 && y > 0) v = Math.min(v, d[i - GN - 1] + 1.4); if (x < GN - 1 && y > 0) v = Math.min(v, d[i - GN + 1] + 1.4); d[i] = v; }
     for (let y = GN - 1; y >= 0; y--) for (let x = GN - 1; x >= 0; x--) { const i = y * GN + x; if (!d[i]) continue; let v = d[i]; if (x < GN - 1) v = Math.min(v, d[i + 1] + 1); if (y < GN - 1) v = Math.min(v, d[i + GN] + 1); if (x < GN - 1 && y < GN - 1) v = Math.min(v, d[i + GN + 1] + 1.4); if (x > 0 && y < GN - 1) v = Math.min(v, d[i + GN - 1] + 1.4); d[i] = v; }
-    let mx = 1; for (let i = 0; i < d.length; i++) mx = Math.max(mx, d[i]); mx = Math.min(mx, 12);          // thickness ramps up over ~9 cells from the rim, so thin parts stay thin
-    let h = new Float32Array(GN * GN); for (let i = 0; i < h.length; i++) { const t = Math.min(1, d[i] / mx); h[i] = depth * Math.sqrt(1 - (1 - t) * (1 - t)); }
+    let mx = 1; for (let i = 0; i < d.length; i++) mx = Math.max(mx, d[i]); mx = Math.min(mx, 16);          // thickness ramps up over ~9 cells from the rim, so thin parts stay thin
+    let h = new Float32Array(GN * GN); for (let i = 0; i < h.length; i++) { const t = Math.min(1, d[i] / mx); h[i] = depth * (t * t * (3 - 2 * t)); }
     for (let pass = 0; pass < 2; pass++) { const o = h.slice(); for (let y = 1; y < GN - 1; y++) for (let x = 1; x < GN - 1; x++) { const i = y * GN + x; if (o[i] > 0) h[i] = (o[i] * 4 + o[i - 1] + o[i + 1] + o[i - GN] + o[i + GN]) / 8; } }
     const geo = (sign) => { const gm = new THREE.PlaneGeometry(size, size, GN - 1, GN - 1), pos = gm.attributes.position; for (let i = 0; i < pos.count; i++) pos.setZ(i, h[i] * sign); if (sign < 0) { const idx = gm.index.array; for (let k = 0; k < idx.length; k += 3) { const t = idx[k + 1]; idx[k + 1] = idx[k + 2]; idx[k + 2] = t; } gm.index.needsUpdate = true; } gm.computeVertexNormals(); return gm; };
     return [geo(1), geo(-1)];
@@ -242,7 +247,13 @@ import * as THREE from './vendor/three/three.module.js';
     const fin = new THREE.Mesh(new THREE.ConeGeometry(.18, 1.4, 8), mat('#3a3b3c')); add(fin, tx, y + .7, PZ);
     const spot = new THREE.SpotLight('#fff1d8', 90, 26, .5, .5, 1.6); spot.position.set(tx + 3, 9.5, PZ + 6); spot.target.position.set(tx, 5, PZ); scene.add(spot, spot.target);
     OBST.push({ x0: -7.3, x1: 1.3, z0: PZ - 4.2, z1: PZ + 4.2 }); }
-  { const st = new THREE.Mesh(new THREE.BoxGeometry(1.6, 4.8, .8), mat('#e9eef7', { emissive: '#bcd3ff', emissiveIntensity: .5 })); add(st, -3, 2.4, SZ); box(2.4, .3, 1.6, -3, .15, SZ, mat('#2a2b2d')); OBST.push({ x0: -4.7, x1: -1.3, z0: SZ - 1.2, z1: SZ + 1.2 }); }
+  { /* Gwanggaeto Stele (central hall): back-lit panel with the stone — textures cropped from 유물 정리/광개토대왕릉비.jpg */
+    const sx = -3, dark = mat('#1d1d1f', { roughness: .6 });
+    const base = new THREE.Mesh(new THREE.CylinderGeometry(3.4, 3.5, .3, 48), mat('#1a1a1c', { roughness: .35, metalness: .2 })); add(base, sx, .15, SZ);
+    const body = new THREE.Mesh(new THREE.BoxGeometry(2.15, 5.5, .4), [dark, dark, dark, dark, new THREE.MeshBasicMaterial({ color: '#d9d9d9' }), new THREE.MeshBasicMaterial({ color: '#d9d9d9' })]); add(body, sx, 3.05, SZ);
+    loadImg('assets/rooms/stele_main.jpg', tx => { for (const m of [body.material[4], body.material[5]]) { m.map = tx; m.color.set('#ffffff'); m.needsUpdate = true; } });
+    const sp = new THREE.SpotLight('#ffffff', 40, 14, .6, .6, 1.5); sp.position.set(sx, 9, SZ + 5); sp.target.position.set(sx, 3, SZ); scene.add(sp, sp.target);
+    OBST.push({ x0: sx - 3.7, x1: sx + 3.7, z0: SZ - 3.7, z1: SZ + 3.7 }); }
 
   /* ---------- scenario artifacts (stations) ---------- */
   const WHITEKEY = { vertexShader: 'varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}', fragmentShader: 'uniform sampler2D map; uniform float glow; varying vec2 vUv; void main(){ vec4 c=texture2D(map,vUv); float m=min(c.r,min(c.g,c.b)); float a=(1.0-smoothstep(0.9,0.985,m))*c.a; gl_FragColor=vec4(c.rgb+glow*0.12,a); gl_FragColor=linearToOutputTexel(gl_FragColor);} ' };
@@ -364,7 +375,7 @@ import * as THREE from './vendor/three/three.module.js';
     mg.strokeStyle = '#8a8c90'; mg.lineWidth = 1.5; for (const z of DIV) { mg.beginPath(); mg.moveTo(mx(8), mz(z)); mg.lineTo(mx(32), mz(z)); mg.stroke(); }
     mg.strokeStyle = '#222'; mg.lineWidth = 2.5; mg.strokeRect(mx(HALL.x0), mz(HALL.z0), (WING.x1 - HALL.x0) * MK, (HALL.z1 - HALL.z0) * MK);
     mg.font = '600 14px sans-serif'; mg.textAlign = 'center';
-    for (const r of ROOMS) { if (r.z0 - r.z1 < 8 && !['101'].includes(r.no)) continue; mg.fillStyle = r.theme === 'baek' ? '#444' : '#d8d8d4'; mg.fillText(r.no, mx(20), mz((r.z0 + r.z1) / 2) + 5); }
+    for (const r of ROOMS) { if (r.z0 - r.z1 < 8 && !['101-102'].includes(r.no)) continue; mg.fillStyle = r.theme === 'baek' ? '#444' : '#d8d8d4'; mg.fillText(r.no, mx(20), mz((r.z0 + r.z1) / 2) + 5); }
     mg.fillStyle = '#7b6f5c'; mg.fillText('Hall', mx(-3), mz(-20));
     for (const it of ITEMS) { mg.beginPath(); mg.arc(mx(it.x), mz(it.z), 2.6, 0, 7); mg.fillStyle = S.prog[it.id] ? '#35B39A' : '#b0a99c'; mg.fill(); }
     const nx = S.started ? nextPending() : null;
@@ -397,7 +408,7 @@ import * as THREE from './vendor/three/three.module.js';
     stepAutoWalk(dt);
     camera.position.set(P.x, EYE + Math.sin(P.bob) * .028, P.z); camera.rotation.order = 'YXZ'; camera.rotation.set(P.pitch, P.yaw, 0); camera.updateMatrixWorld();
     for (const id of Object.keys(ARTW)) { const w = ARTW[id]; if (!w.fixed) w.group.position.y = w.y0 + Math.sin(tAcc * 1.4 + STN[id].z) * .04; if (w.billboard) w.billboard.rotation.y = Math.atan2(P.x - w.group.position.x, P.z - w.group.position.z); else if (w.base) w.base.rotation.y += dt * .5; }
-    for (const b of BILLS) b.mesh.rotation.y = Math.sin(tAcc * .55 + b.ph) * b.amp;
+    /* artifacts stay still (museum objects don't spin) */
     updateAgentLink(dt);
     const nx = document.body.classList.contains('demo') && S.started && S.view === 'agent' ? nextPending() : null; if (nx && Math.hypot(STN[nx].x - P.x, STN[nx].z - P.z) > 4.2) placeDots(pathTo(nx, P.x, P.z), tAcc); else placeDots([[0, 0], [0, 0]], tAcc);
     updateHud(); drawMap(); renderer.render(scene, camera); if (++frames === 40 && window.bootDone) bootDone();
