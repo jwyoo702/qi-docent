@@ -170,12 +170,25 @@ import * as THREE from './vendor/three/three.module.js';
   /* 3D toy-style icon (유물 정리/…/3D 아이콘): transparent sprite that turns to face the visitor, with a soft contact shadow */
   const BILLS = [];
   const shadowTex = canvasTex(128, 128, (g, w, h) => { const r = g.createRadialGradient(64, 64, 4, 64, 64, 62); r.addColorStop(0, 'rgba(0,0,0,.55)'); r.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = r; g.fillRect(0, 0, w, h); });
+  /* real 3D from the icon: the silhouette (alpha) is inflated into a rounded solid (front + back shells, Lambert-lit) so it has true depth and turns slowly on its pedestal */
+  const GN = 112;
+  function inflate(img, size, depth) {
+    const c = document.createElement('canvas'); c.width = c.height = GN; const g = c.getContext('2d', { willReadFrequently: true }); g.drawImage(img, 0, 0, GN, GN); const px = g.getImageData(0, 0, GN, GN).data;
+    const INF = 1e4, d = new Float32Array(GN * GN); for (let i = 0; i < GN * GN; i++) d[i] = px[i * 4 + 3] > 110 ? INF : 0;
+    for (let y = 0; y < GN; y++) for (let x = 0; x < GN; x++) { const i = y * GN + x; if (!d[i]) continue; let v = d[i]; if (x === 0 || y === 0 || x === GN - 1 || y === GN - 1) v = 1; if (x > 0) v = Math.min(v, d[i - 1] + 1); if (y > 0) v = Math.min(v, d[i - GN] + 1); if (x > 0 && y > 0) v = Math.min(v, d[i - GN - 1] + 1.4); if (x < GN - 1 && y > 0) v = Math.min(v, d[i - GN + 1] + 1.4); d[i] = v; }
+    for (let y = GN - 1; y >= 0; y--) for (let x = GN - 1; x >= 0; x--) { const i = y * GN + x; if (!d[i]) continue; let v = d[i]; if (x < GN - 1) v = Math.min(v, d[i + 1] + 1); if (y < GN - 1) v = Math.min(v, d[i + GN] + 1); if (x < GN - 1 && y < GN - 1) v = Math.min(v, d[i + GN + 1] + 1.4); if (x > 0 && y < GN - 1) v = Math.min(v, d[i + GN - 1] + 1.4); d[i] = v; }
+    let mx = 1; for (let i = 0; i < d.length; i++) mx = Math.max(mx, d[i]); mx = Math.min(mx, 12);          // thickness ramps up over ~9 cells from the rim, so thin parts stay thin
+    let h = new Float32Array(GN * GN); for (let i = 0; i < h.length; i++) { const t = Math.min(1, d[i] / mx); h[i] = depth * Math.sqrt(1 - (1 - t) * (1 - t)); }
+    for (let pass = 0; pass < 2; pass++) { const o = h.slice(); for (let y = 1; y < GN - 1; y++) for (let x = 1; x < GN - 1; x++) { const i = y * GN + x; if (o[i] > 0) h[i] = (o[i] * 4 + o[i - 1] + o[i + 1] + o[i - GN] + o[i + GN]) / 8; } }
+    const geo = (sign) => { const gm = new THREE.PlaneGeometry(size, size, GN - 1, GN - 1), pos = gm.attributes.position; for (let i = 0; i < pos.count; i++) pos.setZ(i, h[i] * sign); if (sign < 0) { const idx = gm.index.array; for (let k = 0; k < idx.length; k += 3) { const t = idx[k + 1]; idx[k + 1] = idx[k + 2]; idx[k + 2] = t; } gm.index.needsUpdate = true; } gm.computeVertexNormals(); return gm; };
+    return [geo(1), geo(-1)];
+  }
   function iconFor(group, id, size, opt = {}) {
-    const m = new THREE.Mesh(new THREE.PlaneGeometry(size, size), new THREE.MeshBasicMaterial({ transparent: true, alphaTest: .06, side: THREE.DoubleSide, opacity: 0 })); group.add(m); m.position.y = opt.dy || 0;
-    const rec = { mesh: m, group, clamp: opt.clamp || 0 }; BILLS.push(rec);
-    loadImg('assets/icons/' + id + '.webp', tx => { m.material.map = tx; m.material.opacity = 1; m.material.needsUpdate = true; }, () => { BILLS.splice(BILLS.indexOf(rec), 1); group.remove(m); if (opt.fallback) opt.fallback(); });
+    const holder = new THREE.Group(); holder.position.y = opt.dy || 0; group.add(holder); const rec = { mesh: holder, group, amp: opt.clamp || .6, ph: (id.length * 1.7) % 6.28 }; BILLS.push(rec);
+    loadImg('assets/icons/' + id + '.webp', tx => { try { const [gf, gb] = inflate(tx.image, size, size * .11); const mf = new THREE.MeshStandardMaterial({ map: tx, alphaTest: .5, roughness: .6, metalness: .05, envMapIntensity: .35, emissiveMap: tx, emissive: '#ffffff', emissiveIntensity: .42 }), mb = new THREE.MeshStandardMaterial({ map: tx, alphaTest: .5, color: '#b9b4ac', roughness: .7, envMapIntensity: .3, emissiveMap: tx, emissive: '#ffffff', emissiveIntensity: .25 }); mb.side = THREE.FrontSide;
+        holder.add(new THREE.Mesh(gf, mf), new THREE.Mesh(gb, mb)); } catch (e) { console.warn('icon 3D failed', id, e); } }, () => { BILLS.splice(BILLS.indexOf(rec), 1); group.remove(holder); if (opt.fallback) opt.fallback(); });
     if (opt.shadow) { const sh = new THREE.Mesh(new THREE.PlaneGeometry(size * .8, size * .8), new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false })); sh.rotation.x = -Math.PI / 2; sh.position.y = opt.shadowY; group.add(sh); }
-    return m;
+    return holder;
   }
   function putItem(id, kind, x, z, yaw) {
     const e = EXHMAP[id]; if (!e) return; const th = THEME[ROOMS.find(r => z <= r.z0 && z > r.z1)?.theme || 'dark']; const g = new THREE.Group(); g.rotation.y = yaw;
@@ -187,7 +200,7 @@ import * as THREE from './vendor/three/three.module.js';
       const m = plateFor(scene, id, 2.2, { tint: '#d8d8d8' }); m.rotation.x = -Math.PI / 2; m.position.set(x, 1.02, z); m.rotation.z = yaw; const scr = new THREE.Mesh(new THREE.PlaneGeometry(.9, .45), new THREE.MeshBasicMaterial({ color: '#3a7a9a' })); scr.rotation.x = -Math.PI / 2 + .35; add(scr, x, 1.0, z + .85); { const tg = new THREE.Group(); tg.position.set(x - .55, 1.75, z - .1); scene.add(tg); iconFor(tg, id, 1.3, { shadow: true, shadowY: -.72 }); m.position.x += .5; } ITEMS.push({ id, nation: e.nation, x, y: 1.0, z }); return; }
     else if (kind === 'podium') { box(2.2, .5, 2.2, x, .25, z, BLACK); OBST.push({ x0: x - 1.6, x1: x + 1.6, z0: z - 1.6, z1: z + 1.6 }); g.position.set(x, 1.85, z); s = 2.6; y = 1.85; }
     else if (kind === 'wallcase') { /* big wall case (north wall of Silla) */ g.position.set(x, 2.2, z); s = 7; y = 2.2; const f = new THREE.Mesh(new THREE.BoxGeometry(8.2, 3.9, .3), BLACK); f.position.set(x, 2.2, z - .22); scene.add(f); }
-    scene.add(g); const hasShadow = kind === 'free' || kind === 'hex' || kind === 'podium'; iconFor(g, id, s * (kind === 'wallcase' ? .62 : .98), { clamp: kind === 'niche' ? .22 : (kind === 'hex' || kind === 'wallcase') ? .55 : 0, fallback: () => plateFor(g, id, s), shadow: hasShadow, shadowY: kind === 'free' ? -.9 : kind === 'hex' ? -.9 : -1.35, dy: kind === 'wallcase' ? -.3 : 0 }); ITEMS.push({ id, nation: e.nation, x, y, z });
+    scene.add(g); const hasShadow = kind === 'free' || kind === 'hex' || kind === 'podium'; iconFor(g, id, s * (kind === 'wallcase' ? .62 : .98), { clamp: kind === 'niche' ? .3 : kind === 'wallcase' ? .35 : kind === 'hex' ? .5 : .65, fallback: () => plateFor(g, id, s), shadow: hasShadow, shadowY: kind === 'free' ? -.9 : kind === 'hex' ? -.9 : -1.35, dy: kind === 'wallcase' ? -.3 : 0 }); ITEMS.push({ id, nation: e.nation, x, y, z });
   }
   const PI2 = Math.PI / 2;
   // Goguryeo (105): niches along both walls, free cases, a low table with the stele rubbing
@@ -384,7 +397,7 @@ import * as THREE from './vendor/three/three.module.js';
     stepAutoWalk(dt);
     camera.position.set(P.x, EYE + Math.sin(P.bob) * .028, P.z); camera.rotation.order = 'YXZ'; camera.rotation.set(P.pitch, P.yaw, 0); camera.updateMatrixWorld();
     for (const id of Object.keys(ARTW)) { const w = ARTW[id]; if (!w.fixed) w.group.position.y = w.y0 + Math.sin(tAcc * 1.4 + STN[id].z) * .04; if (w.billboard) w.billboard.rotation.y = Math.atan2(P.x - w.group.position.x, P.z - w.group.position.z); else if (w.base) w.base.rotation.y += dt * .5; }
-    for (const b of BILLS) { const wp = b.group.position; let a = Math.atan2(P.x - wp.x, P.z - wp.z) - b.group.rotation.y; if (b.clamp) { a = ((a + Math.PI) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2) - Math.PI; a = Math.max(-b.clamp, Math.min(b.clamp, a)); } b.mesh.rotation.y = a; }
+    for (const b of BILLS) b.mesh.rotation.y = Math.sin(tAcc * .55 + b.ph) * b.amp;
     updateAgentLink(dt);
     const nx = document.body.classList.contains('demo') && S.started && S.view === 'agent' ? nextPending() : null; if (nx && Math.hypot(STN[nx].x - P.x, STN[nx].z - P.z) > 4.2) placeDots(pathTo(nx, P.x, P.z), tAcc); else placeDots([[0, 0], [0, 0]], tAcc);
     updateHud(); drawMap(); renderer.render(scene, camera); if (++frames === 40 && window.bootDone) bootDone();
