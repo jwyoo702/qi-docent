@@ -433,7 +433,7 @@ body.world #lab.open { display:block; }
     <button class="menurow" id="m-dex">◫ <span data-i18n="dexTitle"></span></button>
     <button class="menurow" id="m-card">✦ <span data-i18n="seeCard"></span></button></div>
   <div class="sheet" id="sheet-course"><div class="grab"></div><h3 data-i18n="courseTitle"></h3><ul class="course" id="courselist"></ul>
-    <div class="row"><span data-i18n="replan"></span><button class="lbtn on" id="btn-replan" data-i18n="redo"></button></div></div>
+</div>
   <div class="sheet" id="sheet-settings"><div class="grab"></div><h3 data-i18n="settings"></h3>
     <div class="row"><span data-i18n="lang"></span><span class="seg" id="seg-lang"></span></div>
     <div class="row"><span data-i18n="voice"><small id="voicenote"></small></span><select id="voicesel"></select></div>
@@ -508,7 +508,7 @@ en: {
   left: m => `${m} min left`, nextPre: 'Next', lastTen: '10 minutes left! At least see these.', timeUp: "Time's up.", allSeen: "You've seen the whole course.", seeCard: 'See taste card',
   done: n => `Added to your collection (${n})`, nextGo: n => `Next: ${n}. Shall we go?`, unlock: 'One ancient history also held a vanished kingdom.', unlockSub: 'Hidden artifact from Gaya unlocked',
   lockedSay: 'Gaya opens after you have seen all three kingdoms.', notInCourse: "This artifact isn't in today's course.", hasLocked: 'Opens after the three kingdoms',
-  menu: 'Menu', courseTitle: "Today's course", replan: 'Change my time', redo: 'Redo', settings: 'QI settings', lang: 'Language', voice: 'Voice', voiceAuto: 'Auto (best available)', noVoice: 'No voice for this language on this device — text only.',
+  menu: 'Menu', courseTitle: 'Highlights', replan: 'Change my time', redo: 'Redo', settings: 'QI settings', lang: 'Language', voice: 'Voice', voiceAuto: 'Auto (best available)', noVoice: 'No voice for this language on this device — text only.',
   freq: 'Proactivity', freqd: 'Lower means fewer approaches', low: 'Low', mid: 'Mid', high: 'High', sound: 'Sound', vib: 'Vibration', camera: 'Camera & gaze', camerad: 'On-device only. Never stored or sent.', sensor: 'Motion sensing', sensord: 'Holding the phone still counts as looking',
   quiet: 'Quiet mode', quietd: 'When on, QI never approaches first', resetd: 'Reset QI & collection', reset: 'Reset', close: 'Close',
   learnLine: (a, b) => `Ignored ${a}× · delay +${b}s`, restart: 'Start over', cardTitle: n => `You are a ${n} type`, cardNone: 'Not enough viewing time to know your taste yet',
@@ -548,7 +548,7 @@ ko: {
   left: m => `${m}분 남음`, nextPre: '다음', lastTen: '10분 남았어요! 이것만이라도 보세요.', timeUp: '시간이 다 됐어요.', allSeen: '코스를 다 봤어요.', seeCard: '취향 카드 보기',
   done: n => `도감에 담았어요 (${n})`, nextGo: n => `다음 유물은 ${n}. 가볼까요?`, unlock: '하나의 고대사에는 사라진 나라도 있었어요.', unlockSub: '숨은 유물 가야가 열렸어요',
   lockedSay: '가야는 세 나라를 모두 본 뒤에 열려요.', notInCourse: '이 유물은 오늘 코스에 없어요.', hasLocked: '세 나라를 보면 열려요',
-  menu: '메뉴', courseTitle: '오늘의 코스', replan: '시간을 다시 정할래요', redo: '다시 짜기', settings: '큐아이 설정', lang: '언어', voice: '목소리', voiceAuto: '자동 (가장 좋은 목소리)', noVoice: '이 기기에는 이 언어의 목소리가 없어요. 글자로만 보여 드려요.',
+  menu: '메뉴', courseTitle: '대표 유물', replan: '시간을 다시 정할래요', redo: '다시 짜기', settings: '큐아이 설정', lang: '언어', voice: '목소리', voiceAuto: '자동 (가장 좋은 목소리)', noVoice: '이 기기에는 이 언어의 목소리가 없어요. 글자로만 보여 드려요.',
   freq: '개입 빈도', freqd: '낮을수록 먼저 말을 덜 걸어요', low: '낮음', mid: '보통', high: '높음', sound: '소리', vib: '진동', camera: '카메라·시선 인식', camerad: '기기 안에서만 처리하고 저장·전송하지 않아요', sensor: '모션 센서', sensord: '폰을 멈춰 들고 있으면 보는 중으로 판단해요',
   quiet: '조용 모드', quietd: '켜면 먼저 말을 걸지 않아요', resetd: '큐아이·도감 초기화', reset: '초기화', close: '닫기',
   learnLine: (a, b) => `무시 ${a}회 · 보정 +${b}초`, restart: '처음부터', cardTitle: n => `당신은 ${n}형`, cardNone: '아직 취향을 알기에는 본 시간이 짧아요',
@@ -588,7 +588,7 @@ ja: {
   left: m => `残り${m}分`, nextPre: '次', lastTen: '残り10分です！せめてこれだけでも。', timeUp: '時間になりました。', allSeen: 'コースを見終わりました。', seeCard: '好みカードを見る',
   done: n => `図鑑に追加しました（${n}）`, nextGo: n => `次は${n}です。行きましょうか？`, unlock: '一つの古代史には、消えた国もありました。', unlockSub: '隠れた展示・伽耶が開きました',
   lockedSay: '伽耶は三国をすべて見ると開きます。', notInCourse: 'この展示は今日のコースにありません。', hasLocked: '三国を見ると開きます',
-  menu: 'メニュー', courseTitle: '今日のコース', replan: '時間を決め直す', redo: '作り直す', settings: 'QI設定', lang: '言語', voice: '音声', voiceAuto: '自動（最適な音声）', noVoice: 'この端末にはこの言語の音声がありません。文字のみ表示します。',
+  menu: 'メニュー', courseTitle: '代表展示', replan: '時間を決め直す', redo: '作り直す', settings: 'QI設定', lang: '言語', voice: '音声', voiceAuto: '自動（最適な音声）', noVoice: 'この端末にはこの言語の音声がありません。文字のみ表示します。',
   freq: '話しかけの頻度', freqd: '低いほど話しかけが減ります', low: '低', mid: '中', high: '高', sound: 'サウンド', vib: 'バイブ', camera: 'カメラ・視線認識', camerad: '端末内のみで処理。保存・送信なし', sensor: 'モーションセンサー', sensord: '端末を静止して持つと見ていると判断します',
   quiet: 'おだやかモード', quietd: 'オンの間、QIから話しかけません', resetd: 'QIと図鑑をリセット', reset: 'リセット', close: '閉じる',
   learnLine: (a, b) => `無視 ${a}回 · 補正 +${b}秒`, restart: '最初から', cardTitle: n => `あなたは${n}タイプ`, cardNone: '好みを知るには見た時間がまだ短いです',
@@ -628,7 +628,7 @@ zh: {
   left: m => `剩余${m}分钟`, nextPre: '下一个', lastTen: '只剩10分钟了！至少看看这些。', timeUp: '时间到了。', allSeen: '路线已经看完了。', seeCard: '查看喜好卡',
   done: n => `已加入图鉴（${n}）`, nextGo: n => `下一件是${n}，一起去吗？`, unlock: '同一段古代史里，也有消失的国家。', unlockSub: '隐藏展品·伽倻已解锁',
   lockedSay: '看完三国之后才会解锁伽倻。', notInCourse: '这件展品不在今天的路线里。', hasLocked: '看完三国后解锁',
-  menu: '菜单', courseTitle: '今日路线', replan: '重新设定时间', redo: '重新规划', settings: 'QI设置', lang: '语言', voice: '语音', voiceAuto: '自动（最佳语音）', noVoice: '本设备没有该语言的语音，仅显示文字。',
+  menu: '菜单', courseTitle: '代表展品', replan: '重新设定时间', redo: '重新规划', settings: 'QI设置', lang: '语言', voice: '语音', voiceAuto: '自动（最佳语音）', noVoice: '本设备没有该语言的语音，仅显示文字。',
   freq: '主动程度', freqd: '越低，主动搭话越少', low: '低', mid: '中', high: '高', sound: '声音', vib: '振动', camera: '摄像头与视线识别', camerad: '仅在本设备处理，不保存不上传', sensor: '运动传感器', sensord: '手机保持静止时视为正在观看',
   quiet: '安静模式', quietd: '开启后QI不会主动搭话', resetd: '重置QI与图鉴', reset: '重置', close: '关闭',
   learnLine: (a, b) => `忽略 ${a} 次 · 补偿 +${b} 秒`, restart: '重新开始', cardTitle: n => `你是${n}型`, cardNone: '观看时间还太短，暂时看不出你的喜好',
@@ -793,9 +793,18 @@ function scoreVoice(v) { const n = (v.name || '').toLowerCase(); let s = 0; if (
 const FEMALE = /samantha|victoria|karen|moira|tessa|fiona|allison|ava\b|susan|zira|yuna|kyoko|o-?ren|ting|mei-?jia|sin-?ji|flo\b|sandy|shelley|nora|google (한국어|日本語|普通话|us english)|female|여성|女/i;
 const MALE = /alex|daniel|fred|tom\b|oliver|ralph|rishi|reed|eddy|rocko|grandpa|otoya|google uk english male|\bmale|남성|男/i;
 /* each kingdom speaks in its own manner: Goguryeo = low and bold, Baekje = soft and graceful, Silla = bright and ornate, Gaya = deep and slow like iron */
-const NVOICE = { gogu: { gender: 'm', pitch: .72, rate: 1.06 }, baek: { gender: 'f', pitch: 1.22, rate: .88 }, silla: { gender: 'f', pitch: 1.16, rate: 1.03 }, gaya: { gender: 'm', pitch: .62, rate: .86 }, absent: { gender: 'f', pitch: 1.15, rate: .82 } };
+/* Voice design prompts (what each voice should sound like). The browser's built-in speech can only pick an installed voice and change pitch/rate/pauses,
+   so these prompts are applied approximately below; if you connect a speech-synthesis service (window.QI_TTS_ENDPOINT) they are sent along as the voice description. */
+const VOICE_PROMPT = {
+  qi: '30대 초중반 한국어 여성 목소리. 맑고 따뜻한 중간 음역, 부드럽지만 또렷한 발음. 속도는 약간 느린 편으로 안정적이고, 문장 끝을 가볍게 내려 신뢰감을 줌. 미소가 느껴지는 친근한 톤이지만 혀 짧은 소리, 애교, 과장된 억양은 없음. 박물관 안내방송처럼 차분하고 지적인 전달.',
+  gogu: '(기존 설정 유지) 낮고 묵직한 남성 목소리, 짧고 힘 있게 끊어 말함. 자랑스러운 대목에서만 기세와 속도가 올라감.',
+  baek: '30대 초반 한국어 여성 목소리. 매끄럽고 실크 같은 메조소프라노. 속도는 느리고 문장이 흐르듯 이어지며, 정중한 쉼을 둠. 격조 있는 큐레이터의 우아함.',
+  silla: '10대 후반~20대 초반 한국어 남성 목소리. 맑고 밝은 테너, 소년 특유의 생기와 약간의 들뜬 높낮이. 속도는 경쾌하고 말끝이 올라감. 씩씩하지만 만화 같지 않은 진심 어린 패기.',
+};
+const QIVOICE = { id: 'qi', gender: 'f', pitch: 1.0, rate: .92, gap: 260, pick: true };    // default QI: warm mid-range female, slightly slow, steady
+const NVOICE = { gogu: { id: 'gogu', gender: 'm', pitch: .72, rate: 1.06, gap: 140 }, baek: { id: 'baek', gender: 'f', pitch: 1.1, rate: .8, gap: 520 }, silla: { id: 'silla', gender: 'm', pitch: 1.3, rate: 1.1, gap: 90 }, gaya: { id: 'gaya', gender: 'm', pitch: .62, rate: .86, gap: 200 }, absent: { id: 'baek', gender: 'f', pitch: 1.1, rate: .78, gap: 560 } };
 for (const k of Object.keys(NVOICE)) if (ART[k]) ART[k].voice = NVOICE[k];
-function bestVoice(lang, gender) { const pick = S.set.voice && S.set.voice[lang]; const list = voicesFor(lang); if (!list.length) return null; if (pick && !gender) { const f = list.find(v => v.voiceURI === pick || v.name === pick); if (f) return f; }
+function bestVoice(lang, gender, allowPick) { const pick = S.set.voice && S.set.voice[lang]; const list = voicesFor(lang); if (!list.length) return null; if (pick && allowPick) { const f = list.find(v => v.voiceURI === pick || v.name === pick); if (f) return f; }
   let pool = list; if (gender) { const g = list.filter(v => gender === 'f' ? FEMALE.test(v.name) && !MALE.test(v.name) : MALE.test(v.name)); if (g.length) pool = g; } return pool.slice().sort((a, b) => scoreVoice(b) - scoreVoice(a))[0]; }
 function fillVoiceSelect() {
   const sel = $('#voicesel'); if (!sel) return; const list = voicesFor(S.set.lang).sort((a, b) => scoreVoice(b) - scoreVoice(a));
@@ -807,23 +816,36 @@ const speechEst = txt => Math.max(1400, txt.length * ({ en: 62, ko: 105, ja: 120
 let sp = { id: 0, fbRemain: 0, fbCb: null, paused: false };
 /* speak text; calls onend when done. Falls back to a reading-speed timer when speech is off / unavailable. */
 function speak(text, onend, prof) {
+  prof = prof || QIVOICE;
   const myId = ++sp.id; stopSpeakRaw(); sp.paused = false; S.speaking = true; if (recOn) stopListen();
-  const finish = () => { if (sp.id !== myId) return; S.speaking = false; sp.fbCb = null; onend && onend(); if (S.voiceMode) setTimeout(startListen, 320); };
-  const v = S.set.sound && window.speechSynthesis ? bestVoice(S.set.lang, prof && prof.gender) : null;
-  if (!v) { sp.fbRemain = speechEst(text); sp.fbCb = finish; return; }
-  const parts = sentSplit(text); let i = 0, guard = null;
-  const next = () => {
-    if (sp.id !== myId) return; if (i >= parts.length) return finish();
-    const u = new SpeechSynthesisUtterance(parts[i++]); u.voice = v; u.lang = v.lang || BCP[S.set.lang]; u.rate = (prof && prof.rate) || (S.set.lang === 'en' ? .96 : .98); u.pitch = (prof && prof.pitch) || 1;
-    let fired = false; const go = () => { if (fired) return; fired = true; clearTimeout(guard); next(); };
-    u.onend = go; u.onerror = go; guard = setTimeout(go, speechEst(parts[i - 1]) * 2.4 + 1800);
-    try { speechSynthesis.speak(u); } catch (e) { go(); }
+  const finish = () => { if (sp.id !== myId) return; S.speaking = false; sp.fbCb = null; sp.audio = null; onend && onend(); if (S.voiceMode) setTimeout(startListen, 320); };
+  const browser = () => {
+    const v = S.set.sound && window.speechSynthesis ? bestVoice(S.set.lang, prof.gender, prof.pick) : null;
+    if (!v) { sp.fbRemain = speechEst(text); sp.fbCb = finish; return; }
+    const parts = sentSplit(text); let i = 0, guard = null;
+    const next = () => {
+      if (sp.id !== myId) return; if (i >= parts.length) return finish();
+      const u = new SpeechSynthesisUtterance(parts[i++]); u.voice = v; u.lang = v.lang || BCP[S.set.lang]; u.rate = prof.rate || .96; u.pitch = prof.pitch || 1;
+      let fired = false; const go = () => { if (fired) return; fired = true; clearTimeout(guard); if (i < parts.length && prof.gap) setTimeout(next, prof.gap); else next(); };
+      u.onend = go; u.onerror = go; guard = setTimeout(go, speechEst(parts[i - 1]) * 2.4 + 1800);
+      try { speechSynthesis.speak(u); } catch (e) { go(); }
+    };
+    setTimeout(() => { if (sp.id === myId) next(); }, 60);   // small delay after cancel() avoids Chrome dropping the first utterance
   };
-  setTimeout(() => { if (sp.id === myId) next(); }, 60);   // small delay after cancel() avoids Chrome dropping the first utterance
+  // optional: a speech-synthesis service behind your own proxy (window.QI_TTS_ENDPOINT) → receives {text, lang, voice, prompt} and returns audio
+  let ep = window.QI_TTS_ENDPOINT; try { ep = ep || localStorage.getItem('qi_tts'); } catch (e) {}
+  if (ep && S.set.sound) {
+    fetch(ep, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text, lang: S.set.lang, voice: prof.id || 'qi', prompt: VOICE_PROMPT[prof.id || 'qi'] || '' }) })
+      .then(r => { if (!r.ok) throw new Error('tts ' + r.status); return r.blob(); })
+      .then(bl => { if (sp.id !== myId) return; const au = new Audio(URL.createObjectURL(bl)); sp.audio = au; au.onended = finish; au.onerror = () => { if (sp.id === myId) browser(); }; au.play().catch(() => { if (sp.id === myId) browser(); }); })
+      .catch(() => { if (sp.id === myId) browser(); });
+    return;
+  }
+  browser();
 }
-function stopSpeakRaw() { try { window.speechSynthesis && speechSynthesis.cancel(); } catch (e) {} sp.fbCb = null; }
+function stopSpeakRaw() { try { window.speechSynthesis && speechSynthesis.cancel(); } catch (e) {} try { if (sp.audio) { sp.audio.pause(); sp.audio = null; } } catch (e) {} sp.fbCb = null; }
 function stopSpeak() { sp.id++; stopSpeakRaw(); S.speaking = false; }
-function pauseSpeak(p) { sp.paused = p; try { if (window.speechSynthesis) { p ? speechSynthesis.pause() : speechSynthesis.resume(); } } catch (e) {} }
+function pauseSpeak(p) { sp.paused = p; try { if (sp.audio) { p ? sp.audio.pause() : sp.audio.play(); } else if (window.speechSynthesis) { p ? speechSynthesis.pause() : speechSynthesis.resume(); } } catch (e) {} }
 
 /* ------------------------------------------------------------------ language */
 function detectLang(txt) { if (/[぀-ヿ]/.test(txt)) return 'ja'; if (/[가-힯]/.test(txt)) return 'ko'; if (/[一-鿿]/.test(txt)) return 'zh'; if (/[a-zA-Z]{3,}/.test(txt)) return 'en'; return null; }
@@ -906,11 +928,16 @@ function refreshAgentText() {
   if (S.state === 'idle' && !S.near) say(...idleMsg()); else if (S.state === 'observe' && S.near) say(L(ART[S.near].name), t('nations')[S.near]);
   renderTime(); renderCourse(); renderSim();
 }
-function showAsk() { setSub('ask'); say(`${t('hello')} ${t('ask')}`, t('askSub')); setActions([]); }
-function enterAgent() {
-  unlockAudio(); play('greet'); haptic([30], .2); setView('agent'); setOrb(null); setState('idle'); showAsk(); speak(`${t('hello')} ${t('ask')}`);
+function showAsk() { setSub('main'); say(t('hello'), t('exploreFree')); setActions([]); }
+function startFree() {   // no time question any more: the visitor walks freely and QI steps in when they linger
+  unlockAudio(); play('greet'); haptic([30], .2); stopSpeak(); setView('agent'); setOrb(null);
+  S.minutes = 0; S.free = true; S.remaining = 0; S.warned10 = false; S.done = new Set(); S.unlockedGaya = true; S.course = ['gogu', 'baek', 'absent', 'gaya', 'silla']; S.started = true; S.clockOn = false; S.near = null; S.rec = null;
+  setSub('main'); setState('idle'); renderCourse(); renderTime(); renderLab(); const g = t('hello');
+  say(g, t('exploreFree')); speak(g + ' ' + t('exploreFree'), () => { if (S.state === 'idle' && !S.near && S.view === 'agent') say(...idleMsg()); });
+  if (S.set.cam && !S.camOn && !S.camConsentAsked) setTimeout(askConsent, 2600); renderSim(); log('free tour started');
 }
-$('#btn-start').onclick = enterAgent;
+const enterAgent = startFree;
+$('#btn-start').onclick = startFree;
 
 function plan(min) {
   stopSpeak(); S.minutes = min; S.remaining = min * 60; S.warned10 = false; S.done = new Set(); S.unlockedGaya = false;
@@ -1119,7 +1146,7 @@ function renderDex() {
   const nav = $('#dexnav'); const ic = { home: '<path d="M4 11l8-7 8 7v9H4z"/>', dex: '<rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/>', scan: '<path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><circle cx="12" cy="12" r="3"/>', mis: '<path d="M5 21V4M5 4h13l-3 4 3 4H5"/>', me: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>' };
   const item = (k, lab, on, cls) => `<button data-k="${k}" class="${on ? 'on ' : ''}${cls || ''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ic[k]}</svg>${lab ? `<span>${lab}</span>` : ''}</button>`;
   nav.innerHTML = item('home', t('fHome')) + item('dex', t('fDex'), true) + item('scan', '', false, 'scan') + item('mis', t('fMis')) + item('me', t('fMe'));
-  $$('#dexnav button').forEach(b => b.onclick = () => { const k = b.dataset.k; if (k === 'home' || k === 'scan') { S.started ? backToAgent() : (setView('agent'), showAsk()); } else if (k === 'mis') { if (S.started) { backToAgent(); renderCourse(); openSheet('sheet-course'); } } else if (k === 'me') showCard(); });
+  $$('#dexnav button').forEach(b => b.onclick = () => { const k = b.dataset.k; if (k === 'home' || k === 'scan') { S.started ? backToAgent() : startFree(); } else if (k === 'mis') { if (S.started) { backToAgent(); renderCourse(); openSheet('sheet-course'); } } else if (k === 'me') showCard(); });
 }
 function openDetail(id) { S.detailId = id; setView('detail'); renderDetail(id); }
 function renderDetail(id) {
@@ -1145,7 +1172,7 @@ function showCard() {
     body.innerHTML = `<h2>${t('cardTitle')(t('nations')[best])}</h2><p>${t('cardLine')[best]}</p><div class="bars">${NATIONS.map(n => `<div class="bar2"><span>${t('nations')[n]}</span><i><em style="width:${Math.max(3, g[n] / max * 100)}%;background:${NCOL[n]}"></em></i><span>${(g[n] / 1000).toFixed(0)}s</span></div>`).join('')}</div><p style="font-size:12px">${t('cardFoot')}</p>`; }
   save();
 }
-$('#card-restart').onclick = () => { S.started = false; S.near = null; S.last = null; S.done = new Set(); S.course = []; S.camConsentAsked = true; setOrb(null); setView('agent'); setState('idle'); showAsk(); speak(`${t('hello')} ${t('ask')}`); renderLab(); renderTime(); };
+$('#card-restart').onclick = () => { S.camConsentAsked = true; startFree(); };
 
 /* ------------------------------------------------------------------ CAMERA + GAZE (MediaPipe Face Landmarker, on-device) */
 /* convex-mirror reflection of the camera on the orb: magnified centre, compressed rim, strong blur, grey-scale
@@ -1338,7 +1365,6 @@ $('#btn-plus').onclick = e => { e.stopPropagation(); openSheet('sheet-menu'); };
 $('#m-course').onclick = () => { closeSheets(); renderCourse(); setTimeout(() => openSheet('sheet-course'), 200); };
 $('#m-dex').onclick = openDex; $('#m-card').onclick = showCard;
 $('#btn-settings').onclick = e => { e.stopPropagation(); renderLearn(); fillVoiceSelect(); openSheet('sheet-settings'); };
-$('#btn-replan').onclick = () => { closeSheets(); S.clockOn = false; S.started = false; stopSpeak(); setActions([]); setOrb(null); setState('idle'); renderTime(); showAsk(); speak(`${t('ask')}`); renderSim(); };
 $('#btn-end').onclick = e => { e.stopPropagation(); showCard(); };
 $('#labopen').onclick = e => { e.stopPropagation(); $('#lab').classList.add('open'); }; $('#labclose').onclick = () => $('#lab').classList.remove('open');
 $('#chip-free').onclick = e => { e.stopPropagation(); unlockAudio(); plan(0); };
@@ -1373,7 +1399,7 @@ addEventListener('resize', fit); fit();
 load(); renderSplashLang(); applyI18n(); setView('splash');
 (function () { // quick demo: #demo=silla (skips splash, 60 min course, standing at that artifact)
   const m = location.hash.match(/demo=(\w+)/); if (!m || !ART[m[1]]) return; S.stats.quiet = false; S.stats.consec = 0; S.stats.bonusMs = 0; S.camConsentAsked = true;
-  setTimeout(() => { enterAgent(); setTimeout(() => { plan(60); setTimeout(() => { setNear(m[1]); S.manualGaze = true; renderLab(); }, 1500); }, 200); }, 100);
+  setTimeout(() => { startFree(); setTimeout(() => { setNear(m[1]); S.manualGaze = true; renderLab(); }, 1500); }, 100);
 })();
 </script>
 <script type="module" src="world.js"></script>
