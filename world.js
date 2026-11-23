@@ -323,6 +323,7 @@ import * as THREE from './vendor/three/three.module.js';
     teleport(id) { if (!id) { place(0, 3, 0); P.pitch = 0; return; } const s = STAND[id], a = STN[id]; place(s[0], s[1], Math.atan2(-(a.x - s[0]), -(a.z - s[1]))); P.pitch = Math.atan2(ART_Y - EYE, Math.hypot(a.x - s[0], a.z - s[1])); log('teleport → ' + id); },
     teleportRoom(no) { const r = ROOMS.find(x => x.no === no); if (!r) return; place(20, r.z0 - 3, 0); P.pitch = 0; },
     state: () => ({ x: P.x, z: P.z, yaw: P.yaw, locked }), items: () => ITEMS.map(i => i.id),
+    introduce: id => showItemCard(id),
   };
   addEventListener('keydown', e => { if (e.target.tagName === 'INPUT') return; const k = e.code; keys[k] = true; if (S.view === 'chat' && ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(k)) miniChat(); if (k === 'KeyF') { S.manualLook = true; renderLab(); clearTimeout(window._flook); window._flook = setTimeout(() => { S.manualLook = false; renderLab(); }, 1600); log('F: looked at phone'); } if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(k) && S.view === 'agent' && e.target === document.body) e.preventDefault(); });
   addEventListener('keyup', e => { keys[e.code] = false; });
@@ -335,11 +336,12 @@ import * as THREE from './vendor/three/three.module.js';
   /* ------------------------------------------------------------ gaze / proximity → phone app */
   const FWD = new THREE.Vector3(); const dwell = { id: null, t: 0 }; const shownAt = {}; let cardTimer = 0;
   const angTo = (x, y, z) => { const cx = x - P.x, cy = y - EYE, cz = z - P.z, len = Math.hypot(cx, cy, cz); return Math.acos(Math.min(1, Math.max(-1, (FWD.x * cx + FWD.y * cy + FWD.z * cz) / len))); };
-  function showItemCard(id) {
-    const e = EXHMAP[id]; if (!e) return; shownAt[id] = performance.now(); const c = $('#itemcard');
-    c.querySelector('img').src = EXH_IMG(id); c.querySelector('b').textContent = L(e.name); c.querySelector('em').textContent = t('nations')[e.nation]; c.querySelector('p').textContent = L(e.note); c.classList.add('on'); clearTimeout(cardTimer); cardTimer = setTimeout(() => c.classList.remove('on'), 9000);
+  function showItemCard(id) {   // no corner card any more: QI explains in the chat thread
+    const e = EXHMAP[id]; if (!e) return; shownAt[id] = performance.now();
     if (!S.prog[id]) { S.prog[id] = { date: new Date().toLocaleDateString(S.set.lang === 'en' ? 'en-US' : S.set.lang, { month: 'short', day: 'numeric' }), seen: true }; save(); log('seen: ' + id); }
-    if (!(window.qiIntroduce && qiIntroduce(id)) && !S.speaking && !S.chatMini) speak(L(e.name) + '. ' + L(e.note), null, NVOICE[e.nation]);
+    const fresh = !S.started; if (fresh) { try { startFree(); } catch (x) {} }          // looking at an exhibit before pressing Start: open the conversation first
+    let tries = 0; const go = () => { if (window.qiIntroduce && qiIntroduce(id)) return; if (++tries < 14) setTimeout(go, 500); };
+    if (fresh) { setTimeout(() => { try { stopSpeak(); } catch (x) {} go(); }, 900); } else go();
   }
   function updateAgentLink(dt) {
     camera.getWorldDirection(FWD);

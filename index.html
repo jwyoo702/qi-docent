@@ -432,6 +432,7 @@ button:focus-visible, input:focus-visible { outline:2px solid var(--primary-mid)
 .card-get .art.ic { background:var(--primary-soft); padding:14px; box-sizing:border-box; } .card-get .art.ic .ico { object-fit:contain; }
 .msg.chdiv img.icon { object-fit:contain; background:var(--primary-soft); padding:3px; box-sizing:border-box; }
 @media (prefers-reduced-motion:reduce) { .ico { animation:none; } }
+#itemcard { display:none !important; }
 </style>
 </head>
 <body>
@@ -531,7 +532,7 @@ button:focus-visible, input:focus-visible { outline:2px solid var(--primary-mid)
 </aside>
 <label id="hx" style="position:fixed;left:-99px;top:-99px;opacity:0;pointer-events:none" aria-hidden="true"><input type="checkbox" switch id="hxi"></label>
 
-<script src="exhibits.js?v=20261123d"></script>
+<script src="exhibits.js?v=20261123e"></script>
 <script>
 /* =====================================================================
    QI (큐아이) · Active Docent — core demo
@@ -1767,6 +1768,6 @@ $('#m-dex').onclick = openDex;
 setView('agent'); applyI18n(); renderStatus();
 
 </script>
-<script type="module" src="world.js?v=20261123d"></script>
+<script type="module" src="world.js?v=20261123e"></script>
 </body>
 </html>
