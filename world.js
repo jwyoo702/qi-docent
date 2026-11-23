@@ -145,7 +145,7 @@ import * as THREE from './vendor/three/three.module.js';
   function plateFor(group, id, maxS, opt = {}) {
     const mesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ color: '#8a8a8a' })); group.add(mesh);
     loadImg(EXH_IMG(id), tx => { const a = tx.image.width / tx.image.height, w = a >= 1 ? maxS : maxS * a, h = a >= 1 ? maxS / a : maxS; mesh.geometry.dispose(); mesh.geometry = new THREE.PlaneGeometry(w, h); mesh.material.map = tx; mesh.material.color.set(opt.tint || '#eeeeee'); mesh.material.needsUpdate = true;
-      const fr = new THREE.Mesh(new THREE.PlaneGeometry(w + .06, h + .06), new THREE.MeshBasicMaterial({ color: '#0b0b0c' })); fr.position.z = -.01; group.add(fr); });
+      const fr = new THREE.Mesh(new THREE.PlaneGeometry(w + .06, h + .06), new THREE.MeshBasicMaterial({ color: '#0b0b0c' })); fr.position.z = -.01; mesh.add(fr); });   // child of the plate so it follows the plate's own position/rotation (was added to the scene origin → black slab at spawn)
     return mesh;
   }
   function putItem(id, kind, x, z, yaw) {
@@ -337,7 +337,7 @@ import * as THREE from './vendor/three/three.module.js';
   }
 
   /* ------------------------------------------------------------ loop */
-  let last = performance.now(), tAcc = 0;
+  let last = performance.now(), tAcc = 0, frames = 0;
   function loop(now) {
     requestAnimationFrame(loop); const dt = Math.min(.05, (now - last) / 1000); last = now; tAcc += dt;
     if (S.set.lang !== lastLang) { lastLang = S.set.lang; refreshPlates(); }
@@ -351,7 +351,7 @@ import * as THREE from './vendor/three/three.module.js';
     for (const id of Object.keys(ARTW)) { const w = ARTW[id]; if (!w.fixed) w.group.position.y = w.y0 + Math.sin(tAcc * 1.4 + STN[id].z) * .04; if (w.billboard) w.billboard.rotation.y = Math.atan2(P.x - w.group.position.x, P.z - w.group.position.z); else if (w.base) w.base.rotation.y += dt * .5; }
     updateAgentLink(dt);
     const nx = S.started && S.view === 'agent' ? nextPending() : null; if (nx && Math.hypot(STN[nx].x - P.x, STN[nx].z - P.z) > 4.2) placeDots(pathTo(nx, P.x, P.z), tAcc); else placeDots([[0, 0], [0, 0]], tAcc);
-    updateHud(); drawMap(); renderer.render(scene, camera);
+    updateHud(); drawMap(); renderer.render(scene, camera); if (++frames === 40 && window.bootDone) bootDone();
   }
   refreshPlates(); requestAnimationFrame(loop); console.log('world ready');
 })();
