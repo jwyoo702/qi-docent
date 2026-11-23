@@ -95,13 +95,36 @@ input { font: inherit; color: inherit; }
   box-shadow:inset 0 0 8px 2px rgba(255,255,255,.8), 0 0 0 1.5px color-mix(in srgb, var(--c3) 45%, transparent); animation:breathe 5s ease-in-out infinite; }
 .morb.talk { animation:breathe 1.1s ease-in-out infinite; }
 
+
+/* ---------- QI character ---------- */
+.qi-char { position:absolute; inset:0; } .qiav svg, .qi-char svg { width:100%; height:100%; display:block; overflow:visible; }
+.morb.qiav, .orbmark.qiav, .b-orb.qiav { background:none !important; box-shadow:none !important; border-radius:0 !important; animation:none !important; }
+#v-splash .orbmark.qiav { width:176px; height:176px; margin-bottom:26px; filter:drop-shadow(0 18px 34px rgba(0,0,0,.28)); } .b-orb.qiav { width:124px; height:124px; filter:drop-shadow(0 14px 26px rgba(0,0,0,.25)); }
+#orb .o-gloss, #orb .o-rim, #orb .o-arcs { display:none; } #orb .o-body { background:none; box-shadow:none; animation:none; overflow:visible; } #orb .o-body > video, #orb .o-body > canvas { opacity:0; pointer-events:none; }
+.o-glow { background:radial-gradient(circle, rgba(159,208,195,.55) 0%, transparent 66%) !important; }
+.qi-bob { animation:qiBob 4.4s ease-in-out infinite; } @keyframes qiBob { 50% { transform:translateY(-4px); } }
+.qi-head { transform-box:fill-box; transform-origin:50% 80%; } .qi-eye, .qi-talk { transform-box:fill-box; transform-origin:center; }
+.qi-eye { animation:qiBlink 5.6s infinite; } @keyframes qiBlink { 0%,93%,100% { transform:scaleY(1); } 96% { transform:scaleY(.08); } }
+.qi-talk { opacity:0; } #phone[data-speak="1"] .qi-smile { opacity:0; } #phone[data-speak="1"] .qi-talk { opacity:1; animation:qiMouth .32s ease-in-out infinite alternate; }
+@keyframes qiMouth { from { transform:scale(.78,.3); } to { transform:scale(1.08,1.15); } }
+#phone[data-speak="1"] .qi-head { animation:qiNod 1.7s ease-in-out infinite; } @keyframes qiNod { 0%,100% { transform:translateY(10px) rotate(-1.3deg); } 50% { transform:translateY(11px) rotate(1.5deg); } }
+#phone[data-state="signal"] .qi-eye { animation:none; transform:scale(1.1,1.18); } #phone[data-quiet="1"] .qi-eye { animation:none; transform:scaleY(.5); }
+/* conversation thread */
+.msg.chdiv { align-self:stretch; max-width:100%; background:transparent !important; border:0 !important; box-shadow:none; display:flex; align-items:center; gap:10px; padding:8px 0 2px; font-size:12px; color:var(--mut); }
+.msg.chdiv::before, .msg.chdiv::after { content:""; flex:1; height:1px; background:var(--line); } .msg.chdiv img { width:36px; height:36px; border-radius:10px; object-fit:cover; flex:none; }
+.msg.chdiv div { display:flex; flex-direction:column; align-items:flex-start; line-height:1.3; } .msg.chdiv b { color:var(--ink); font-size:12.5px; }
+.msg .mimg { display:block; width:100%; max-height:150px; object-fit:cover; border-radius:12px; margin-bottom:8px; }
+#v-chat.nostory .narr, #v-chat.nostory #tabs, #v-chat.nostory #chat-min { display:none; }
+#timechip { pointer-events:auto; cursor:pointer; } #timechip .tc { display:inline-block; margin-top:2px; padding:2px 9px; border-radius:11px; background:rgba(63,116,104,.1); color:var(--primary); font-weight:600; font-size:11.5px; }
+.qimg { display:block; width:calc(100% - 32px); height:112px; margin:2px 16px 0; border-radius:18px; object-fit:cover; background:var(--chip); }
+
 /* ---------- agent view ---------- */
 #top { position:absolute; top:62px; left:20px; right:20px; display:flex; justify-content:space-between; align-items:center; z-index:6; }
 .round { width:48px; height:48px; border-radius:50%; background:#fff; box-shadow:0 6px 22px rgba(63,116,104,.13); display:grid; place-items:center; flex:none; }
 .round svg { width:22px; height:22px; } .round.dark { background:var(--primary); color:#fff; } .round.on { background:var(--primary); color:#fff; }
 #timechip { font-size:12.5px; color:var(--mut); text-align:center; line-height:1.35; min-width:0; }
 #timechip b { color:var(--ink); font-size:14px; font-variant-numeric:tabular-nums; }
-body:not(.demo) #hud-lab, body:not(.demo) #labopen, body:not(.demo) #lab { display:none !important; }   /* developer tools: only with ?demo=1 or Shift+D */
+body:not(.demo) #simbar, body:not(.demo) #hud-lab, body:not(.demo) #labopen, body:not(.demo) #lab { display:none !important; }   /* developer tools: only with ?demo=1 or Shift+D */
 #boot { position:fixed; inset:0; z-index:999; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; background:linear-gradient(160deg,#2f5f55,#4B8A7C); color:#fff; transition:opacity .7s ease, visibility .7s; text-align:center; }
 #boot.off { opacity:0; visibility:hidden; pointer-events:none; } #boot b { font-family:var(--serif); font-size:26px; letter-spacing:.5px; font-weight:600; } #boot span { font-size:13px; opacity:.75; letter-spacing:.4px; }
 .b-orb { width:84px; height:84px; border-radius:50%; margin-bottom:12px; background:radial-gradient(circle at 34% 30%, #fff, #bfe3d8 55%, #7fb8a8); box-shadow:0 0 50px rgba(255,255,255,.35); animation:bootbreath 2.2s ease-in-out infinite; } @keyframes bootbreath { 50% { transform:scale(1.07); box-shadow:0 0 70px rgba(255,255,255,.5); } }
@@ -297,7 +320,14 @@ body.world #lab.open { display:block; }
 </style>
 </head>
 <body>
-<div id="boot"><div class="b-orb"></div><b>QI · 큐아이</b><span>National Museum of Korea</span></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<radialGradient id="qiHead" cx="36%" cy="26%" r="85%"><stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#f3f5f8"/><stop offset="1" stop-color="#d5dae2"/></radialGradient>
+<linearGradient id="qiBand" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#dfe3ea"/></linearGradient>
+<linearGradient id="qiVisor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#23262e"/><stop offset=".35" stop-color="#0c0d11"/><stop offset="1" stop-color="#030304"/></linearGradient>
+<filter id="qiGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="qiSoft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2.4"/></filter>
+</defs></svg>
+<div id="boot"><div class="b-orb qiav"></div><b>QI · 큐아이</b><span>National Museum of Korea</span></div>
 
 <canvas id="world"></canvas>
 <div id="hud">
@@ -318,7 +348,7 @@ body.world #lab.open { display:block; }
   <!-- ===== 1 · SPLASH ===== -->
   <section class="scr" id="v-splash">
     <div class="lang" id="splash-lang"></div>
-    <div class="mark"><div class="orbmark"></div><div class="kr">국립중앙박물관</div><div class="en">National Museum of Korea</div><div class="qi">QI · 큐아이</div><div class="tag" data-i18n="tag"></div></div>
+    <div class="mark"><div class="orbmark qiav"></div><div class="kr">국립중앙박물관</div><div class="en">National Museum of Korea</div><div class="qi">QI · 큐아이</div><div class="tag" data-i18n="tag"></div></div>
     <button class="btn" id="btn-start" data-i18n="start"></button>
   </section>
 
@@ -327,7 +357,7 @@ body.world #lab.open { display:block; }
     <div id="orb">
       <div class="o-glow"></div>
       <div class="o-breath"><div class="o-lvl">
-        <div class="o-body"><video id="camvideo" playsinline muted autoplay></video><canvas id="mirror" width="256" height="256"></canvas><div class="o-gloss"></div></div>
+        <div class="qi-char qiav"></div><div class="o-body"><video id="camvideo" playsinline muted autoplay></video><canvas id="mirror" width="256" height="256"></canvas><div class="o-gloss"></div></div>
         <div class="o-rim"></div>
         <svg class="o-arcs" viewBox="0 0 240 240" fill="none"><defs><linearGradient id="ag" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#8CC9BB"/></linearGradient></defs>
           <g class="a1"><ellipse cx="120" cy="120" rx="106" ry="98" stroke="url(#ag)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="190 480"/></g>
@@ -371,13 +401,13 @@ body.world #lab.open { display:block; }
     <div class="hdr2">
       <div class="hrow">
         <button class="back" id="chat-back" aria-label="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
-        <div class="morb" style="width:34px;height:34px"></div>
+        <div class="morb qiav" style="width:34px;height:34px"></div>
         <div class="ttl"><b>QI</b><span id="chat-sub"></span></div>
         <button class="back" id="chat-min" aria-label="minimize"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><button class="langchip" id="chat-lang">EN</button>
       </div>
       <div class="tabs" id="tabs"><div class="on"><i></i><span data-i18n="tabStory"></span></div><div><i></i><span data-i18n="tabQuiz"></span></div><div><i></i><span data-i18n="tabPuzzle"></span></div></div>
     </div>
-    <div class="narr"><div class="morb" id="narr-orb"></div>
+    <div class="narr"><div class="morb qiav" id="narr-orb"></div>
       <div class="meta"><b id="narr-title"></b><div class="ctl"><button class="pp" id="btn-pp"><svg id="pp-ic" viewBox="0 0 14 14" fill="currentColor"><rect x="2" y="1" width="3.4" height="12" rx="1"/><rect x="8.6" y="1" width="3.4" height="12" rx="1"/></svg></button><div class="bar"><i id="narr-bar"></i></div><time id="narr-time">0:00</time></div></div></div>
     <div id="msgs"></div>
     <div id="chatfoot"><div id="qchips"></div>
@@ -388,8 +418,8 @@ body.world #lab.open { display:block; }
   <section class="scr" id="v-quiz">
     <div class="safe" style="height:78px"></div>
     <div class="qhead"><button class="back" id="quiz-x" aria-label="close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="pbar"><i id="quiz-bar"></i></div><span id="quiz-n"></span></div>
-    <div class="qbub"><div class="morb talk"></div><div class="msg qa" id="quiz-bub"></div></div>
-    <div class="qlabel" id="quiz-lab"></div><div class="qtext" id="quiz-q"></div>
+    <div class="qbub"><div class="morb qiav talk"></div><div class="msg qa" id="quiz-bub"></div></div>
+    <img id="quiz-img" class="qimg" alt="" style="display:none"><div class="qlabel" id="quiz-lab"></div><div class="qtext" id="quiz-q"></div>
     <div id="answers"></div><div class="fb" id="quiz-fb"></div>
     <div class="qfoot"><button class="btn line" id="quiz-skip" data-i18n="skip"></button><button class="btn primary" id="quiz-check" data-i18n="check"></button></div>
   </section>
@@ -408,7 +438,7 @@ body.world #lab.open { display:block; }
   <!-- ===== 6 · COLLECTED ===== -->
   <section class="scr" id="v-collected">
     <div class="ptsbadge" id="col-pts"></div><h1 data-i18n="added"></h1>
-    <div class="dcard"><div class="t"><span id="col-no"></span><span id="col-rar"></span></div><div class="art"><div class="morb"></div></div><h3 id="col-name"></h3><p id="col-sub"></p></div>
+    <div class="dcard"><div class="t"><span id="col-no"></span><span id="col-rar"></span></div><div class="art"><div class="morb qiav"></div></div><h3 id="col-name"></h3><p id="col-sub"></p></div>
     <div class="foot"><button class="btn primary" id="col-dex" data-i18n="viewDex"></button><button class="btn line" id="col-next" data-i18n="nextArt"></button></div>
   </section>
 
@@ -424,7 +454,7 @@ body.world #lab.open { display:block; }
   <section class="scr" id="v-detail">
     <div class="safe"></div>
     <div class="hdr"><button class="back" id="det-back" aria-label="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button></div>
-    <div class="main"><div class="dhero"><div class="morb" id="det-orb"></div><img id="det-img" alt="" style="display:none;width:100%;height:100%;border-radius:24px;object-fit:contain"></div>
+    <div class="main"><div class="dhero"><div class="morb qiav" id="det-orb"></div><img id="det-img" alt="" style="display:none;width:100%;height:100%;border-radius:24px;object-fit:contain"></div>
       <div class="dinfo"><small id="det-no"></small><h1 id="det-name"></h1><div class="tagrow" id="det-tags"></div></div>
       <div class="dsec"><h2 data-i18n="story3"></h2><p id="det-story"></p></div>
       <div class="fact"><i>✦</i><div><b data-i18n="fun"></b><span id="det-fun"></span></div></div>
@@ -433,7 +463,7 @@ body.world #lab.open { display:block; }
   </section>
 
   <!-- ===== 9 · TASTE CARD ===== -->
-  <section class="scr" id="v-card"><div class="morb" id="card-orb"></div><div id="cardbody" style="width:100%;display:flex;flex-direction:column;align-items:center"></div><button class="btn primary" id="card-restart" data-i18n="restart"></button></section>
+  <section class="scr" id="v-card"><div class="morb qiav" id="card-orb"></div><div id="cardbody" style="width:100%;display:flex;flex-direction:column;align-items:center"></div><button class="btn primary" id="card-restart" data-i18n="restart"></button></section>
 
   <div id="scrim"></div>
   <div class="sheet" id="sheet-menu"><div class="grab"></div><h3 data-i18n="menu"></h3>
@@ -497,7 +527,7 @@ en: {
   simGo: n => `Demo · stand at ${n} and look`, simOn: n => `Demo · looking at ${n} ✓ (tap to stop)`,
   tapHint: 'Look at your phone — or tap the screen.',
   freeBtn: 'Just wander (no time limit)', freeTour: 'Free tour',
-  autoWalk: 'Auto-walk (G)', voiceCheck: 'Voice check', voiceCheckd: 'Which installed voice each character uses. Tap ▶ to listen.', noFemale: 'No female voice installed — pitch only', noMale: 'No male voice installed — pitch only', onlineVoice: 'Online voice: pitch and speed may be ignored',
+  autoWalk: 'Auto-walk (G)', thread: 'Conversation', voiceCheck: 'Voice check', voiceCheckd: 'Which installed voice each character uses. Tap ▶ to listen.', noFemale: 'No female voice installed — pitch only', noMale: 'No male voice installed — pitch only', onlineVoice: 'Online voice: pitch and speed may be ignored',
   later: 'Keep exploring', skipPuzzle: 'Skip the puzzle', sugg: 'Suggested', npDone: 'Story done · tap to continue', minimize: 'Listen while you walk', playing: 'Now telling', exploreFree: 'Walk freely. Linger on anything that catches your eye.', hiReply: "Hello! I'm QI, your museum docent. Tell me how long you'll stay, or just start walking.", whoAmI: "I'm QI. I notice where you linger in the museum and speak up at just the right moment.",
   nextIs: n => `Next is ${n}.`, noNext: "You've seen everything on today's course.", timeLeftMsg: m => `About ${m} minutes left.`, freeLeftMsg: 'No time limit today. Take your time.',
   quietOnMsg: "Okay. I'll stay quiet until you call me.", quietOffMsg: "Okay. I'll speak up again when you linger.", helpMsg: "Try saying: next, how much time is left, explain this, take me there, be quiet, or tell me how long you'll stay.",
@@ -537,7 +567,7 @@ ko: {
   simGo: n => `시연 · ${n} 앞에서 바라보기`, simOn: n => `시연 · ${n} 바라보는 중 ✓ (눌러서 멈춤)`,
   tapHint: '폰을 보거나, 화면을 눌러 주세요.',
   freeBtn: '시간 상관없이 자유롭게 둘러볼래요', freeTour: '자유 관람',
-  autoWalk: '자동 이동 (G)', voiceCheck: '목소리 확인', voiceCheckd: '캐릭터마다 어떤 음성이 쓰이는지 보여 줘요. ▶로 들어 보세요.', noFemale: '여성 음성이 없어서 높낮이만 조절해요', noMale: '남성 음성이 없어서 높낮이만 조절해요', onlineVoice: '온라인 음성이라 높낮이·속도가 무시될 수 있어요',
+  autoWalk: '자동 이동 (G)', thread: '대화', voiceCheck: '목소리 확인', voiceCheckd: '캐릭터마다 어떤 음성이 쓰이는지 보여 줘요. ▶로 들어 보세요.', noFemale: '여성 음성이 없어서 높낮이만 조절해요', noMale: '남성 음성이 없어서 높낮이만 조절해요', onlineVoice: '온라인 음성이라 높낮이·속도가 무시될 수 있어요',
   later: '계속 둘러볼래요', skipPuzzle: '퍼즐 건너뛰기', sugg: '추천', npDone: '이야기 끝 · 눌러서 이어가기', minimize: '걸으면서 듣기', playing: '설명 중', exploreFree: '자유롭게 걸어 보세요. 눈길이 가는 유물에 머물러 보세요.', hiReply: '안녕하세요! 저는 박물관 도슨트 큐아이예요. 얼마나 보실지 알려 주시거나 그냥 걸어 보세요.', whoAmI: '저는 큐아이예요. 박물관에서 어디에 오래 머무는지 알아채고, 알맞은 때에 먼저 말을 걸어요.',
   nextIs: n => `다음 유물: ${n}`, noNext: '오늘 코스를 모두 보셨어요.', timeLeftMsg: m => `약 ${m}분 남았어요.`, freeLeftMsg: '오늘은 시간 제한이 없어요. 천천히 보세요.',
   quietOnMsg: '알겠어요. 부르실 때까지 조용히 있을게요.', quietOffMsg: '알겠어요. 머무시면 다시 말을 걸게요.', helpMsg: "이렇게 말해 보세요: 다음, 남은 시간, 이거 설명해 줘, 데려가 줘, 조용히 해. 얼마나 있을지 알려 주셔도 돼요.",
@@ -577,7 +607,7 @@ ja: {
   simGo: n => `デモ · ${n}の前で見つめる`, simOn: n => `デモ · ${n}を見つめ中 ✓（タップで停止）`,
   tapHint: 'スマホを見るか、画面をタップしてください。',
   freeBtn: '時間を決めず気ままに見たい', freeTour: '自由見学',
-  autoWalk: '自動移動 (G)', voiceCheck: '音声の確認', voiceCheckd: 'キャラクターごとに使われている音声です。▶で聞けます。', noFemale: '女性の音声がないため、高さのみ調整します', noMale: '男性の音声がないため、高さのみ調整します', onlineVoice: 'オンライン音声は高さ・速度が無視されることがあります',
+  autoWalk: '自動移動 (G)', thread: '会話', voiceCheck: '音声の確認', voiceCheckd: 'キャラクターごとに使われている音声です。▶で聞けます。', noFemale: '女性の音声がないため、高さのみ調整します', noMale: '男性の音声がないため、高さのみ調整します', onlineVoice: 'オンライン音声は高さ・速度が無視されることがあります',
   later: 'このまま見て回る', skipPuzzle: 'パズルをスキップ', sugg: 'おすすめ', npDone: 'お話は終わり · タップで続ける', minimize: '歩きながら聞く', playing: '解説中', exploreFree: '自由に歩いてみてください。気になる展示の前で立ち止まってみましょう。', hiReply: 'こんにちは！博物館ドーセントのQIです。滞在時間を教えてください。歩き始めてもOKです。', whoAmI: 'QIです。博物館でどこに長く留まるかに気づいて、ちょうどいいタイミングで声をかけます。',
   nextIs: n => `次は${n}です。`, noNext: '今日のコースはすべて見終わりました。', timeLeftMsg: m => `あと約${m}分です。`, freeLeftMsg: '今日は時間制限がありません。ゆっくりどうぞ。',
   quietOnMsg: 'わかりました。呼ばれるまで静かにしています。', quietOffMsg: 'わかりました。立ち止まったらまた声をかけます。', helpMsg: 'こう話しかけてください：次、残り時間、これを説明して、連れて行って、静かにして。滞在時間を教えてもOKです。',
@@ -617,7 +647,7 @@ zh: {
   simGo: n => `演示 · 站在${n}前注视`, simOn: n => `演示 · 正在注视${n} ✓（点击停止）`,
   tapHint: '请看手机，或点击屏幕。',
   freeBtn: '不限时间，随意逛逛', freeTour: '自由参观',
-  autoWalk: '自动前往 (G)', voiceCheck: '语音检查', voiceCheckd: '显示每个角色使用的语音，点击▶试听。', noFemale: '没有女声，只能调整音高', noMale: '没有男声，只能调整音高', onlineVoice: '在线语音可能会忽略音高和语速',
+  autoWalk: '自动前往 (G)', thread: '对话', voiceCheck: '语音检查', voiceCheckd: '显示每个角色使用的语音，点击▶试听。', noFemale: '没有女声，只能调整音高', noMale: '没有男声，只能调整音高', onlineVoice: '在线语音可能会忽略音高和语速',
   later: '继续参观', skipPuzzle: '跳过拼图', sugg: '推荐', npDone: '故事讲完了 · 点击继续', minimize: '边走边听', playing: '讲解中', exploreFree: '请自由行走，在感兴趣的展品前停留片刻。', hiReply: '你好！我是博物馆讲解员QI。告诉我你打算逛多久，或者直接开始走吧。', whoAmI: '我是QI。我会察觉你在博物馆里在哪里停留，并在合适的时候主动开口。',
   nextIs: n => `下一件是“${n}”。`, noNext: '今天的路线已经全部看完了。', timeLeftMsg: m => `大约还剩${m}分钟。`, freeLeftMsg: '今天没有时间限制，慢慢看。',
   quietOnMsg: '好的，在你叫我之前我会保持安静。', quietOffMsg: '好的，你停下来时我会再开口。', helpMsg: '可以这样说：下一个、还剩多久、讲讲这个、带我过去、安静点，或者告诉我你要逛多久。',
@@ -725,6 +755,7 @@ absent: { nation: 'baek', sound: 'ghost', vib: [18,120,18,120,18,120,60], shake:
   quiz: [] },
 };
 const ORDER = ['gogu', 'baek', 'absent', 'gaya', 'silla'], NATIONS = ['gogu', 'baek', 'silla', 'gaya'];   // real walking order in the museum: 105 Goguryeo → 106 Baekje → 107 Gaya → 108-110 Silla
+const QI_SVG = '<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g class="qi-bob"><ellipse class="qi-shadow" cx="120" cy="214" rx="50" ry="6.5" fill="#2c5a50" opacity=".16" filter="url(#qiSoft)"/><g class="qi-head" transform="translate(0 10)"><path d="M42 106 C42 46 80 34 120 34 C160 34 198 46 198 106" fill="none" stroke="#c9ced8" stroke-width="10.5" stroke-linecap="round" opacity=".55"/><path d="M42 104 C42 44 80 32 120 32 C160 32 198 44 198 104" fill="none" stroke="url(#qiBand)" stroke-width="9" stroke-linecap="round"/><ellipse cx="120" cy="124" rx="72" ry="65" fill="url(#qiHead)"/><ellipse cx="94" cy="78" rx="30" ry="11" fill="#fff" opacity=".7" transform="rotate(-18 94 78)"/><rect x="23" y="101" width="23" height="52" rx="11.5" fill="url(#qiHead)"/><rect x="37" y="106" width="8" height="42" rx="4" fill="#17181c"/><rect x="194" y="101" width="23" height="52" rx="11.5" fill="url(#qiHead)"/><rect x="195" y="106" width="8" height="42" rx="4" fill="#17181c"/><rect x="58" y="90" width="126" height="84" rx="40" fill="url(#qiVisor)"/><path d="M76 101 Q100 94 134 96" stroke="#fff" stroke-opacity=".13" stroke-width="5" fill="none" stroke-linecap="round"/><g filter="url(#qiGlow)"><ellipse class="qi-eye" cx="92" cy="130" rx="9.6" ry="11.6" fill="#f1f4ff"/><ellipse class="qi-eye" cx="150" cy="130" rx="9.6" ry="11.6" fill="#f1f4ff"/><path class="qi-smile" d="M108 148 Q121 159 134 148" stroke="#dfe8ff" stroke-width="4.4" fill="none" stroke-linecap="round"/><ellipse class="qi-talk" cx="121" cy="152" rx="8.6" ry="6" fill="#dfe8ff"/></g><path d="M210 140 C212 172 192 190 164 188" fill="none" stroke="#22242a" stroke-width="4.6" stroke-linecap="round"/><rect x="148" y="182.5" width="20" height="10.5" rx="5.2" fill="#22242a"/></g></g></svg>';
 const DEF = ['#F3FBF8', '#9FD0C3', '#F5CDB9'], NCOL = { gogu: '#ef5a45', baek: '#7fcfa8', silla: '#f0bf3f', gaya: '#4f4d57' };
 
 /* FAQ keyword matching (all four languages) */
@@ -850,8 +881,8 @@ let sp = { id: 0, fbRemain: 0, fbCb: null, paused: false };
 /* speak text; calls onend when done. Falls back to a reading-speed timer when speech is off / unavailable. */
 function speak(text, onend, prof) {
   prof = prof || QIVOICE;
-  const myId = ++sp.id; stopSpeakRaw(); sp.paused = false; S.speaking = true; if (recOn) stopListen();
-  const finish = () => { if (sp.id !== myId) return; S.speaking = false; sp.fbCb = null; sp.audio = null; onend && onend(); if (S.voiceMode) setTimeout(startListen, 320); };
+  const myId = ++sp.id; stopSpeakRaw(); sp.paused = false; S.speaking = true; phone.dataset.speak = '1'; if (recOn) stopListen();
+  const finish = () => { if (sp.id !== myId) return; S.speaking = false; phone.dataset.speak = '0'; sp.fbCb = null; sp.audio = null; onend && onend(); if (S.voiceMode) setTimeout(startListen, 320); };
   const browser = () => {
     const v = S.set.sound && window.speechSynthesis ? bestVoice(S.set.lang, prof.gender, prof.pick, prof.id) : null;
     if (!v) { sp.fbRemain = speechEst(text); sp.fbCb = finish; return; }
@@ -877,7 +908,7 @@ function speak(text, onend, prof) {
   browser();
 }
 function stopSpeakRaw() { try { window.speechSynthesis && speechSynthesis.cancel(); } catch (e) {} try { if (sp.audio) { sp.audio.pause(); sp.audio = null; } } catch (e) {} sp.fbCb = null; }
-function stopSpeak() { sp.id++; stopSpeakRaw(); S.speaking = false; }
+function stopSpeak() { sp.id++; stopSpeakRaw(); S.speaking = false; phone.dataset.speak = '0'; }
 function pauseSpeak(p) { sp.paused = p; try { if (sp.audio) { p ? sp.audio.pause() : sp.audio.play(); } else if (window.speechSynthesis) { p ? speechSynthesis.pause() : speechSynthesis.resume(); } } catch (e) {} }
 
 /* ------------------------------------------------------------------ language */
@@ -904,7 +935,8 @@ function renderChips() { const box = $('#chips'); if (!box) return; box.innerHTM
 /* ------------------------------------------------------------------ helpers / views */
 function setView(v) { S.view = v; phone.dataset.view = v; }
 function setSub(s) { S.sub = s; phone.dataset.sub = s; }
-function setOrb(id) { const c = id ? ART[id].c : DEF; phone.style.setProperty('--c1', c[0]); phone.style.setProperty('--c2', c[1]); phone.style.setProperty('--c3', c[2]); }
+function setOrb(id) { const c = DEF;   /* QI keeps one look: no colour per kingdom */
+  phone.style.setProperty('--c1', c[0]); phone.style.setProperty('--c2', c[1]); phone.style.setProperty('--c3', c[2]); }
 function say(a, b = '') { const e = $('#say'); e.style.opacity = 0; setTimeout(() => { e.textContent = a; $('#sub').textContent = b; e.style.opacity = 1; }, 150); S.sayKey = null; }
 function setActions(list) { const box = $('#actions'); box.innerHTML = ''; list.forEach(o => { const b = document.createElement('button'); b.className = 'btn ' + (o.cls || ''); b.textContent = o.label; b.onclick = e => { e.stopPropagation(); unlockAudio(); o.fn(); }; box.appendChild(b); }); }
 function setState(s) { S.state = s; S.stateMs = 0; phone.dataset.state = s; $('#kState').textContent = s; log('state → ' + s); }
@@ -927,14 +959,14 @@ function qiIntroduce(id) {   // free-browsing exhibit: QI herself introduces it 
   const e = EXHMAP[id]; if (!e || !S.started || S.view !== 'agent') return false;
   if (S.chatMini || !['idle', 'observe', 'cooldown', 'quiet'].includes(S.state) || (S.speaking && !S.intro)) return false;   // never cut off a story or a staged artifact
   const tok = S.introTok = (S.introTok || 0) + 1; S.intro = true; if (ART[e.nation]) setOrb(e.nation); phone.dataset.talk = '1'; setSub('main');
-  const txt = L(e.note); say(L(e.name), txt);
+  const txt = L(e.note); say(L(e.name), txt); addMsg('qa', `<img class="mimg" src="${EXH_IMG(id)}" alt=""><b>${L(e.name)}</b><br>${txt}`, false);
   const done = () => { if (S.introTok !== tok) return; S.intro = false; phone.dataset.talk = '0'; setTimeout(() => { if (S.introTok !== tok || S.state === 'signal' || S.view !== 'agent') return; setOrb(null); if (['idle', 'cooldown', 'observe', 'quiet'].includes(S.state) && !S.chatMini) say(...idleMsg()); }, 3500); };
   speak(L(e.name) + '. ' + txt, done, NVOICE[e.nation] || QIVOICE); log('QI introduced free exhibit: ' + id); return true;
 }
 function eligible(id) { return true; }
 function renderTime() {
   const el = $('#timechip'); if (!S.started) { el.innerHTML = ''; return; }
-  const n = nextPending(); el.innerHTML = `<b>${S.free ? t('freeTour') : t('left')(Math.floor(S.remaining / 60))}</b>${n ? `<br>${t('nextPre')} · ${L(ART[n].name)}` : ''}`;
+  const n = nextPending(); el.innerHTML = `<b>${t('freeTour')}</b><br><span class="tc">💬 ${t('thread')}</span>`; el.onclick = openThread;
 }
 function renderSim() {
   const show = !S.world && S.started && !S.camOn && ['idle', 'observe', 'cooldown', 'quiet'].includes(S.state) && S.view === 'agent';
@@ -963,7 +995,7 @@ const EYE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-w
 
 /* ------------------------------------------------------------------ SPLASH → AGENT */
 function renderSplashLang() { $('#splash-lang').innerHTML = LANGS.map(l => `<button data-v="${l}" class="${l === S.set.lang ? 'on' : ''}">${LCODE[l]}</button>`).join(''); $$('#splash-lang button').forEach(b => b.onclick = () => setLang(b.dataset.v)); }
-function idleMsg() { const n = nextPending(); return S.world && n ? [t('follow')(L(ART[n].name)), t('followSub')] : [t('standBy'), t('langNote')]; }
+function idleMsg() { return [t('standBy'), t('langNote')]; }
 function refreshAgentText() {
   if (!S.started) { if (S.sub === 'ask') showAsk(); return; }
   if (S.state === 'idle' && !S.near) say(...idleMsg()); else if (S.state === 'observe' && S.near) say(L(ART[S.near].name), t('nations')[S.near]);
@@ -973,7 +1005,7 @@ function showAsk() { setSub('main'); say(t('hello'), t('exploreFree')); setActio
 function startFree() {   // no time question any more: the visitor walks freely and QI steps in when they linger
   unlockAudio(); play('greet'); haptic([30], .2); stopSpeak(); setView('agent'); setOrb(null);
   S.minutes = 0; S.free = true; S.remaining = 0; S.warned10 = false; S.done = new Set(); S.unlockedGaya = true; S.course = ['gogu', 'baek', 'absent', 'gaya', 'silla']; S.started = true; S.clockOn = false; S.near = null; S.rec = null;
-  setSub('main'); setState('idle'); renderCourse(); renderTime(); renderLab(); const g = t('hello');
+  setSub('main'); setState('idle'); renderCourse(); renderTime(); renderLab(); const g = t('hello'); $('#msgs').innerHTML = ''; addMsg('qa', g + ' ' + t('exploreFree'));
   say(g, t('exploreFree')); speak(g + ' ' + t('exploreFree'), () => { if (S.state === 'idle' && !S.near && S.view === 'agent') say(...idleMsg()); });
   if (S.set.cam && !S.camOn && !S.camConsentAsked) setTimeout(askConsent, 2600); renderSim(); log('free tour started');
 }
@@ -1038,7 +1070,8 @@ function timeUp() { S.clockOn = false; if (S.view === 'agent') { say(t('timeUp')
 
 /* ------------------------------------------------------------------ CHAT (docent) */
 function renderChatChrome() {
-  const c = S.chat; if (!c) return; const a = ART[c.id];
+  const c = S.chat; $('#v-chat').classList.toggle('nostory', !c); $('#chat-lang').textContent = LCODE[S.set.lang]; $$('#chatin').forEach(i => i.placeholder = t('askQa'));
+  if (!c) { $('#chat-sub').textContent = t('thread'); $('#qchips').innerHTML = ''; return; } const a = ART[c.id];
   $('#chat-sub').textContent = `${L(a.name)} · ${t('nations')[c.id]}`; $('#chat-lang').textContent = LCODE[S.set.lang];
   const tabs = $$('#tabs div'); tabs[0].querySelector('span').textContent = t('tabStory'); tabs[1].querySelector('span').textContent = t('tabQuiz'); tabs[2].querySelector('span').textContent = t('tabPuzzle');
   $('#narr-title').textContent = c.finished ? t('narrOff') : t('chapter')(Math.min(c.idx + 1, c.total), c.total);
@@ -1048,10 +1081,14 @@ function renderChatChrome() {
 }
 function addMsg(cls, html, isText = true) { const d = document.createElement('div'); d.className = 'msg ' + cls; isText ? d.textContent = html : d.innerHTML = html; const m = $('#msgs'); m.appendChild(d); setTimeout(() => m.scrollTop = m.scrollHeight, 30); return d; }
 function setTab(i) { $$('#tabs div').forEach((d, k) => { d.classList.toggle('on', k === i); d.classList.toggle('done', k < i); }); }
+function chatDivider(id) { const a = ART[id], im = dexImg(id); addMsg('chdiv', `${im ? `<img src="${im}" alt="">` : ''}<div><b>${L(a.name)}</b><span>${t('nations')[id]}</span></div>`, false); }
+function openThread() {   // the whole conversation with QI lives in one thread; this just opens it
+  if (S.view === 'chat') return; if (S.chat) return expandChat(); stopListen && 0; setView('chat'); renderChatChrome(); setTimeout(() => { const m = $('#msgs'); m.scrollTop = m.scrollHeight; }, 60);
+}
 function openChat(id, replay) {
   const a = ART[id]; S.last = id; S.near = id; stopSpeak();
   S.chat = { id, idx: 0, total: a.story.en.length, finished: false, timer: 0, dur: 0, playing: true }; S.chatMini = false; phone.dataset.np = '0';
-  setView('chat'); setOrb(id); setTab(0); $('#msgs').innerHTML = ''; setNarrOrb(); setPP(true); $('#narr-bar').style.width = '0'; $('#narr-time').textContent = '0:00';
+  setView('chat'); setOrb(id); setTab(0); chatDivider(id); setNarrOrb(); setPP(true); $('#narr-bar').style.width = '0'; $('#narr-time').textContent = '0:00';
   renderChatChrome(); addMsg('hint', `${EYE}<span>${L(a.hint)}</span>`, false); log('chat open: ' + id);
   setTimeout(() => narrateNext(S.chat), 700);
 }
@@ -1075,18 +1112,18 @@ function setPP(play) { $('#pp-ic').innerHTML = play ? '<rect x="2" y="1" width="
 $('#btn-pp').onclick = () => { const c = S.chat; if (!c) return; if (c.finished) { // replay
     c.finished = false; c.idx = 0; c.dur = 0; setPP(true); narrateNext(c); return; }
   const p = !S.chatPlaying ? false : true; pauseSpeak(p); setPP(!p); };
-function userAsk(text, forced) {
-  const c = S.chat; if (!c) return; const dl = detectLang(text); if (dl && dl !== S.set.lang && !forced) { setLang(dl, true); }
-  addMsg('me', text); const a = ART[c.id]; let key = forced;
-  if (!key) key = Object.keys(KW).find(k => KW[k].test(text));
+function userAsk(text, forced, noEcho) {
+  const c = S.chat, id = c ? c.id : S.last, a = id && ART[id]; const dl = detectLang(text); if (dl && dl !== S.set.lang && !forced) { setLang(dl, true); }
+  if (!noEcho) addMsg('me', text); let key = forced;
+  if (!key && a) key = Object.keys(KW).find(k => KW[k].test(text));
   if (!key && converse(text)) return;
   const typing = addMsg('qa typing', '···'); stopSpeak();
-  setTimeout(() => { typing.remove(); const ans = key ? L(a[key]) : t('noAnswer'); addMsg('qa', ans); if (key) { $('#narr-orb').classList.add('talk'); speak(ans, () => $('#narr-orb').classList.remove('talk'), a.voice); } }, 650);
+  setTimeout(() => { typing.remove(); const ans = key && a ? L(a[key]) : (a ? t('noAnswer') : t('fallbackMsg')); addMsg('qa', ans); if (key && a) speak(ans, null, a.voice); else speak(ans); }, 650);
 }
 $('#chatform').onsubmit = e => { e.preventDefault(); const v = $('#chatin').value.trim(); if (!v) return; $('#chatin').value = ''; unlockAudio(); userAsk(v); };
 $('#chat-lang').onclick = () => { const i = LANGS.indexOf(S.set.lang); setLang(LANGS[(i + 1) % LANGS.length]); };
 $('#chat-back').onclick = () => leaveChat();
-function leaveChat() { const c = S.chat; if (c && (c.idx >= 1 || c.finished)) markSeen(c.id); stopSpeak(); S.chat = null; S.chatMini = false; phone.dataset.np = '0'; backToAgent(); }
+function leaveChat() { const c = S.chat; if (!c) { setView('agent'); refreshAgentText(); return; } if (c && (c.idx >= 1 || c.finished)) markSeen(c.id); stopSpeak(); S.chat = null; S.chatMini = false; phone.dataset.np = '0'; backToAgent(); }
 function renderNP() {
   const c = S.chat; if (!c) return; const a = ART[c.id], lines = a.story[S.set.lang] || a.story.en;
   $('#np-label').textContent = t('playing'); $('#np-title').textContent = L(a.name); $('#np-sub').textContent = c.finished ? t('npDone') : t('chapter')(Math.min(c.idx + 1, lines.length), lines.length);
@@ -1102,19 +1139,21 @@ $('#np-pp').onclick = () => { $('#btn-pp').click(); renderNP(); };
 function backToAgent() {
   setView('agent'); setOrb(null); setSub('main'); S.manualGaze = false; S.manualLook = false; S.camGaze = false; S.gazeMs = 0; setActions([]); phone.dataset.watch = '0'; phone.dataset.hold = '0';
   setState('cooldown'); const id = S.last; S.near = id; renderLab(); renderTime();
-  if (id && S.done.has(id)) { const n = nextPending(); say(L(ART[id].name), n ? t('nextGo')(L(ART[n].name)) : ''); if (!n) allSeenCheck(); }
+  if (id && S.done.has(id)) { say(L(ART[id].name), ''); allSeenCheck(); }
   else say(...idleMsg());
   setTimeout(() => { if (S.state === 'cooldown' && S.view === 'agent' && S.near && !S.done.has(S.near)) setNear(S.near); }, 3000);
 }
 function allSeenCheck() { if (S.course.every(x => S.done.has(x))) { say(t('allSeen'), ''); setActions([{ label: t('seeCard'), cls: 'primary', fn: showCard }]); } }
 
 /* ------------------------------------------------------------------ QUIZ */
+const SQ = {};   // square, centre-cropped copies of the artifact photos for the jigsaw
+function prepSquare(id, cb) { const src = dexImg(id); if (!src || SQ[id]) return cb && cb(); const im = new Image(); im.onload = () => { try { const sz = Math.min(im.width, im.height), c = document.createElement('canvas'); c.width = c.height = 420; c.getContext('2d').drawImage(im, (im.width - sz) / 2, (im.height - sz) / 2, sz, sz, 0, 0, 420, 420); SQ[id] = c.toDataURL('image/jpeg', .86); } catch (e) {} cb && cb(); }; im.onerror = () => cb && cb(); im.src = src; }
 function startQuiz(id) {
-  stopSpeak(); const a = ART[id]; S.quiz = { id, i: 0, sel: -1, right: 0, checked: false }; setView('quiz'); setTab(1); renderQuiz();
+  prepSquare(id); stopSpeak(); const a = ART[id]; S.quiz = { id, i: 0, sel: -1, right: 0, checked: false }; setView('quiz'); setTab(1); renderQuiz();
   $('#quiz-bub').textContent = t('quizListen'); speak(t('quizListen'));
 }
 function renderQuiz() {
-  const z = S.quiz, a = ART[z.id], q = a.quiz[z.i], n = a.quiz.length; z.sel = -1; z.checked = false;
+  const z = S.quiz, a = ART[z.id], q = a.quiz[z.i], n = a.quiz.length; z.sel = -1; z.checked = false; { const im = dexImg(z.id), el = $('#quiz-img'); el.style.display = im ? 'block' : 'none'; if (im) el.src = im; }
   $('#quiz-n').textContent = `${z.i + 1} / ${n}`; $('#quiz-bar').style.width = (z.i / n * 100 + 100 / n * .5) + '%'; $('#quiz-lab').textContent = t('qLabel')(z.i + 1); $('#quiz-q').textContent = L(q.q); $('#quiz-fb').textContent = ''; $('#quiz-check').textContent = t('check'); $('#quiz-check').disabled = true; $('#quiz-skip').style.display = '';
   const box = $('#answers'); box.innerHTML = ''; (q.o[S.set.lang] || q.o.en).forEach((txt, k) => { const b = document.createElement('button'); b.className = 'ans'; b.innerHTML = `<b>${'ABCD'[k]}</b><span></span>`; b.querySelector('span').textContent = txt; b.onclick = () => { if (z.checked) return; z.sel = k; $$('#answers .ans').forEach((x, j) => x.classList.toggle('sel', j === k)); $('#quiz-check').disabled = false; }; box.appendChild(b); });
 }
@@ -1133,9 +1172,9 @@ function finishQuiz() { const z = S.quiz; S.quiz = { ...z, done: true }; startPu
 /* ------------------------------------------------------------------ PUZZLE */
 function startPuzzle(id, quizRight) {
   const a = ART[id]; const miss = [4, 6].sort(() => Math.random() - .5); // grid index of missing pieces (5th & 7th tile)
-  S.puz = { id, miss, placed: {}, sel: null, t0: Date.now(), sec: 0, quizRight, over: false }; setView('puzzle'); setTab(2); renderPuzzle();
+  S.puz = { id, miss, placed: {}, sel: null, t0: Date.now(), sec: 0, quizRight, over: false }; setView('puzzle'); setTab(2); renderPuzzle(); prepSquare(id, () => { if (S.puz && S.puz.id === id) renderPuzzle(); });
 }
-function tileStyle(a, k) { const r = Math.floor(k / 3), c = k % 3; return `background-image:radial-gradient(circle at 42% 38%, #fff 0%, ${a.c[0]} 32%, ${a.c[1]} 100%);background-size:300% 300%;background-position:${c * 50}% ${r * 50}%;`; }
+function tileStyle(a, k) { const r = Math.floor(k / 3), c = k % 3; const sq = S.puz && SQ[S.puz.id]; if (sq) return `background-image:url(${sq});background-size:300% 300%;background-position:${c * 50}% ${r * 50}%;`; return `background-image:radial-gradient(circle at 42% 38%, #fff 0%, ${a.c[0]} 32%, ${a.c[1]} 100%);background-size:300% 300%;background-position:${c * 50}% ${r * 50}%;`; }
 function renderPuzzle() {
   const p = S.puz, a = ART[p.id], g = $('#pgrid'); g.innerHTML = '';
   for (let k = 0; k < 9; k++) { const el = document.createElement('div'); if (p.miss.includes(k) && !p.placed[k]) { el.className = 'tile empty' + (p.sel != null ? ' target' : ''); el.textContent = '?'; el.onclick = () => placePiece(k); } else { el.className = 'tile img'; el.setAttribute('style', tileStyle(a, k)); el.innerHTML = `<span class="n">${k + 1}</span>`; } g.appendChild(el); }
@@ -1161,7 +1200,7 @@ function collect(id, res) {
   $('#col-pts').textContent = t('points')(pts); $('#col-no').textContent = 'No. ' + String(a.no).padStart(3, '0'); $('#col-rar').textContent = `${t('rarity')} ${'★'.repeat(a.stars)}${'☆'.repeat(3 - a.stars)}`;
   $('#col-name').textContent = L(a.name); $('#col-sub').textContent = `${t('nations')[id]} · ${t('types')[id]}`;
   // course logic
-  S.chat = null; renderCourse(); renderTime();
+  addMsg('qa', t('done')(L(a.name))); S.chat = null; renderCourse(); renderTime();
 }
 $('#col-dex').onclick = () => openDex();
 $('#col-next').onclick = () => { backToAgent(); };
@@ -1292,7 +1331,7 @@ function poseUpdate(now, yaw, pitch, found) {
 /* ------------------------------------------------------------------ voice conversation with QI */
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition; let rec = null, recOn = false, recTimer = 0; S.voiceMode = false;
 function micUI(on) { $('#btn-mic').classList.toggle('on', on); $('#chat-mic').classList.toggle('on', on); $('#micslash').style.display = on ? 'none' : ''; phone.dataset.listen = on ? '1' : '0'; }
-function toast(msg) { if (S.view === 'agent') { say(msg, ''); setTimeout(refreshAgentText, 2600); } else if (S.chat) addMsg('qa', msg); }
+function toast(msg) { if (S.view === 'agent') { say(msg, ''); setTimeout(refreshAgentText, 2600); } else if (S.view === 'chat') addMsg('qa', msg); }
 function startListen() {
   if (!SR || !S.voiceMode || recOn || S.speaking) return;
   try {
@@ -1329,7 +1368,8 @@ const RX = {
 };
 function qiReply(msg, prof) {
   const tok = S.replyTok = (S.replyTok || 0) + 1;      // a newer reply cancels the pending "back to the idle message"
-  if (S.view === 'chat' && S.chat) { addMsg('qa', msg); speak(msg, null, prof); }
+  addMsg('qa', msg);
+  if (S.view === 'chat') { speak(msg, null, prof); }
   else { if (S.view === 'agent') { setSub(S.started ? 'main' : S.sub); say(msg, ''); } speak(msg, () => { if (S.view === 'agent' && !S.voiceMode) setTimeout(() => { if (tok === S.replyTok) refreshAgentText(); }, 1500); }, prof); }
 }
 function converse(text) {
@@ -1359,8 +1399,8 @@ async function handleAsk(text) {
   if (S.view !== 'agent') return; const mins = parseDuration(text);
   if (/just wander|no (time )?limit|free tour|ぶらぶら|気まま|自由|자유|상관없|随便|随意|不限/i.test(text) && (!S.started || S.sub === 'ask')) { plan(0); return; }
   if (mins >= 10 && mins <= 300 && (!S.started || S.sub === 'ask')) { plan(Math.min(180, mins)); return; }
-  if (converse(text)) return;
-  const id = S.near || S.last; if (id && ART[id] && S.started) { S.near = id; openChat(id); setTimeout(() => userAsk(text), 900); return; }
+  addMsg('me', text); if (converse(text)) return;
+  const id = S.near || S.last; if (id && ART[id] && S.started) { S.near = id; openChat(id); setTimeout(() => userAsk(text, undefined, true), 900); return; }
   const r = await askLLM(text); qiReply(r || t('fallbackMsg'));
 }
 $('#askin').oninput = e => $('#sendbtn').classList.toggle('show', e.target.value.trim().length > 0);
@@ -1424,6 +1464,7 @@ $('#btnNod').onclick = () => { unlockAudio(); if (S.state === 'question') respon
 $('#thr').oninput = e => { S.base = +e.target.value * 1000; $('#thrval').textContent = (+e.target.value).toFixed(1) + 's'; };
 $('#btn10').onclick = () => { if (!S.started || S.free) return; S.remaining = 600; S.warned10 = false; renderTime(); warn10(); };
 $('#btnFill').onclick = () => { if (!S.started || S.free) return; S.remaining = S.minutes * 60; S.warned10 = false; renderTime(); };
+$$('.qiav').forEach(el => el.innerHTML = QI_SVG);
 if (new URLSearchParams(location.search).has('demo')) document.body.classList.add('demo');
 window.bootDone = (() => { let done = false; const t0 = performance.now(); return () => { if (done) return; done = true; setTimeout(() => $('#boot').classList.add('off'), Math.max(0, 900 - (performance.now() - t0))); }; })();
 setTimeout(() => { if (new URLSearchParams(location.search).get('world') === '0' || innerWidth <= 900) bootDone(); }, 300); setTimeout(() => bootDone(), 7000);

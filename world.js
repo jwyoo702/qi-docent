@@ -255,7 +255,7 @@ import * as THREE from './vendor/three/three.module.js';
     if (d < .3) { AW.seg++; if (AW.seg >= pts.length - 1) { AW.on = false; AW.face = .9; } return; }
     const step = Math.min(d, AW.speed * dt); P.x += dx / d * step; P.z += dz / d * step; P.yaw = lerpAng(P.yaw, Math.atan2(-dx, -dz), Math.min(1, dt * 7)); P.pitch += (0 - P.pitch) * Math.min(1, dt * 4); P.bob += dt * 10;
   }
-  addEventListener('keydown', e => { if (e.target.tagName === 'INPUT') return; if (e.code === 'KeyG') autoWalk(); });
+  addEventListener('keydown', e => { if (e.target.tagName === 'INPUT') return; if (e.code === 'KeyG' && document.body.classList.contains('demo')) autoWalk(); });
   $('#autowalk').onclick = () => { unlockAudio(); autoWalk(); };
   window.WORLD_API = {
     on: true, autoWalk, distTo(id) { const a = STN[id]; return a ? Math.hypot(a.x - P.x, a.z - P.z) : 1e9; },
@@ -325,10 +325,10 @@ import * as THREE from './vendor/three/three.module.js';
   }
   function roomName() { if (P.x < 8) return { name: S.set.lang === 'ko' ? '역사의 길 (대공간)' : 'Great Hall · History Road', sub: '1F' };
     const r = ROOMS.find(x => P.z <= x.z0 && P.z > x.z1) || ROOMS[0]; const nation = r.key ? t('nations')[r.key] : (S.set.lang === 'ko' ? r.ko : r.en); return { name: `${r.no} · ${nation}`, sub: S.set.lang === 'ko' ? '선사·고대관 1F' : 'Prehistory & Ancient 1F' }; }
-  const HINT = { en: ['Click the scene to look around', 'WASD walk · Shift run · mouse look · Esc release · F look at phone · G auto-walk'], ko: ['화면을 클릭하면 둘러볼 수 있어요', 'WASD 걷기 · Shift 달리기 · 마우스 시점 · Esc 해제 · F 폰 보기 · G 자동 이동'], ja: ['画面をクリックすると見回せます', 'WASD 歩く · Shift 走る · マウス 視点 · Esc 解除 · F スマホを見る · G 自動移動'], zh: ['点击画面即可环顾四周', 'WASD 行走 · Shift 奔跑 · 鼠标环顾 · Esc 释放 · F 看手机 · G 自动前往'] };
+  const HINT = { en: ['Click the scene to look around', 'WASD walk · Shift run · mouse look · Esc release · F look at phone'], ko: ['화면을 클릭하면 둘러볼 수 있어요', 'WASD 걷기 · Shift 달리기 · 마우스 시점 · Esc 해제 · F 폰 보기'], ja: ['画面をクリックすると見回せます', 'WASD 歩く · Shift 走る · マウス 視点 · Esc 解除 · F スマホを見る'], zh: ['点击画面即可环顾四周', 'WASD 行走 · Shift 奔跑 · 鼠标环顾 · Esc 释放 · F 看手机'] };
   function updateHud() {
     const rn = roomName(); $('#rs-name').textContent = rn.name; $('#rs-sub').textContent = rn.sub;
-    const nx = S.started && S.view === 'agent' ? nextPending() : null, tag = $('#nexttag');
+    const nx = document.body.classList.contains('demo') && S.started && S.view === 'agent' ? nextPending() : null, tag = $('#nexttag');   // free tour: no "suggested next" pill (demo mode only)
     if (nx) { const st = STN[nx], d = Math.round(Math.hypot(st.x - P.x, st.z - P.z)); if (d > 5) { tag.style.display = 'block'; tag.textContent = `${t('sugg')} ➜ ${L(ART[nx].name)} · ${d} m`; } else tag.style.display = 'none'; } else tag.style.display = 'none';
     const aw = $('#autowalk'); aw.style.display = (nx && Math.hypot(STN[nx].x - P.x, STN[nx].z - P.z) > 7 && !AW.on) ? 'block' : 'none'; aw.textContent = t('autoWalk');
     const hint = $('#ctrlhint'); const show = S.view === 'agent' && !locked; hint.style.opacity = show ? 1 : 0; const h = HINT[S.set.lang] || HINT.en; hint.innerHTML = `${h[0]}<small>${h[1]}</small>`;
@@ -350,7 +350,7 @@ import * as THREE from './vendor/three/three.module.js';
     camera.position.set(P.x, EYE + Math.sin(P.bob) * .028, P.z); camera.rotation.order = 'YXZ'; camera.rotation.set(P.pitch, P.yaw, 0); camera.updateMatrixWorld();
     for (const id of Object.keys(ARTW)) { const w = ARTW[id]; if (!w.fixed) w.group.position.y = w.y0 + Math.sin(tAcc * 1.4 + STN[id].z) * .04; if (w.billboard) w.billboard.rotation.y = Math.atan2(P.x - w.group.position.x, P.z - w.group.position.z); else if (w.base) w.base.rotation.y += dt * .5; }
     updateAgentLink(dt);
-    const nx = S.started && S.view === 'agent' ? nextPending() : null; if (nx && Math.hypot(STN[nx].x - P.x, STN[nx].z - P.z) > 4.2) placeDots(pathTo(nx, P.x, P.z), tAcc); else placeDots([[0, 0], [0, 0]], tAcc);
+    const nx = document.body.classList.contains('demo') && S.started && S.view === 'agent' ? nextPending() : null; if (nx && Math.hypot(STN[nx].x - P.x, STN[nx].z - P.z) > 4.2) placeDots(pathTo(nx, P.x, P.z), tAcc); else placeDots([[0, 0], [0, 0]], tAcc);
     updateHud(); drawMap(); renderer.render(scene, camera); if (++frames === 40 && window.bootDone) bootDone();
   }
   refreshPlates(); requestAnimationFrame(loop); console.log('world ready');
