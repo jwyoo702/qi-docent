@@ -144,7 +144,7 @@ input { font: inherit; color: inherit; }
 .seg { display:inline-flex; background:var(--chip); border-radius:12px; padding:3px; flex-wrap:wrap; } .seg button { padding:6px 10px; border-radius:9px; font-size:12.5px; font-weight:600; color:var(--mut); } .seg button.on { background:#fff; color:var(--ink); box-shadow:0 1px 4px rgba(0,0,0,.12); }
 select { font:inherit; font-size:13px; padding:7px 8px; border-radius:10px; border:1px solid var(--line); background:#fff; max-width:170px; }
 #voicecheck { display:flex; flex-direction:column; gap:6px; } .vc { display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:14px; background:var(--chip); font-size:13px; }
-.vc b { width:64px; flex:none; } .vc span { flex:1; min-width:0; color:var(--mut); line-height:1.35; } .vc span i { color:#b3541e; font-style:normal; display:block; font-size:11.5px; } .vc button { width:34px; height:34px; border-radius:50%; background:var(--primary); color:#fff; font-size:12px; flex:none; }
+.vsel { width:100%; font-size:12.5px; padding:5px 6px; border-radius:10px; border:1px solid rgba(0,0,0,.12); background:#fff; color:var(--ink,#222); margin-bottom:2px; } .vc b { width:64px; flex:none; } .vc span { flex:1; min-width:0; color:var(--mut); line-height:1.35; } .vc span i { color:#b3541e; font-style:normal; display:block; font-size:11.5px; } .vc button { width:34px; height:34px; border-radius:50%; background:var(--primary); color:#fff; font-size:12px; flex:none; }
 .sw { width:50px; height:30px; border-radius:15px; background:#C5D9D3; position:relative; transition:background .2s; flex:none; } .sw::after { content:""; position:absolute; left:3px; top:3px; width:24px; height:24px; border-radius:50%; background:#fff; transition:transform .2s; box-shadow:0 1px 4px rgba(0,0,0,.25); }
 .sw.on { background:var(--primary); } .sw.on::after { transform:translateX(20px); } .dangerbtn { color:#c0392b; font-weight:600; font-size:14px; }
 .course { padding:0; margin:0 0 8px; } .course li { list-style:none; display:flex; align-items:center; gap:12px; padding:13px 0; border-bottom:1px solid var(--line); font-size:15px; }
@@ -438,7 +438,7 @@ body.world #lab.open { display:block; }
 </div>
   <div class="sheet" id="sheet-settings"><div class="grab"></div><h3 data-i18n="settings"></h3>
     <div class="row"><span data-i18n="lang"></span><span class="seg" id="seg-lang"></span></div>
-    <div class="row"><span data-i18n="voice"><small id="voicenote"></small></span><select id="voicesel"></select></div>
+    <small id="voicenote" style="display:none"></small>
     <div class="row" style="flex-direction:column;align-items:stretch;gap:8px"><span data-i18n="voiceCheck"><small data-i18n="voiceCheckd"></small></span><div id="voicecheck"></div></div>
     <div class="row"><span data-i18n="freq"><small data-i18n="freqd"></small></span><span class="seg" id="seg-freq"><button data-v="0" data-i18n="low"></button><button data-v="1" data-i18n="mid"></button><button data-v="2" data-i18n="high"></button></span></div>
     <div class="row"><span data-i18n="sound"></span><button class="sw" id="sw-sound"></button></div>
@@ -809,11 +809,12 @@ for (const k of Object.keys(NVOICE)) if (ART[k]) ART[k].voice = NVOICE[k];
 let VASSIGN = { key: '', map: {} };
 const VPROFILES = () => [['qi', QIVOICE], ['baek', NVOICE.baek], ['silla', NVOICE.silla], ['gogu', NVOICE.gogu], ['gaya', NVOICE.gaya]];
 const isFem = v => FEMALE.test(v.name) && !MALE.test(v.name), isMal = v => MALE.test(v.name);
-function assignVoices(lang) {   // give every character its own voice: right gender first, an on-device voice when pitch/rate must change, never the same voice twice if avoidable
-  const pickName = S.set.voice && S.set.voice[lang], key = lang + '|' + VOICES.length + '|' + (pickName || ''); if (VASSIGN.key === key) return VASSIGN.map;
+function assignVoices(lang) {   // explicit per-character picks first, then automatic: right gender, on-device when pitch/rate must change, no duplicates if avoidable
+  const by = (S.set.voiceBy && S.set.voiceBy[lang]) || {}, key = lang + '|' + VOICES.length + '|' + JSON.stringify(by); if (VASSIGN.key === key) return VASSIGN.map;
   const list = voicesFor(lang).slice().sort((a, b) => scoreVoice(b) - scoreVoice(a)), used = new Set(), map = {};
+  for (const [id] of VPROFILES()) { const c = by[id] && list.find(v => v.voiceURI === by[id] || v.name === by[id]); if (c) { map[id] = c; used.add(c.voiceURI); } }
   for (const [id, pr] of VPROFILES()) {
-    const chosen = pr.pick && pickName ? list.find(v => v.voiceURI === pickName || v.name === pickName) : null; if (chosen) { map[id] = chosen; used.add(chosen.voiceURI); continue; }
+    if (map[id]) continue;
     const want = pr.gender === 'f' ? isFem : isMal, needsLocal = Math.abs((pr.pitch || 1) - 1) > .12 || Math.abs((pr.rate || 1) - 1) > .1, free = v => !used.has(v.voiceURI), loc = v => !needsLocal || v.localService;
     const tiers = [list.filter(v => want(v) && free(v) && loc(v)), list.filter(v => want(v) && free(v)), list.filter(v => free(v) && loc(v)), list.filter(v => want(v)), list];
     const v = (tiers.find(x => x.length) || [])[0]; if (v) { map[id] = v; used.add(v.voiceURI); }
@@ -827,16 +828,15 @@ function _renderVoiceCheck() {
   const names = { qi: 'QI', baek: t('nations').baek, silla: t('nations').silla, gogu: t('nations').gogu, gaya: t('nations').gaya };
   for (const [id, pr] of VPROFILES()) {
     const v = m[id], gOk = !v || (pr.gender === 'f' ? isFem(v) : isMal(v)), row = document.createElement('div'); row.className = 'vc';
-    row.innerHTML = `<b>${names[id]}</b><span>${v ? v.name + (v.localService ? '' : ' · online') : t('noVoice')}${v && !gOk ? `<i>⚠ ${pr.gender === 'f' ? t('noFemale') : t('noMale')}</i>` : ''}${v && !v.localService ? `<i>⚠ ${t('onlineVoice')}</i>` : ''}</span><button aria-label="play">▶</button>`;
-    row.querySelector('button').onclick = () => { unlockAudio(); const a = ART[id]; speak(id === 'qi' ? t('hello') + ' ' + t('exploreFree') : L(a.story.en && a.story)[0], null, id === 'qi' ? QIVOICE : pr); };
+    const opts = voicesFor(S.set.lang).slice().sort((a, b) => scoreVoice(b) - scoreVoice(a)), cur = (S.set.voiceBy && S.set.voiceBy[S.set.lang] && S.set.voiceBy[S.set.lang][id]) || '';
+    row.innerHTML = `<b>${names[id]}</b><span><select class="vsel">${`<option value="">${t('voiceAuto')}${v && !cur ? ' · ' + v.name : ''}</option>` + opts.map(o => `<option value="${o.voiceURI}"${o.voiceURI === cur ? ' selected' : ''}>${o.name}${o.localService ? '' : ' · online'}</option>`).join('')}</select>${v && !gOk ? `<i>⚠ ${pr.gender === 'f' ? t('noFemale') : t('noMale')}</i>` : ''}${v && !v.localService ? `<i>⚠ ${t('onlineVoice')}</i>` : ''}</span><button aria-label="play">▶</button>`;
+    row.querySelector('select').onchange = e => { S.set.voiceBy = S.set.voiceBy || {}; (S.set.voiceBy[S.set.lang] = S.set.voiceBy[S.set.lang] || {})[id] = e.target.value; VASSIGN.key = ''; save(); renderVoiceCheck(); row.querySelector && 0; playRow(id, pr); };
+    row.querySelector('button').onclick = () => { playRow(id, pr); };
+    const playRow = (id, pr) => { unlockAudio(); const a = ART[id]; speak(id === 'qi' ? t('hello') + ' ' + t('exploreFree') : L(a.story.en && a.story)[0], null, id === 'qi' ? QIVOICE : pr); };
     box.appendChild(row);
   }
 }
-function fillVoiceSelect() {
-  const sel = $('#voicesel'); if (!sel) return; const list = voicesFor(S.set.lang).sort((a, b) => scoreVoice(b) - scoreVoice(a));
-  sel.innerHTML = `<option value="">${t('voiceAuto')}</option>` + list.map(v => `<option value="${v.voiceURI}">${v.name}</option>`).join('');
-  sel.value = (S.set.voice && S.set.voice[S.set.lang]) || ''; $('#voicenote').textContent = list.length ? '' : t('noVoice'); renderVoiceCheck();
-}
+function fillVoiceSelect() { $('#voicenote').textContent = voicesFor(S.set.lang).length ? '' : t('noVoice'); renderVoiceCheck(); }
 const sentSplit = txt => (txt.match(/[^.!?。！？]+[.!?。！？]*/g) || [txt]).map(s => s.trim()).filter(Boolean);
 const speechEst = txt => Math.max(1400, txt.length * ({ en: 62, ko: 105, ja: 120, zh: 135 }[S.set.lang] || 90));
 let sp = { id: 0, fbRemain: 0, fbCb: null, paused: false };
@@ -1397,7 +1397,6 @@ $('#chip-free').onclick = e => { e.stopPropagation(); unlockAudio(); plan(0); };
 const sl = $('#slider'); const fmt = v => v >= 60 ? `${Math.floor(v / 60)}${t('hour')}${v % 60 ? ' ' + (v % 60) + t('min') : ''}` : `${v}${t('min')}`;
 sl.oninput = () => $('#sliderval').textContent = fmt(+sl.value); $('#sliderGo').onclick = e => { e.stopPropagation(); unlockAudio(); plan(+sl.value); };
 $$('#seg-freq button').forEach(b => b.onclick = () => { S.set.freq = +b.dataset.v; applyI18n(); save(); });
-$('#voicesel').onchange = e => { VASSIGN.key = ''; S.set.voice = S.set.voice || {}; S.set.voice[S.set.lang] = e.target.value; save(); const test = L(ART.silla.story).slice(0, 1)[0]; speak(test); };
 $('#sw-sound').onclick = () => { S.set.sound = !S.set.sound; if (!S.set.sound) stopSpeak(); applyI18n(); save(); };
 $('#sw-vib').onclick = () => { S.set.vib = !S.set.vib; applyI18n(); save(); if (S.set.vib) haptic([30], .2); };
 $('#sw-sensor').onclick = () => { S.set.sensor = !S.set.sensor; if (S.set.sensor) requestMotion(true); else S.sensorGaze = S.sensorLook = false; applyI18n(); save(); };
