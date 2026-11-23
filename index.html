@@ -143,6 +143,8 @@ input { font: inherit; color: inherit; }
 .row small { display:block; color:var(--mut); font-size:12px; margin-top:2px; line-height:1.4; max-width:215px; }
 .seg { display:inline-flex; background:var(--chip); border-radius:12px; padding:3px; flex-wrap:wrap; } .seg button { padding:6px 10px; border-radius:9px; font-size:12.5px; font-weight:600; color:var(--mut); } .seg button.on { background:#fff; color:var(--ink); box-shadow:0 1px 4px rgba(0,0,0,.12); }
 select { font:inherit; font-size:13px; padding:7px 8px; border-radius:10px; border:1px solid var(--line); background:#fff; max-width:170px; }
+#voicecheck { display:flex; flex-direction:column; gap:6px; } .vc { display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:14px; background:var(--chip); font-size:13px; }
+.vc b { width:64px; flex:none; } .vc span { flex:1; min-width:0; color:var(--mut); line-height:1.35; } .vc span i { color:#b3541e; font-style:normal; display:block; font-size:11.5px; } .vc button { width:34px; height:34px; border-radius:50%; background:var(--primary); color:#fff; font-size:12px; flex:none; }
 .sw { width:50px; height:30px; border-radius:15px; background:#C5D9D3; position:relative; transition:background .2s; flex:none; } .sw::after { content:""; position:absolute; left:3px; top:3px; width:24px; height:24px; border-radius:50%; background:#fff; transition:transform .2s; box-shadow:0 1px 4px rgba(0,0,0,.25); }
 .sw.on { background:var(--primary); } .sw.on::after { transform:translateX(20px); } .dangerbtn { color:#c0392b; font-weight:600; font-size:14px; }
 .course { padding:0; margin:0 0 8px; } .course li { list-style:none; display:flex; align-items:center; gap:12px; padding:13px 0; border-bottom:1px solid var(--line); font-size:15px; }
@@ -437,6 +439,7 @@ body.world #lab.open { display:block; }
   <div class="sheet" id="sheet-settings"><div class="grab"></div><h3 data-i18n="settings"></h3>
     <div class="row"><span data-i18n="lang"></span><span class="seg" id="seg-lang"></span></div>
     <div class="row"><span data-i18n="voice"><small id="voicenote"></small></span><select id="voicesel"></select></div>
+    <div class="row" style="flex-direction:column;align-items:stretch;gap:8px"><span data-i18n="voiceCheck"><small data-i18n="voiceCheckd"></small></span><div id="voicecheck"></div></div>
     <div class="row"><span data-i18n="freq"><small data-i18n="freqd"></small></span><span class="seg" id="seg-freq"><button data-v="0" data-i18n="low"></button><button data-v="1" data-i18n="mid"></button><button data-v="2" data-i18n="high"></button></span></div>
     <div class="row"><span data-i18n="sound"></span><button class="sw" id="sw-sound"></button></div>
     <div class="row"><span data-i18n="vib"></span><button class="sw" id="sw-vib"></button></div>
@@ -488,7 +491,7 @@ en: {
   simGo: n => `Demo · stand at ${n} and look`, simOn: n => `Demo · looking at ${n} ✓ (tap to stop)`,
   tapHint: 'Look at your phone — or tap the screen.',
   freeBtn: 'Just wander (no time limit)', freeTour: 'Free tour',
-  autoWalk: 'Auto-walk (G)',
+  autoWalk: 'Auto-walk (G)', voiceCheck: 'Voice check', voiceCheckd: 'Which installed voice each character uses. Tap ▶ to listen.', noFemale: 'No female voice installed — pitch only', noMale: 'No male voice installed — pitch only', onlineVoice: 'Online voice: pitch and speed may be ignored',
   later: 'Keep exploring', skipPuzzle: 'Skip the puzzle', sugg: 'Suggested', npDone: 'Story done · tap to continue', minimize: 'Listen while you walk', playing: 'Now telling', exploreFree: 'Walk freely. Linger on anything that catches your eye.', hiReply: "Hello! I'm QI, your museum docent. Tell me how long you'll stay, or just start walking.", whoAmI: "I'm QI. I notice where you linger in the museum and speak up at just the right moment.",
   nextIs: n => `Next is ${n}.`, noNext: "You've seen everything on today's course.", timeLeftMsg: m => `About ${m} minutes left.`, freeLeftMsg: 'No time limit today. Take your time.',
   quietOnMsg: "Okay. I'll stay quiet until you call me.", quietOffMsg: "Okay. I'll speak up again when you linger.", helpMsg: "Try saying: next, how much time is left, explain this, take me there, be quiet, or tell me how long you'll stay.",
@@ -528,7 +531,7 @@ ko: {
   simGo: n => `시연 · ${n} 앞에서 바라보기`, simOn: n => `시연 · ${n} 바라보는 중 ✓ (눌러서 멈춤)`,
   tapHint: '폰을 보거나, 화면을 눌러 주세요.',
   freeBtn: '시간 상관없이 자유롭게 둘러볼래요', freeTour: '자유 관람',
-  autoWalk: '자동 이동 (G)',
+  autoWalk: '자동 이동 (G)', voiceCheck: '목소리 확인', voiceCheckd: '캐릭터마다 어떤 음성이 쓰이는지 보여 줘요. ▶로 들어 보세요.', noFemale: '여성 음성이 없어서 높낮이만 조절해요', noMale: '남성 음성이 없어서 높낮이만 조절해요', onlineVoice: '온라인 음성이라 높낮이·속도가 무시될 수 있어요',
   later: '계속 둘러볼래요', skipPuzzle: '퍼즐 건너뛰기', sugg: '추천', npDone: '이야기 끝 · 눌러서 이어가기', minimize: '걸으면서 듣기', playing: '설명 중', exploreFree: '자유롭게 걸어 보세요. 눈길이 가는 유물에 머물러 보세요.', hiReply: '안녕하세요! 저는 박물관 도슨트 큐아이예요. 얼마나 보실지 알려 주시거나 그냥 걸어 보세요.', whoAmI: '저는 큐아이예요. 박물관에서 어디에 오래 머무는지 알아채고, 알맞은 때에 먼저 말을 걸어요.',
   nextIs: n => `다음 유물: ${n}`, noNext: '오늘 코스를 모두 보셨어요.', timeLeftMsg: m => `약 ${m}분 남았어요.`, freeLeftMsg: '오늘은 시간 제한이 없어요. 천천히 보세요.',
   quietOnMsg: '알겠어요. 부르실 때까지 조용히 있을게요.', quietOffMsg: '알겠어요. 머무시면 다시 말을 걸게요.', helpMsg: "이렇게 말해 보세요: 다음, 남은 시간, 이거 설명해 줘, 데려가 줘, 조용히 해. 얼마나 있을지 알려 주셔도 돼요.",
@@ -568,7 +571,7 @@ ja: {
   simGo: n => `デモ · ${n}の前で見つめる`, simOn: n => `デモ · ${n}を見つめ中 ✓（タップで停止）`,
   tapHint: 'スマホを見るか、画面をタップしてください。',
   freeBtn: '時間を決めず気ままに見たい', freeTour: '自由見学',
-  autoWalk: '自動移動 (G)',
+  autoWalk: '自動移動 (G)', voiceCheck: '音声の確認', voiceCheckd: 'キャラクターごとに使われている音声です。▶で聞けます。', noFemale: '女性の音声がないため、高さのみ調整します', noMale: '男性の音声がないため、高さのみ調整します', onlineVoice: 'オンライン音声は高さ・速度が無視されることがあります',
   later: 'このまま見て回る', skipPuzzle: 'パズルをスキップ', sugg: 'おすすめ', npDone: 'お話は終わり · タップで続ける', minimize: '歩きながら聞く', playing: '解説中', exploreFree: '自由に歩いてみてください。気になる展示の前で立ち止まってみましょう。', hiReply: 'こんにちは！博物館ドーセントのQIです。滞在時間を教えてください。歩き始めてもOKです。', whoAmI: 'QIです。博物館でどこに長く留まるかに気づいて、ちょうどいいタイミングで声をかけます。',
   nextIs: n => `次は${n}です。`, noNext: '今日のコースはすべて見終わりました。', timeLeftMsg: m => `あと約${m}分です。`, freeLeftMsg: '今日は時間制限がありません。ゆっくりどうぞ。',
   quietOnMsg: 'わかりました。呼ばれるまで静かにしています。', quietOffMsg: 'わかりました。立ち止まったらまた声をかけます。', helpMsg: 'こう話しかけてください：次、残り時間、これを説明して、連れて行って、静かにして。滞在時間を教えてもOKです。',
@@ -608,7 +611,7 @@ zh: {
   simGo: n => `演示 · 站在${n}前注视`, simOn: n => `演示 · 正在注视${n} ✓（点击停止）`,
   tapHint: '请看手机，或点击屏幕。',
   freeBtn: '不限时间，随意逛逛', freeTour: '自由参观',
-  autoWalk: '自动前往 (G)',
+  autoWalk: '自动前往 (G)', voiceCheck: '语音检查', voiceCheckd: '显示每个角色使用的语音，点击▶试听。', noFemale: '没有女声，只能调整音高', noMale: '没有男声，只能调整音高', onlineVoice: '在线语音可能会忽略音高和语速',
   later: '继续参观', skipPuzzle: '跳过拼图', sugg: '推荐', npDone: '故事讲完了 · 点击继续', minimize: '边走边听', playing: '讲解中', exploreFree: '请自由行走，在感兴趣的展品前停留片刻。', hiReply: '你好！我是博物馆讲解员QI。告诉我你打算逛多久，或者直接开始走吧。', whoAmI: '我是QI。我会察觉你在博物馆里在哪里停留，并在合适的时候主动开口。',
   nextIs: n => `下一件是“${n}”。`, noNext: '今天的路线已经全部看完了。', timeLeftMsg: m => `大约还剩${m}分钟。`, freeLeftMsg: '今天没有时间限制，慢慢看。',
   quietOnMsg: '好的，在你叫我之前我会保持安静。', quietOffMsg: '好的，你停下来时我会再开口。', helpMsg: '可以这样说：下一个、还剩多久、讲讲这个、带我过去、安静点，或者告诉我你要逛多久。',
@@ -790,9 +793,8 @@ function refreshVoices() { try { VOICES = (window.speechSynthesis && speechSynth
 if (window.speechSynthesis) { refreshVoices(); speechSynthesis.onvoiceschanged = refreshVoices; }
 function voicesFor(lang) { const pre = BCP[lang].slice(0, 2).toLowerCase(); return VOICES.filter(v => (v.lang || '').toLowerCase().replace('_', '-').startsWith(pre)); }
 function scoreVoice(v) { const n = (v.name || '').toLowerCase(); let s = 0; if (/premium|enhanced|neural|natural|siri/.test(n)) s += 6; if (/google/.test(n)) s += 4; if (/(samantha|ava|allison|karen|moira|serena|yuna|kyoko|o-ren|mei-jia|tingting|sin-ji|kanya|flo|sandy|shelley)/.test(n)) s += 3; if (v.localService) s += 1; if (/compact|eloquence|novelty|bad news|bahh|bells|boing|bubbles|cellos|deranged|good news|hysterical|jester|organ|superstar|trinoids|whisper|wobble|zarvox|albert|fred|junior|kathy|ralph/.test(n)) s -= 8; if (/grandma|grandpa/.test(n)) s -= 2; return s; }
-const FEMALE = /samantha|victoria|karen|moira|tessa|fiona|allison|ava\b|susan|zira|yuna|kyoko|o-?ren|ting|mei-?jia|sin-?ji|flo\b|sandy|shelley|nora|google (한국어|日本語|普通话|us english)|female|여성|女/i;
-const MALE = /alex|daniel|fred|tom\b|oliver|ralph|rishi|reed|eddy|rocko|grandpa|otoya|google uk english male|\bmale|남성|男/i;
-/* each kingdom speaks in its own manner: Goguryeo = low and bold, Baekje = soft and graceful, Silla = bright and ornate, Gaya = deep and slow like iron */
+const FEMALE = /samantha|victoria|karen|moira|tessa|fiona|allison|ava\b|susan|zira|yuna|kyoko|o-?ren|ting|mei-?jia|sin-?ji|flo\b|sandy|shelley|nora|heami|sun-?hi|seoyeon|jimin|nanami|yunyang|xiaoxiao|google (한국어|日本語|普通话|us english)|female|여성|女/i;
+const MALE = /alex|daniel|fred|tom\b|oliver|ralph|rishi|reed|eddy|rocko|grandpa|otoya|injoon|hyunsu|bongjin|keita|yunxi|google uk english male|\bmale|남성|男/i;
 /* Voice design prompts (what each voice should sound like). The browser's built-in speech can only pick an installed voice and change pitch/rate/pauses,
    so these prompts are applied approximately below; if you connect a speech-synthesis service (window.QI_TTS_ENDPOINT) they are sent along as the voice description. */
 const VOICE_PROMPT = {
@@ -804,12 +806,36 @@ const VOICE_PROMPT = {
 const QIVOICE = { id: 'qi', gender: 'f', pitch: 1.0, rate: .92, gap: 260, pick: true };    // default QI: warm mid-range female, slightly slow, steady
 const NVOICE = { gogu: { id: 'gogu', gender: 'm', pitch: .72, rate: 1.06, gap: 140 }, baek: { id: 'baek', gender: 'f', pitch: 1.1, rate: .8, gap: 520 }, silla: { id: 'silla', gender: 'm', pitch: 1.3, rate: 1.1, gap: 90 }, gaya: { id: 'gaya', gender: 'm', pitch: .62, rate: .86, gap: 200 }, absent: { id: 'baek', gender: 'f', pitch: 1.1, rate: .78, gap: 560 } };
 for (const k of Object.keys(NVOICE)) if (ART[k]) ART[k].voice = NVOICE[k];
-function bestVoice(lang, gender, allowPick) { const pick = S.set.voice && S.set.voice[lang]; const list = voicesFor(lang); if (!list.length) return null; if (pick && allowPick) { const f = list.find(v => v.voiceURI === pick || v.name === pick); if (f) return f; }
-  let pool = list; if (gender) { const g = list.filter(v => gender === 'f' ? FEMALE.test(v.name) && !MALE.test(v.name) : MALE.test(v.name)); if (g.length) pool = g; } return pool.slice().sort((a, b) => scoreVoice(b) - scoreVoice(a))[0]; }
+let VASSIGN = { key: '', map: {} };
+const VPROFILES = () => [['qi', QIVOICE], ['baek', NVOICE.baek], ['silla', NVOICE.silla], ['gogu', NVOICE.gogu], ['gaya', NVOICE.gaya]];
+const isFem = v => FEMALE.test(v.name) && !MALE.test(v.name), isMal = v => MALE.test(v.name);
+function assignVoices(lang) {   // give every character its own voice: right gender first, an on-device voice when pitch/rate must change, never the same voice twice if avoidable
+  const pickName = S.set.voice && S.set.voice[lang], key = lang + '|' + VOICES.length + '|' + (pickName || ''); if (VASSIGN.key === key) return VASSIGN.map;
+  const list = voicesFor(lang).slice().sort((a, b) => scoreVoice(b) - scoreVoice(a)), used = new Set(), map = {};
+  for (const [id, pr] of VPROFILES()) {
+    const chosen = pr.pick && pickName ? list.find(v => v.voiceURI === pickName || v.name === pickName) : null; if (chosen) { map[id] = chosen; used.add(chosen.voiceURI); continue; }
+    const want = pr.gender === 'f' ? isFem : isMal, needsLocal = Math.abs((pr.pitch || 1) - 1) > .12 || Math.abs((pr.rate || 1) - 1) > .1, free = v => !used.has(v.voiceURI), loc = v => !needsLocal || v.localService;
+    const tiers = [list.filter(v => want(v) && free(v) && loc(v)), list.filter(v => want(v) && free(v)), list.filter(v => free(v) && loc(v)), list.filter(v => want(v)), list];
+    const v = (tiers.find(x => x.length) || [])[0]; if (v) { map[id] = v; used.add(v.voiceURI); }
+  }
+  VASSIGN = { key, map }; return map;
+}
+function bestVoice(lang, gender, allowPick, id) { const m = assignVoices(lang); return (id && m[id]) || null; }
+function renderVoiceCheck() { try { _renderVoiceCheck(); } catch (e) { /* called once before the voice profiles exist; the settings sheet renders it again */ } }
+function _renderVoiceCheck() {
+  const box = $('#voicecheck'); if (!box) return; const m = assignVoices(S.set.lang); box.innerHTML = '';
+  const names = { qi: 'QI', baek: t('nations').baek, silla: t('nations').silla, gogu: t('nations').gogu, gaya: t('nations').gaya };
+  for (const [id, pr] of VPROFILES()) {
+    const v = m[id], gOk = !v || (pr.gender === 'f' ? isFem(v) : isMal(v)), row = document.createElement('div'); row.className = 'vc';
+    row.innerHTML = `<b>${names[id]}</b><span>${v ? v.name + (v.localService ? '' : ' · online') : t('noVoice')}${v && !gOk ? `<i>⚠ ${pr.gender === 'f' ? t('noFemale') : t('noMale')}</i>` : ''}${v && !v.localService ? `<i>⚠ ${t('onlineVoice')}</i>` : ''}</span><button aria-label="play">▶</button>`;
+    row.querySelector('button').onclick = () => { unlockAudio(); const a = ART[id]; speak(id === 'qi' ? t('hello') + ' ' + t('exploreFree') : L(a.story.en && a.story)[0], null, id === 'qi' ? QIVOICE : pr); };
+    box.appendChild(row);
+  }
+}
 function fillVoiceSelect() {
   const sel = $('#voicesel'); if (!sel) return; const list = voicesFor(S.set.lang).sort((a, b) => scoreVoice(b) - scoreVoice(a));
   sel.innerHTML = `<option value="">${t('voiceAuto')}</option>` + list.map(v => `<option value="${v.voiceURI}">${v.name}</option>`).join('');
-  sel.value = (S.set.voice && S.set.voice[S.set.lang]) || ''; $('#voicenote').textContent = list.length ? '' : t('noVoice');
+  sel.value = (S.set.voice && S.set.voice[S.set.lang]) || ''; $('#voicenote').textContent = list.length ? '' : t('noVoice'); renderVoiceCheck();
 }
 const sentSplit = txt => (txt.match(/[^.!?。！？]+[.!?。！？]*/g) || [txt]).map(s => s.trim()).filter(Boolean);
 const speechEst = txt => Math.max(1400, txt.length * ({ en: 62, ko: 105, ja: 120, zh: 135 }[S.set.lang] || 90));
@@ -820,7 +846,7 @@ function speak(text, onend, prof) {
   const myId = ++sp.id; stopSpeakRaw(); sp.paused = false; S.speaking = true; if (recOn) stopListen();
   const finish = () => { if (sp.id !== myId) return; S.speaking = false; sp.fbCb = null; sp.audio = null; onend && onend(); if (S.voiceMode) setTimeout(startListen, 320); };
   const browser = () => {
-    const v = S.set.sound && window.speechSynthesis ? bestVoice(S.set.lang, prof.gender, prof.pick) : null;
+    const v = S.set.sound && window.speechSynthesis ? bestVoice(S.set.lang, prof.gender, prof.pick, prof.id) : null;
     if (!v) { sp.fbRemain = speechEst(text); sp.fbCb = finish; return; }
     const parts = sentSplit(text); let i = 0, guard = null;
     const next = () => {
@@ -1364,14 +1390,14 @@ $('#btn-menu').onclick = e => { e.stopPropagation(); openSheet('sheet-menu'); };
 $('#btn-plus').onclick = e => { e.stopPropagation(); openSheet('sheet-menu'); };
 $('#m-course').onclick = () => { closeSheets(); renderCourse(); setTimeout(() => openSheet('sheet-course'), 200); };
 $('#m-dex').onclick = openDex; $('#m-card').onclick = showCard;
-$('#btn-settings').onclick = e => { e.stopPropagation(); renderLearn(); fillVoiceSelect(); openSheet('sheet-settings'); };
+$('#btn-settings').onclick = e => { e.stopPropagation(); renderLearn(); VASSIGN.key = ''; refreshVoices(); fillVoiceSelect(); openSheet('sheet-settings'); };
 $('#btn-end').onclick = e => { e.stopPropagation(); showCard(); };
 $('#labopen').onclick = e => { e.stopPropagation(); $('#lab').classList.add('open'); }; $('#labclose').onclick = () => $('#lab').classList.remove('open');
 $('#chip-free').onclick = e => { e.stopPropagation(); unlockAudio(); plan(0); };
 const sl = $('#slider'); const fmt = v => v >= 60 ? `${Math.floor(v / 60)}${t('hour')}${v % 60 ? ' ' + (v % 60) + t('min') : ''}` : `${v}${t('min')}`;
 sl.oninput = () => $('#sliderval').textContent = fmt(+sl.value); $('#sliderGo').onclick = e => { e.stopPropagation(); unlockAudio(); plan(+sl.value); };
 $$('#seg-freq button').forEach(b => b.onclick = () => { S.set.freq = +b.dataset.v; applyI18n(); save(); });
-$('#voicesel').onchange = e => { S.set.voice = S.set.voice || {}; S.set.voice[S.set.lang] = e.target.value; save(); const test = L(ART.silla.story).slice(0, 1)[0]; speak(test); };
+$('#voicesel').onchange = e => { VASSIGN.key = ''; S.set.voice = S.set.voice || {}; S.set.voice[S.set.lang] = e.target.value; save(); const test = L(ART.silla.story).slice(0, 1)[0]; speak(test); };
 $('#sw-sound').onclick = () => { S.set.sound = !S.set.sound; if (!S.set.sound) stopSpeak(); applyI18n(); save(); };
 $('#sw-vib').onclick = () => { S.set.vib = !S.set.vib; applyI18n(); save(); if (S.set.vib) haptic([30], .2); };
 $('#sw-sensor').onclick = () => { S.set.sensor = !S.set.sensor; if (S.set.sensor) requestMotion(true); else S.sensorGaze = S.sensorLook = false; applyI18n(); save(); };
