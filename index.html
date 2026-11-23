@@ -532,7 +532,7 @@ button:focus-visible, input:focus-visible { outline:2px solid var(--primary-mid)
 </aside>
 <label id="hx" style="position:fixed;left:-99px;top:-99px;opacity:0;pointer-events:none" aria-hidden="true"><input type="checkbox" switch id="hxi"></label>
 
-<script src="exhibits.js?v=20261123e"></script>
+<script src="exhibits.js?v=20261123f"></script>
 <script>
 /* =====================================================================
    QI (큐아이) · Active Docent — core demo
@@ -1524,28 +1524,28 @@ load(); renderSplashLang(); applyI18n(); setView('splash');
    QI v2 — ONE conversation thread (Figma "2차"). Everything the visitor does happens as messages/cards in #msgs.
    This block replaces the old orb screen, story screen, quiz screen, puzzle screen and result screen.
    ================================================================================================== */
-Object.assign(T.en, {
+Object.assign(T.en, { llmOn: 'AI answers are on. Ask me anything about what you see.', chipMore: 'Tell me more', chipMade: 'Who made it, and why?', chipEasy: 'Explain it simply', thinking: 'Thinking…',
   heroTitle: 'Explore\nfreely', heroSub: "Linger on anything that catches your eye.\nI'll speak up first if you look for a while.", chipToday: 'What should I see today?', chipLang: 'English · 한국어', chipVoice: 'Ask by voice',
   todayReply: "Start wherever you like. Stay in front of a piece for a few seconds and I'll tell you its story.", stListening: 'Listening', stLooking: 'Looking at an artifact', stSpeaking: 'Speaking', stExplain: (n, m) => `Telling the story · ${n}/${m}`, stQuiz: 'Quiz time', stPuzzle: 'Puzzle time',
   nudgeLead: "You've been looking a while", piecesLead: 'Collecting Dex pieces', piecesNote: 'Do any three of these four and it goes into your Dex.', step_listen: 'Listen', step_ask: 'Ask', step_quiz: 'Quiz', step_puz: 'Puzzle',
   needPieces: 'You need 3 pieces to add this to your Dex.', gotPiece: n => `Got a piece · ${n} / 3`, pieceDone: 'You collected 3 pieces!', dexGot: 'Added to your Dex!', keepTalking: 'Keep chatting', chipQuizGo: 'Take the quiz', chipAskGo: 'Ask something', chipPuzzleGo: 'Solve the puzzle', storyAgain: 'Hear the story again',
   quizLead: 'Shall we try a quick quiz?', quizGood: (r, n) => `You got ${r} of ${n}!`, quizTry: "That one was tricky. Want to try the puzzle or ask me something?", puzzleLead: 'Want to fill in the missing pieces?', puzzleTitle: 'Find the 2 missing pieces', piecesLeftLabel: 'Pieces left', seeResult: 'See result',
   askLead: 'What would you like to know?', pieceN: n => `Piece ${n} / 3`, qLabel2: 'Quiz result', puzzleDone: 'Beautiful! The puzzle is complete.', tasteRow: 'Today\'s taste card' });
-Object.assign(T.ko, {
+Object.assign(T.ko, { llmOn: 'AI 답변이 켜졌어요. 보이는 건 뭐든 물어보세요.', chipMore: '더 알려줘요', chipMade: '누가 왜 만들었어요?', chipEasy: '쉽게 설명해 줘요', thinking: '생각하는 중…',
   heroTitle: '자유롭게\n둘러보세요', heroSub: '눈길이 가는 유물에 머물러 보세요.\n오래 보고 계시면 제가 먼저 말을 걸게요.', chipToday: '오늘 뭘 보면 좋아요?', chipLang: '한국어 · English', chipVoice: '말로 물어볼게요',
   todayReply: '마음 가는 곳부터 보세요. 유물 앞에 몇 초만 머물면 제가 이야기를 들려드릴게요.', stListening: '듣고 있어요', stLooking: '유물을 보고 있어요', stSpeaking: '말하는 중', stExplain: (n, m) => `설명 중 · ${n}/${m}`, stQuiz: '퀴즈 중', stPuzzle: '퍼즐 중',
   nudgeLead: '한참 보고 계시네요', piecesLead: '도감 조각 모으는 중', piecesNote: '네 가지 중 세 가지를 하면 도감에 담겨요.', step_listen: '듣기', step_ask: '질문', step_quiz: '퀴즈', step_puz: '퍼즐',
   needPieces: '도감에 담으려면 조각이 3개 필요해요.', gotPiece: n => `조각을 하나 모았어요 · ${n} / 3`, pieceDone: '조각 3개를 모았어요!', dexGot: '도감 획득!', keepTalking: '계속 이야기해요', chipQuizGo: '퀴즈 풀기', chipAskGo: '궁금한 걸 물어보기', chipPuzzleGo: '퍼즐 맞추기', storyAgain: '이야기 다시 듣기',
   quizLead: '퀴즈 하나 풀어볼까요?', quizGood: (r, n) => `${n}문제 중 ${r}문제 맞혔어요!`, quizTry: '조금 어려웠죠? 퍼즐을 맞추거나 더 물어봐도 좋아요.', puzzleLead: '빠진 조각도 맞춰 볼까요?', puzzleTitle: '빠진 조각 2개를 찾아 주세요', piecesLeftLabel: '남은 조각', seeResult: '결과 보기',
   askLead: '어떤 게 궁금하세요?', pieceN: n => `조각 ${n} / 3`, qLabel2: '퀴즈 결과', puzzleDone: '멋져요! 퍼즐을 완성했어요.', tasteRow: '오늘의 취향 카드' });
-Object.assign(T.ja, {
+Object.assign(T.ja, { llmOn: 'AI回答がオンです。見ているものを何でも聞いてください。', chipMore: 'もっと教えて', chipMade: '誰がなぜ作ったの？', chipEasy: 'やさしく説明して', thinking: '考え中…',
   heroTitle: '自由に\n見て回ろう', heroSub: '気になる展示の前で立ち止まってみてください。\nしばらく見ていると、私から声をかけます。', chipToday: '今日は何を見ようか？', chipLang: '日本語 · English', chipVoice: '声で聞いてみる',
   todayReply: '好きなところからどうぞ。展示の前で数秒立ち止まると、お話を始めます。', stListening: '聞いています', stLooking: '展示を見ています', stSpeaking: '話しています', stExplain: (n, m) => `解説中 · ${n}/${m}`, stQuiz: 'クイズ中', stPuzzle: 'パズル中',
   nudgeLead: 'しばらく見ていますね', piecesLead: '図鑑のかけらを集め中', piecesNote: '4つのうち3つできると図鑑に入ります。', step_listen: '聞く', step_ask: '質問', step_quiz: 'クイズ', step_puz: 'パズル',
   needPieces: '図鑑に入れるにはかけらが3つ必要です。', gotPiece: n => `かけらを1つ集めました · ${n} / 3`, pieceDone: 'かけらを3つ集めました！', dexGot: '図鑑ゲット！', keepTalking: 'このまま話す', chipQuizGo: 'クイズに挑戦', chipAskGo: '質問する', chipPuzzleGo: 'パズルをする', storyAgain: 'お話をもう一度',
   quizLead: 'クイズを1つ解いてみましょうか？', quizGood: (r, n) => `${n}問中${r}問正解！`, quizTry: '少し難しかったですね。パズルや質問もどうぞ。', puzzleLead: '足りないかけらも合わせてみますか？', puzzleTitle: '足りないかけらを2つ探してください', piecesLeftLabel: '残りのかけら', seeResult: '結果を見る',
   askLead: '何が気になりますか？', pieceN: n => `かけら ${n} / 3`, qLabel2: 'クイズ結果', puzzleDone: 'すてき！パズル完成です。', tasteRow: '今日の好みカード' });
-Object.assign(T.zh, {
+Object.assign(T.zh, { llmOn: 'AI回答已开启。看到什么都可以问我。', chipMore: '再多讲讲', chipMade: '是谁、为什么做的？', chipEasy: '讲得简单点', thinking: '思考中…',
   heroTitle: '自由\n参观吧', heroSub: '在感兴趣的展品前停留一会儿。\n你看得久了，我会主动开口。', chipToday: '今天看什么好？', chipLang: '中文 · English', chipVoice: '语音提问',
   todayReply: '从你喜欢的地方开始吧。在展品前停留几秒，我就会给你讲它的故事。', stListening: '正在聆听', stLooking: '正在看展品', stSpeaking: '正在讲话', stExplain: (n, m) => `讲解中 · ${n}/${m}`, stQuiz: '答题中', stPuzzle: '拼图中',
   nudgeLead: '你看了好一会儿', piecesLead: '正在收集图鉴碎片', piecesNote: '四项中完成三项，就能收进图鉴。', step_listen: '听', step_ask: '提问', step_quiz: '答题', step_puz: '拼图',
@@ -1677,9 +1677,27 @@ function userAsk(text, forced, noEcho, idOverride) {
   setTimeout(() => { typing.remove(); const ans = key && a ? L(a[key]) : (a ? t('noAnswer') : t('fallbackMsg')); addMsg('qa', ans); speak(ans, null, a ? a.voice : undefined);
     if (key && a) { S.asked = S.asked || {}; (S.asked[id] = S.asked[id] || new Set()).add(key); S.asks = S.asks || {}; S.asks[id] = (S.asks[id] || 0) + 1; if (S.asks[id] >= 2) addPiece(id, 'ask'); if (!(S.prog[id] && S.prog[id].date)) setTimeout(() => askChips(id, false), 500); } }, 650);
 }
+/* ---- AI answers (OpenAI via qi_server.py proxy; falls back to the curated rule-based answers when no key) ---- */
+const LLM = { ok: false, hist: [] };
+fetch('/api/qi/health').then(r => r.json()).then(j => { LLM.ok = !!j.ok; log('LLM ' + (LLM.ok ? 'on (' + j.model + ')' : 'off (no key)')); if (LLM.ok && S.started) addMsg('hint', t('llmOn')); }).catch(() => {});
+function llmOn() { let e = window.QI_LLM_ENDPOINT; try { e = e || localStorage.getItem('qi_llm'); } catch (x) {} return !!(LLM.ok || e); }
+function factsFor(id) {
+  const e = EXHMAP[id], a = ART[id]; if (a) return [`Name: ${L(a.name)} (${a.name.en})`, `Room/kingdom: ${t('nations')[id] || a.nation}`, a.absent ? 'Note: this object is held at another institution; the museum shows a replica or panel.' : '', `Story: ${(a.story[S.set.lang] || a.story.en).join(' ')}`, `Who made it: ${L(a.who)}`, `Why it matters: ${L(a.why)}`, `In simple words: ${L(a.simple)}`, `Fun fact: ${L(a.fun)}`].filter(Boolean).join('\n');
+  if (e) return [`Name: ${L(e.name)} (${e.name.en})`, `Kingdom: ${t('nations')[e.nation]}`, `Museum label note: ${L(e.note)}`].join('\n'); return '';
+}
+async function askLLM(text, id) {
+  let ep = window.QI_LLM_ENDPOINT; try { ep = ep || localStorage.getItem('qi_llm'); } catch (x) {} if (!ep && LLM.ok) ep = '/api/qi'; if (!ep) return null; id = id || S.near || S.focus || S.last;
+  try { const r = await fetch(ep, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text, lang: S.set.lang, current: id || '', facts: factsFor(id), history: LLM.hist.slice(-8) }) }); if (!r.ok) return null; const j = await r.json(); if (j.reply) { LLM.hist.push({ role: 'user', content: text }, { role: 'assistant', content: j.reply }); return j.reply; } } catch (x) {} return null;
+}
+async function llmAnswer(text, id) {
+  const typing = addMsg('qa typing', '···'); stopSpeak(); const r = await askLLM(text, id); typing.remove();
+  if (!r) { if (id && ART[id]) return userAsk(text, undefined, true, id); return qiReply(t('fallbackMsg')); }
+  addMsg('qa', r); speak(r, null, ART[id] ? ART[id].voice : EXHMAP[id] ? NVOICE[EXHMAP[id].nation] : undefined);
+  if (ART[id]) { S.asks = S.asks || {}; S.asks[id] = (S.asks[id] || 0) + 1; if (S.asks[id] >= 2) addPiece(id, 'ask'); }
+}
 async function handleAsk(text) {
   const isLangReq = LANGREQ.some(([rx]) => rx.test(text)); const dl = detectLang(text); if (dl && dl !== S.set.lang && !isLangReq) setLang(dl, true); if (!S.started) startFree();
-  addMsg('me', text); if (converse(text)) return; const id = S.chat ? S.chat.id : (S.near || S.last); if (id && ART[id]) return userAsk(text, undefined, true, id);
+  addMsg('me', text); if (converse(text)) return; const id = S.chat ? S.chat.id : (S.near || S.focus || S.last); if (llmOn()) return llmAnswer(text, id); if (id && ART[id]) return userAsk(text, undefined, true, id);
   const r = await askLLM(text); qiReply(r || t('fallbackMsg'));
 }
 
@@ -1731,6 +1749,7 @@ function qiIntroduce(id) {
   const e = EXHMAP[id]; if (!e || !S.started || S.view !== 'agent') return false; if (!['idle', 'observe', 'cooldown', 'quiet'].includes(S.state) || (S.speaking && !S.intro)) return false;
   const tok = S.introTok = (S.introTok || 0) + 1; S.intro = true; const c = mk('div', 'tcard card-art');
   c.innerHTML = `<div class="stage">${icoTag(id)}<img class="real" src="${EXH_IMG(id)}" alt=""></div><div class="body"><div class="tag"><b>${esc(t('nations')[e.nation])}</b></div><h3>${esc(L(e.name))}</h3><p>${esc(L(e.note))}</p></div>`; put(c);
+  S.focus = id; if (llmOn()) chipRow([[t('chipMore'), () => { addMsg('me', t('chipMore')); llmAnswer(t('chipMore'), id); }], [t('chipMade'), () => { addMsg('me', t('chipMade')); llmAnswer(t('chipMade'), id); }], [t('chipEasy'), () => { addMsg('me', t('chipEasy')); llmAnswer(t('chipEasy'), id); }]]);
   speak(L(e.name) + '. ' + L(e.note), () => { if (S.introTok === tok) S.intro = false; }, NVOICE[e.nation] || QIVOICE); log('QI introduced free exhibit: ' + id); return true;
 }
 
@@ -1768,6 +1787,6 @@ $('#m-dex').onclick = openDex;
 setView('agent'); applyI18n(); renderStatus();
 
 </script>
-<script type="module" src="world.js?v=20261123e"></script>
+<script type="module" src="world.js?v=20261123f"></script>
 </body>
 </html>

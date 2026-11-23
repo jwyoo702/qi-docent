@@ -358,7 +358,7 @@ import * as THREE from './vendor/three/three.module.js';
     let best = null, ba = 1e9; const free = S.view === 'agent' && !gz && (!S.started || S.chatMini || ['idle', 'observe', 'cooldown', 'quiet'].includes(S.state));
     if (free) for (const it of ITEMS) { const d = Math.hypot(it.x - P.x, it.z - P.z); if (d > 7.5) continue; const ang = angTo(it.x, it.y, it.z); if (ang < .17 && ang < ba) { ba = ang; best = it; } }
     if (best && best.id === dwell.id) dwell.t += dt; else { dwell.id = best ? best.id : null; dwell.t = 0; }
-    if (best) { S.stats.gaze[best.nation] = (S.stats.gaze[best.nation] || 0) + dt * 1000; if (dwell.t > 1.6 && (!shownAt[best.id] || performance.now() - shownAt[best.id] > 30000)) showItemCard(best.id); }
+    if (best) { S.stats.gaze[best.nation] = (S.stats.gaze[best.nation] || 0) + dt * 1000; if (dwell.t > 1.6 && (!shownAt[best.id] || performance.now() - shownAt[best.id] > 600000)) showItemCard(best.id); }
     const xh = $('#xhair'); const thr = threshold(); xh.classList.toggle('on', gz || !!best);
     xh.style.setProperty('--gz', gz ? (S.state === 'observe' ? Math.min(100, S.gazeMs / thr * 100) : (['signal', 'guide', 'question'].includes(S.state) ? 100 : 0)) : (best ? Math.min(100, dwell.t / 1.6 * 100) : 0));
     for (const id of Object.keys(ARTW)) { const w = ARTW[id], isNear = S.near === id; let target = 0.0; if (isNear) target = S.state === 'observe' ? .5 : (['signal', 'guide', 'question', 'explain'].includes(S.state) ? 1.6 : .8); w.light.intensity += (target * 5 - w.light.intensity) * Math.min(1, dt * 4);
