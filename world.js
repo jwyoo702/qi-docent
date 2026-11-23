@@ -62,17 +62,21 @@ import * as THREE from './vendor/three/three.module.js';
   const gridTex = (rx, ry) => canvasTex(128, 128, (g, w, h) => { g.fillStyle = '#212224'; g.fillRect(0, 0, w, h); g.strokeStyle = '#17181a'; g.lineWidth = 3; g.strokeRect(0, 0, w, h); }, rx, ry);
 
   /* room themes (look of each gallery) */
-  const hallStone = new THREE.MeshStandardMaterial({ map: stoneTex(6, 3), roughness: .7 });
+  /* great hall: pale travertine in tall panels (from the central-hall photos) */
+  const travTex = (rx, ry) => canvasTex(512, 512, (g, w, h) => { g.fillStyle = '#d9c8ad'; g.fillRect(0, 0, w, h); let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    for (let c = 0; c < 4; c++) for (let r = 0; r < 2; r++) { const x = c * 128, y = r * 256, sh = 214 + Math.round(rnd() * 14); g.fillStyle = `rgb(${sh},${sh - 14},${sh - 38})`; g.fillRect(x + 2, y + 2, 124, 252); for (let i = 0; i < 26; i++) { g.fillStyle = `rgba(${150 + rnd() * 40},${125 + rnd() * 30},${95 + rnd() * 30},${.05 + rnd() * .08})`; g.fillRect(x + 4, y + rnd() * 250, 120, 1 + rnd() * 2); } }
+    g.fillStyle = '#b9a688'; for (let c = 0; c <= 4; c++) g.fillRect(c * 128 - 1, 0, 2, h); g.fillRect(0, 255, w, 2); g.fillRect(0, 0, w, 2); }, rx, ry);
+  const hallStone = new THREE.MeshStandardMaterial({ map: travTex(10, 4), roughness: .5, metalness: .02, envMapIntensity: .6 });
   const DARK = mat('#2c2d30', { roughness: .8 });
   const THEME = {
-    dark:  { wall: DARK, floor: new THREE.MeshStandardMaterial({ map: tileTex('#3a3836', '#2b2a28', 'rgba(255,255,255,.035)', 6, 6), roughness: .32, metalness: .05, envMapIntensity: .8 }), ceil: new THREE.MeshStandardMaterial({ map: gridTex(20, 20), roughness: .9 }), frame: BLACK },
+    dark:  { wall: DARK, floor: new THREE.MeshStandardMaterial({ map: tileTex('#3a2f2a', '#2a221e', 'rgba(255,255,255,.03)', 6, 6), roughness: .3, metalness: .05, envMapIntensity: .8 }), ceil: new THREE.MeshStandardMaterial({ map: gridTex(20, 20), roughness: .9 }), frame: BLACK },
     gogu:  { wall: mat('#202225', { roughness: .85 }), floor: new THREE.MeshStandardMaterial({ map: tileTex('#242220', '#181716', 'rgba(255,255,255,.02)', 6, 8), roughness: .3, metalness: .08, envMapIntensity: .7 }), ceil: mat('#141517'), frame: BLACK },
     baek:  { wall: mat('#f4f4f2', { roughness: .8 }), floor: new THREE.MeshStandardMaterial({ map: tileTex('#d4d7db', '#c3c7cc', 'rgba(255,255,255,.35)', 6, 8), roughness: .1, metalness: .05, envMapIntensity: 1.3 }), ceil: mat('#f6f6f6', { emissive: '#e6e6e6', emissiveIntensity: .75 }), frame: WHITEF },
     silla: { wall: mat('#3f2f2a', { roughness: .85 }), floor: new THREE.MeshStandardMaterial({ map: woodTex(6, 10), roughness: .3, metalness: .05, envMapIntensity: .9 }), ceil: mat('#2a211e'), frame: BLACK },
   };
   const slab = (x0, x1, z0, z1, floorMat, ceilMat, ceilH) => { const w = x1 - x0, d = z0 - z1, cx = (x0 + x1) / 2, cz = (z0 + z1) / 2; const f = new THREE.Mesh(new THREE.PlaneGeometry(w, d), floorMat); f.rotation.x = -Math.PI / 2; add(f, cx, 0, cz); const c = new THREE.Mesh(new THREE.PlaneGeometry(w, d), ceilMat); c.rotation.x = Math.PI / 2; add(c, cx, ceilH, cz); };
   // great hall
-  { const t = tileTex('#d9cab2', '#c3b399', 'rgba(255,255,255,.22)', (HALL.x1 - HALL.x0) / 4, (HALL.z1 - HALL.z0) / 4); slab(HALL.x0, HALL.x1, HALL.z1, HALL.z0, new THREE.MeshStandardMaterial({ map: t, roughness: .16, metalness: .05, envMapIntensity: 1.1 }), mat('#d6c9b3'), HH); }
+  { const t = tileTex('#cdb999', '#b4a07f', 'rgba(255,255,255,.12)', (HALL.x1 - HALL.x0) / 4, (HALL.z1 - HALL.z0) / 4); slab(HALL.x0, HALL.x1, HALL.z1, HALL.z0, new THREE.MeshStandardMaterial({ map: t, roughness: .09, metalness: .1, envMapIntensity: .95 }), mat('#d6c9b3'), HH); }
   // each gallery gets its own floor / ceiling
   ROOMS.forEach(r => { const th = THEME[r.theme]; slab(WING.x0, WING.x1, r.z0, r.z1, th.floor, th.ceil, H); });
   // skylights over the great hall
@@ -102,6 +106,21 @@ import * as THREE from './vendor/three/three.module.js';
   for (const z of DIV) { wall(12, z, 8, .5, DARK); wall(28, z, 8, .5, DARK); box(8, 1.5, .5, 20, H - .75, z, DARK); }
   box(8, 1.2, .5, 20, H - .6, -12, DARK);
   for (let zz = -22; zz > -146; zz -= 14) { const z = zz; const n = new THREE.Mesh(new THREE.PlaneGeometry(3.2, 4.2), new THREE.MeshStandardMaterial({ color: '#6b5f50', roughness: 1 })); n.rotation.y = Math.PI / 2; add(n, -13.78, 3.4, z); const ln = new THREE.Mesh(new THREE.PlaneGeometry(3.2, .08), GLOW); ln.rotation.y = Math.PI / 2; add(ln, -13.76, 5.5, z); }
+
+  /* hall dressing: recessed tall windows in the stone walls, balcony + glazed end wall, sun patches under the skylights, wall spots */
+  { const FR = mat('#c3b193', { roughness: .6 }), INS = new THREE.MeshStandardMaterial({ color: '#8a7f70', roughness: .9, emissive: '#fff1d6', emissiveIntensity: .18 });
+    const recess = (x, z, facing) => { const w = 1.5, h = 3.4, y = 7.2, f = facing; box(.5, .22, w + .5, x, y + h / 2 + .1, z, FR); box(.5, .22, w + .5, x, y - h / 2 - .1, z, FR); box(.5, h, .25, x, y, z + (w / 2 + .12), FR); box(.5, h, .25, x, y, z - (w / 2 + .12), FR);
+      const p = new THREE.Mesh(new THREE.PlaneGeometry(w, h), INS); p.rotation.y = f > 0 ? (Math.PI / 2) : -(Math.PI / 2); add(p, x + f * .02, y, z); };
+    for (let z = -6; z > -150; z -= 7.5) { recess(-13.55, z, 1); if (!OPEN.some(([a, b]) => z < a + 1 && z > b - 1)) recess(7.45, z, -1); }
+    // balcony + glass end wall (far end of the hall, like the 2F gallery seen above the pagoda in the photo)
+    box(22, .4, 6, -3, 5.1, ZE + 3.4, mat('#cdbd9f')); box(22, 1.1, .08, -3, 5.8, ZE + 6.4, new THREE.MeshStandardMaterial({ color: '#cfe4f2', transparent: true, opacity: .25, roughness: .05, depthWrite: false }));
+    box(22, .06, .08, -3, 6.35, ZE + 6.4, TRIM); for (let x = -13; x <= 7; x += 2) box(.05, 1.1, .05, x, 5.8, ZE + 6.4, TRIM);
+    const glassEnd = new THREE.Mesh(new THREE.PlaneGeometry(22, 5), new THREE.MeshBasicMaterial({ color: '#dfe9f2' })); glassEnd.position.set(-3, 8, ZE + .35); add(glassEnd, -3, 8, ZE + .35);
+    for (let x = -13; x <= 7; x += 4) box(.18, 5, .2, x, 8, ZE + .45, TRIM); box(22, .18, .2, -3, 8, ZE + .45, TRIM);
+    for (const cz of [-14, -62, -92, -120]) { const patch = new THREE.Mesh(new THREE.PlaneGeometry(9, 9), new THREE.MeshBasicMaterial({ color: '#fff7e6', transparent: true, opacity: .16, depthWrite: false })); patch.rotation.x = -Math.PI / 2; patch.rotation.z = .35; add(patch, -2 + 3, .012, cz + 4); }
+    // ceiling spots (recessed) in the dark galleries — small warm discs in rows over the cases
+    const spotM = new THREE.MeshBasicMaterial({ color: '#fff0d2' }), spotG = new THREE.CircleGeometry(.07, 12);
+    for (const r of ROOMS) { if (r.theme === 'baek') continue; for (let z = r.z0 - 2; z > r.z1 + 1; z -= 3.5) for (const x of [11, 17, 23, 29]) { const d = new THREE.Mesh(spotG, spotM); d.rotation.x = Math.PI / 2; d.position.set(x, H - .02, z); scene.add(d); } } }
 
   /* labels */
   function labelTex(lines, w, h, opt = {}) { const c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d'); g.fillStyle = opt.bg || '#17181a'; g.fillRect(0, 0, w, h); g.textAlign = 'center'; g.textBaseline = 'middle';
@@ -148,17 +167,27 @@ import * as THREE from './vendor/three/three.module.js';
       const fr = new THREE.Mesh(new THREE.PlaneGeometry(w + .06, h + .06), new THREE.MeshBasicMaterial({ color: '#0b0b0c' })); fr.position.z = -.01; mesh.add(fr); });   // child of the plate so it follows the plate's own position/rotation (was added to the scene origin → black slab at spawn)
     return mesh;
   }
+  /* 3D toy-style icon (유물 정리/…/3D 아이콘): transparent sprite that turns to face the visitor, with a soft contact shadow */
+  const BILLS = [];
+  const shadowTex = canvasTex(128, 128, (g, w, h) => { const r = g.createRadialGradient(64, 64, 4, 64, 64, 62); r.addColorStop(0, 'rgba(0,0,0,.55)'); r.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = r; g.fillRect(0, 0, w, h); });
+  function iconFor(group, id, size, opt = {}) {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(size, size), new THREE.MeshBasicMaterial({ transparent: true, alphaTest: .06, side: THREE.DoubleSide, opacity: 0 })); group.add(m); m.position.y = opt.dy || 0;
+    const rec = { mesh: m, group, clamp: opt.clamp || 0 }; BILLS.push(rec);
+    loadImg('assets/icons/' + id + '.webp', tx => { m.material.map = tx; m.material.opacity = 1; m.material.needsUpdate = true; }, () => { BILLS.splice(BILLS.indexOf(rec), 1); group.remove(m); if (opt.fallback) opt.fallback(); });
+    if (opt.shadow) { const sh = new THREE.Mesh(new THREE.PlaneGeometry(size * .8, size * .8), new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false })); sh.rotation.x = -Math.PI / 2; sh.position.y = opt.shadowY; group.add(sh); }
+    return m;
+  }
   function putItem(id, kind, x, z, yaw) {
     const e = EXHMAP[id]; if (!e) return; const th = THEME[ROOMS.find(r => z <= r.z0 && z > r.z1)?.theme || 'dark']; const g = new THREE.Group(); g.rotation.y = yaw;
     let y = ART_Y, s = 1.15;
-    if (kind === 'niche') { nicheFrame(x, z, yaw, th.frame, th.frame === WHITEF ? '#d9dadc' : '#2a2c30'); g.position.set(x, 1.7, z); const o = [Math.sin(yaw), Math.cos(yaw)]; g.position.x += o[0] * -.14; g.position.z += o[1] * -.14; y = 1.7; s = 1.7; }
+    if (kind === 'niche') { nicheFrame(x, z, yaw, th.frame, th.frame === WHITEF ? '#d9dadc' : '#2a2c30'); g.position.set(x, 1.7, z); const o = [Math.sin(yaw), Math.cos(yaw)]; g.position.x += o[0] * .02; g.position.z += o[1] * .02; y = 1.7; s = 1.7; }
     else if (kind === 'free') { vitrine(x, z, 1.5, .9, 1.9, th.frame); g.position.set(x, ART_Y, z); }
     else if (kind === 'hex') { hexCase(x, z, yaw); g.position.set(x, ART_Y, z); s = 1.25; }
     else if (kind === 'table') { box(2.7, .9, 1.4, x, .45, z, BLACK); box(2.8, .06, 1.5, x, .93, z, TRIM); add(new THREE.Mesh(new THREE.BoxGeometry(2.55, .02, 1.25), GLASS), x, 1.0, z); OBST.push({ x0: x - 1.65, x1: x + 1.65, z0: z - 1, z1: z + 1 });
-      const m = plateFor(scene, id, 2.2, { tint: '#d8d8d8' }); m.rotation.x = -Math.PI / 2; m.position.set(x, 1.02, z); m.rotation.z = yaw; const scr = new THREE.Mesh(new THREE.PlaneGeometry(.9, .45), new THREE.MeshBasicMaterial({ color: '#3a7a9a' })); scr.rotation.x = -Math.PI / 2 + .35; add(scr, x, 1.0, z + .85); ITEMS.push({ id, nation: e.nation, x, y: 1.0, z }); return; }
+      const m = plateFor(scene, id, 2.2, { tint: '#d8d8d8' }); m.rotation.x = -Math.PI / 2; m.position.set(x, 1.02, z); m.rotation.z = yaw; const scr = new THREE.Mesh(new THREE.PlaneGeometry(.9, .45), new THREE.MeshBasicMaterial({ color: '#3a7a9a' })); scr.rotation.x = -Math.PI / 2 + .35; add(scr, x, 1.0, z + .85); { const tg = new THREE.Group(); tg.position.set(x - .55, 1.75, z - .1); scene.add(tg); iconFor(tg, id, 1.3, { shadow: true, shadowY: -.72 }); m.position.x += .5; } ITEMS.push({ id, nation: e.nation, x, y: 1.0, z }); return; }
     else if (kind === 'podium') { box(2.2, .5, 2.2, x, .25, z, BLACK); OBST.push({ x0: x - 1.6, x1: x + 1.6, z0: z - 1.6, z1: z + 1.6 }); g.position.set(x, 1.85, z); s = 2.6; y = 1.85; }
     else if (kind === 'wallcase') { /* big wall case (north wall of Silla) */ g.position.set(x, 2.2, z); s = 7; y = 2.2; const f = new THREE.Mesh(new THREE.BoxGeometry(8.2, 3.9, .3), BLACK); f.position.set(x, 2.2, z - .22); scene.add(f); }
-    scene.add(g); plateFor(g, id, s); ITEMS.push({ id, nation: e.nation, x, y, z });
+    scene.add(g); const hasShadow = kind === 'free' || kind === 'hex' || kind === 'podium'; iconFor(g, id, s * (kind === 'wallcase' ? .62 : .98), { clamp: kind === 'niche' ? .22 : (kind === 'hex' || kind === 'wallcase') ? .55 : 0, fallback: () => plateFor(g, id, s), shadow: hasShadow, shadowY: kind === 'free' ? -.9 : kind === 'hex' ? -.9 : -1.35, dy: kind === 'wallcase' ? -.3 : 0 }); ITEMS.push({ id, nation: e.nation, x, y, z });
   }
   const PI2 = Math.PI / 2;
   // Goguryeo (105): niches along both walls, free cases, a low table with the stele rubbing
@@ -190,10 +219,16 @@ import * as THREE from './vendor/three/three.module.js';
   { const props = [[12, -14.5, 'stone'], [28, -19.5, 'pot'], [12, -24.5, 'bronze'], [28, -29.5, 'bronze']];
     for (const [x, z, kind] of props) { vitrine(x, z, 1.2, .8, 1.35); const m = kind === 'stone' ? new THREE.Mesh(new THREE.DodecahedronGeometry(.3, 0), mat('#a39d92')) : kind === 'pot' ? new THREE.Mesh(new THREE.ConeGeometry(.26, .6, 16), mat('#b98f6a')) : new THREE.Mesh(new THREE.CylinderGeometry(.22, .3, .45, 18), mat('#7d9a86', { metalness: .3 })); add(m, x, 1.55, z); } }
   const PZ = -118, SZ = -62;
-  { box(5.6, .6, 5.6, -3, .3, PZ, mat('#3a3937')); let y = .6; for (let i = 0; i < 10; i++) { const s = 4.2 - i * .26; const tier = new THREE.Mesh(new THREE.BoxGeometry(s, .7, s), mat(i % 2 ? '#4c4a47' : '#5a5753', { roughness: .9 })); tier.position.set(-3, y + .35, PZ); scene.add(tier);
-      for (let k = -1; k <= 1; k++) { const rel = new THREE.Mesh(new THREE.BoxGeometry(.5, .45, .06), mat('#2f2e2c')); rel.position.set(-3 + k * s / 3.2, y + .35, PZ + s / 2 + .02); scene.add(rel); }
-      y += .7; const roof = new THREE.Mesh(new THREE.BoxGeometry(s + .55, .16, s + .55), mat('#363532')); roof.position.set(-3, y + .08, PZ); scene.add(roof); y += .16 + .08; }
-    OBST.push({ x0: -6.4, x1: .4, z0: PZ - 3.4, z1: PZ + 3.4 }); }
+  { /* Gyeongcheonsa ten-storey stone pagoda (central hall landmark) — tapered tiers, eaves and relief bands */
+    const stoneM = mat('#7a7c7c', { roughness: .85 }), darkM = mat('#4b4d4e', { roughness: .9 }), tx = -3;
+    box(7.4, .35, 7.4, tx, .175, PZ, mat('#26272a', { roughness: .5 })); box(5.8, .5, 5.8, tx, .6, PZ, darkM); box(4.6, .5, 4.6, tx, 1.1, PZ, stoneM); let y = 1.35;
+    for (let i = 0; i < 10; i++) { const s0 = i < 3 ? 3.5 - i * .1 : 3.0 - (i - 3) * .2, bh = i < 3 ? 1.15 : .8;
+      const body = new THREE.Mesh(new THREE.BoxGeometry(s0, bh, s0), stoneM); add(body, tx, y + bh / 2, PZ);
+      for (const [dx, dz, ry] of [[0, 1, 0], [0, -1, Math.PI], [1, 0, PI2], [-1, 0, -PI2]]) for (let k = -1; k <= 1; k++) { const rel = new THREE.Mesh(new THREE.BoxGeometry(s0 * .26, bh * .62, .07), darkM); rel.rotation.y = ry; rel.position.set(tx + dx * (s0 / 2 + .02) + (dz ? k * s0 * .3 : 0), y + bh / 2, PZ + dz * (s0 / 2 + .02) + (dx ? k * s0 * .3 : 0)); scene.add(rel); }
+      y += bh; const roof = new THREE.Mesh(new THREE.CylinderGeometry(s0 * .62, s0 * .98, .32, 4), stoneM); roof.rotation.y = Math.PI / 4; add(roof, tx, y + .16, PZ); const lip = new THREE.Mesh(new THREE.BoxGeometry(s0 * 1.5, .06, s0 * 1.5), darkM); add(lip, tx, y + .02, PZ); y += .3; }
+    const fin = new THREE.Mesh(new THREE.ConeGeometry(.18, 1.4, 8), mat('#3a3b3c')); add(fin, tx, y + .7, PZ);
+    const spot = new THREE.SpotLight('#fff1d8', 90, 26, .5, .5, 1.6); spot.position.set(tx + 3, 9.5, PZ + 6); spot.target.position.set(tx, 5, PZ); scene.add(spot, spot.target);
+    OBST.push({ x0: -7.3, x1: 1.3, z0: PZ - 4.2, z1: PZ + 4.2 }); }
   { const st = new THREE.Mesh(new THREE.BoxGeometry(1.6, 4.8, .8), mat('#e9eef7', { emissive: '#bcd3ff', emissiveIntensity: .5 })); add(st, -3, 2.4, SZ); box(2.4, .3, 1.6, -3, .15, SZ, mat('#2a2b2d')); OBST.push({ x0: -4.7, x1: -1.3, z0: SZ - 1.2, z1: SZ + 1.2 }); }
 
   /* ---------- scenario artifacts (stations) ---------- */
@@ -216,7 +251,7 @@ import * as THREE from './vendor/three/three.module.js';
     ARTW[id] = { group: g, base, light, billboard: null, y0: ART_Y, fixed: false };
     // 1) toy-style cut-out in assets/artifacts/<id>.png (white background keyed out)  2) photo plate from assets/exhibits/<id>.jpg
     loadImg(`assets/artifacts/${id}.png`, tex => { const aspect = tex.image.width / tex.image.height, mesh = new THREE.Mesh(new THREE.PlaneGeometry(1.3 * aspect, 1.3), new THREE.ShaderMaterial(Object.assign({ uniforms: { map: { value: tex }, glow: { value: 0 } }, transparent: true, depthWrite: false }, WHITEKEY))); g.remove(base); g.add(mesh); ARTW[id].billboard = mesh; ARTW[id].base = null; },
-      () => { if (!MAINIMG.has(id)) return; g.remove(base); ARTW[id].base = null; ARTW[id].fixed = true; g.rotation.y = face; const m = plateFor(g, id, 1.5); ARTW[id].plate3 = m; });
+      () => { if (!MAINIMG.has(id)) return; g.remove(base); ARTW[id].base = null; ARTW[id].fixed = true; g.rotation.y = face; iconFor(g, id, 1.45, { shadow: true, shadowY: -.9, fallback: () => { ARTW[id].plate3 = plateFor(g, id, 1.5); } }); });
     const plate = new THREE.Mesh(new THREE.PlaneGeometry(1.2, .38), new THREE.MeshBasicMaterial({ map: labelTex([{ text: '', size: 30, y: 50 }], 512, 160) })); plate.position.set(x + (x > 20 ? -.76 : .76), .55, z); plate.rotation.y = face; scene.add(plate); ARTW[id].plate = plate;
   }
   function refreshPlates() { for (const id of Object.keys(STN)) { const mt = ARTW[id].plate.material; const nm = L(ART[id].name); mt.map = labelTex([{ text: nm.length > 20 ? nm.slice(0, 19) + '…' : nm, size: 36, y: 60 }, { text: t('nations')[id], size: 28, y: 112, color: '#a8a8a2' }], 512, 160); mt.needsUpdate = true; }
@@ -349,6 +384,7 @@ import * as THREE from './vendor/three/three.module.js';
     stepAutoWalk(dt);
     camera.position.set(P.x, EYE + Math.sin(P.bob) * .028, P.z); camera.rotation.order = 'YXZ'; camera.rotation.set(P.pitch, P.yaw, 0); camera.updateMatrixWorld();
     for (const id of Object.keys(ARTW)) { const w = ARTW[id]; if (!w.fixed) w.group.position.y = w.y0 + Math.sin(tAcc * 1.4 + STN[id].z) * .04; if (w.billboard) w.billboard.rotation.y = Math.atan2(P.x - w.group.position.x, P.z - w.group.position.z); else if (w.base) w.base.rotation.y += dt * .5; }
+    for (const b of BILLS) { const wp = b.group.position; let a = Math.atan2(P.x - wp.x, P.z - wp.z) - b.group.rotation.y; if (b.clamp) { a = ((a + Math.PI) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2) - Math.PI; a = Math.max(-b.clamp, Math.min(b.clamp, a)); } b.mesh.rotation.y = a; }
     updateAgentLink(dt);
     const nx = document.body.classList.contains('demo') && S.started && S.view === 'agent' ? nextPending() : null; if (nx && Math.hypot(STN[nx].x - P.x, STN[nx].z - P.z) > 4.2) placeDots(pathTo(nx, P.x, P.z), tAcc); else placeDots([[0, 0], [0, 0]], tAcc);
     updateHud(); drawMap(); renderer.render(scene, camera); if (++frames === 40 && window.bootDone) bootDone();
