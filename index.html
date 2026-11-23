@@ -202,7 +202,7 @@ select { font:inherit; font-size:13px; padding:7px 8px; border-radius:10px; bord
 .dx small { font-size:10.5px; color:var(--mut); } .dx b { font-size:12.5px; line-height:1.3; } .dx.lock { background:#fafafa; border-style:dashed; } .dx.lock b { color:#aaa; font-weight:500; }
 #dexnav { flex:none; height:84px; border-top:1px solid var(--line); background:#fff; display:flex; justify-content:space-around; padding-top:10px; }
 #dexnav button { width:64px; display:flex; flex-direction:column; align-items:center; gap:3px; font-size:10.5px; color:#8c8c92; font-weight:600; height:46px; } #dexnav button.on { color:var(--ink); } #dexnav svg { width:24px; height:24px; } #dexnav .scan { width:56px; height:56px; border-radius:50%; background:var(--primary); color:#fff; justify-content:center; margin-top:-10px; box-shadow:0 8px 20px rgba(0,0,0,.2); }
-.dhero { height:230px; margin:0 16px; border-radius:24px; background:var(--chip); display:grid; place-items:center; } .dhero .morb { width:160px; height:160px; animation-duration:4.5s; }
+.dx .im img { width:100%; height:100%; object-fit:cover; border-radius:11px; } .dhero { height:230px; overflow:hidden; margin:0 16px; border-radius:24px; background:var(--chip); display:grid; place-items:center; } .dhero .morb { width:160px; height:160px; animation-duration:4.5s; }
 .dinfo { padding:20px 16px 0; } .dinfo small { font-size:12px; color:var(--mut); font-weight:600; } .dinfo h1 { margin:6px 0 12px; font-size:24px; letter-spacing:-.5px; line-height:1.3; }
 .tagrow { display:flex; gap:6px; flex-wrap:wrap; } .tagrow span { padding:6px 12px; border-radius:14px; background:var(--chip); font-size:12px; font-weight:600; }
 .dsec { padding:20px 16px 0; } .dsec h2 { margin:0 0 8px; font-size:15px; } .dsec p { margin:0; font-size:14px; line-height:1.65; color:#444; }
@@ -252,6 +252,9 @@ body.world #lab.open { display:block; }
 #ctrlhint small { display:block; color:#777; font-weight:500; margin-top:2px; }
 #minimap { position:absolute; left:20px; bottom:20px; width:120px; height:240px; border-radius:14px; background:rgba(255,255,255,.85); box-shadow:0 6px 22px rgba(0,0,0,.12); }
 #autowalk { position:absolute; left:50%; top:66px; transform:translateX(-50%); pointer-events:auto; height:38px; padding:0 18px; border-radius:19px; background:rgba(255,255,255,.92); font-size:14px; font-weight:700; box-shadow:0 6px 22px rgba(0,0,0,.14); display:none; }
+#itemcard { position:absolute; left:190px; bottom:104px; width:430px; display:flex; gap:16px; align-items:center; padding:14px; border-radius:22px; background:rgba(255,255,255,.93); backdrop-filter:blur(10px); box-shadow:0 14px 40px rgba(31,45,43,.28); opacity:0; transform:translateY(14px); transition:opacity .45s, transform .45s; pointer-events:none; }
+#itemcard.on { opacity:1; transform:none; } #itemcard img { width:96px; height:96px; border-radius:14px; object-fit:cover; flex:none; background:#e9f2ef; }
+#itemcard em { font-style:normal; font-size:12px; font-weight:700; color:var(--primary); letter-spacing:.3px; } #itemcard b { display:block; font-size:17px; margin:2px 0 4px; line-height:1.3; } #itemcard p { margin:0; font-size:13.5px; line-height:1.5; color:#4a5d59; }
 #hud-lab { position:absolute; left:20px; top:92px; pointer-events:auto; height:32px; padding:0 14px; border-radius:16px; background:rgba(255,255,255,.88); font-size:12.5px; font-weight:600; box-shadow:0 4px 14px rgba(0,0,0,.1); }
 #worldmsg { position:absolute; left:50%; top:62%; transform:translateX(-50%); background:rgba(26,26,26,.82); color:#fff; padding:10px 18px; border-radius:18px; font-weight:600; opacity:0; transition:opacity .4s; }
 #worldmsg.on { opacity:1; }
@@ -287,6 +290,7 @@ body.world #lab.open { display:block; }
   <div id="roomsign"><b id="rs-name">—</b><span id="rs-sub"></span></div>
   <div id="nexttag" style="display:none"></div>
   <button id="autowalk"></button>
+  <div id="itemcard"><img alt=""><div><em></em><b></b><p></p></div></div>
   <button id="hud-lab">Demo tools</button>
   <canvas id="minimap" width="240" height="480"></canvas>
   <div id="worldmsg"></div>
@@ -403,7 +407,7 @@ body.world #lab.open { display:block; }
   <section class="scr" id="v-detail">
     <div class="safe"></div>
     <div class="hdr"><button class="back" id="det-back" aria-label="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button></div>
-    <div class="main"><div class="dhero"><div class="morb" id="det-orb"></div></div>
+    <div class="main"><div class="dhero"><div class="morb" id="det-orb"></div><img id="det-img" alt="" style="display:none;width:100%;height:100%;border-radius:24px;object-fit:contain"></div>
       <div class="dinfo"><small id="det-no"></small><h1 id="det-name"></h1><div class="tagrow" id="det-tags"></div></div>
       <div class="dsec"><h2 data-i18n="story3"></h2><p id="det-story"></p></div>
       <div class="fact"><i>✦</i><div><b data-i18n="fun"></b><span id="det-fun"></span></div></div>
@@ -447,6 +451,7 @@ body.world #lab.open { display:block; }
 </aside>
 <label id="hx" style="position:fixed;left:-99px;top:-99px;opacity:0;pointer-events:none" aria-hidden="true"><input type="checkbox" switch id="hxi"></label>
 
+<script src="exhibits.js"></script>
 <script>
 /* =====================================================================
    QI (큐아이) · Active Docent — core demo
@@ -1054,20 +1059,23 @@ $('#col-dex').onclick = () => openDex();
 $('#col-next').onclick = () => { backToAgent(); };
 
 const FILTERS = [['all', null], ['gogu', 'gogu'], ['baek', 'baek'], ['silla', 'silla'], ['gaya', 'gaya']];
-const TOTAL_SLOTS = 12;
+const MAINIMG = new Set(['baek', 'silla', 'absent']);
+const dexIds = () => Object.keys(ART).sort((x, y) => ART[x].no - ART[y].no).concat(EXH.map(e => e.id));
+const dexNation = id => ART[id] ? ART[id].nation : EXHMAP[id].nation;
+const dexGot = id => { const p = S.prog[id]; return !!(p && (p.date || p.seen)); };
+const dexName = id => ART[id] ? L(ART[id].name) : L(EXHMAP[id].name);
+const dexImg = id => EXHMAP[id] || MAINIMG.has(id) ? EXH_IMG(id) : null;
 function openDex() { closeSheets(); setView('dex'); setOrb(null); renderDex(); }
 function renderDex() {
-  const n = Object.keys(S.prog).filter(k => S.prog[k] && S.prog[k].date).length; $('#dex-count').textContent = t('dexCount')(n, TOTAL_SLOTS);
+  const ids = dexIds(), n = ids.filter(dexGot).length; $('#dex-count').textContent = t('dexCount')(n, ids.length);
   $('#dex-filters').innerHTML = FILTERS.map(([k]) => `<button data-k="${k}" class="${S.dexFilter === k ? 'on' : ''}">${k === 'all' ? t('all') : t('nations')[k]}</button>`).join(''); $$('#dex-filters button').forEach(b => b.onclick = () => { S.dexFilter = b.dataset.k; renderDex(); });
   const grid = $('#dexgrid'); grid.innerHTML = '';
-  for (let i = 1; i <= TOTAL_SLOTS; i++) {
-    const id = ORDER.find(k => ART[k].no === i), got = id && S.prog[id] && S.prog[id].date; const el = document.createElement('button');
-    if (id && (S.dexFilter === 'all' || ART[id].nation === S.dexFilter) || (!id && S.dexFilter === 'all')) {
-      if (got) { el.className = 'dx'; el.innerHTML = `<div class="im"><div class="morb" style="--c1:${ART[id].c[0]};--c2:${ART[id].c[1]};--c3:${ART[id].c[2]}"></div></div><small>No. ${String(i).padStart(3, '0')}</small><b></b>`; el.querySelector('b').textContent = L(ART[id].name); el.onclick = () => openDetail(id); }
-      else { el.className = 'dx lock'; el.innerHTML = `<div class="im">?</div><small>No. ${String(i).padStart(3, '0')}</small><b>${t('notFound')}</b>`; }
-      grid.appendChild(el);
-    }
-  }
+  ids.forEach((id, i) => {
+    if (S.dexFilter !== 'all' && dexNation(id) !== S.dexFilter) return; const el = document.createElement('button'), no = 'No. ' + String(i + 1).padStart(3, '0');
+    if (dexGot(id)) { el.className = 'dx'; const img = dexImg(id); el.innerHTML = `<div class="im">${img ? `<img src="${img}" alt="">` : `<div class="morb" style="--c1:${ART[id].c[0]};--c2:${ART[id].c[1]};--c3:${ART[id].c[2]}"></div>`}</div><small>${no}</small><b></b>`; el.querySelector('b').textContent = dexName(id); el.onclick = () => openDetail(id); }
+    else { el.className = 'dx lock'; el.innerHTML = `<div class="im">?</div><small>${no}</small><b>${t('notFound')}</b>`; }
+    grid.appendChild(el);
+  });
   const nav = $('#dexnav'); const ic = { home: '<path d="M4 11l8-7 8 7v9H4z"/>', dex: '<rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/>', scan: '<path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><circle cx="12" cy="12" r="3"/>', mis: '<path d="M5 21V4M5 4h13l-3 4 3 4H5"/>', me: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>' };
   const item = (k, lab, on, cls) => `<button data-k="${k}" class="${on ? 'on ' : ''}${cls || ''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ic[k]}</svg>${lab ? `<span>${lab}</span>` : ''}</button>`;
   nav.innerHTML = item('home', t('fHome')) + item('dex', t('fDex'), true) + item('scan', '', false, 'scan') + item('mis', t('fMis')) + item('me', t('fMe'));
@@ -1075,14 +1083,18 @@ function renderDex() {
 }
 function openDetail(id) { S.detailId = id; setView('detail'); renderDetail(id); }
 function renderDetail(id) {
-  if (!id) return; const a = ART[id], p = S.prog[id] || {}; $('#det-orb').style.cssText = `--c1:${a.c[0]};--c2:${a.c[1]};--c3:${a.c[2]}`;
-  $('#det-no').textContent = `No. ${String(a.no).padStart(3, '0')} · ${t('collectedOn')(p.date || '')}`; $('#det-name').textContent = L(a.name);
+  if (!id) return; const ex = EXHMAP[id], a = ART[id], p = S.prog[id] || {}, ids = dexIds(), no = 'No. ' + String(ids.indexOf(id) + 1).padStart(3, '0');
+  const img = $('#det-img'), orb = $('#det-orb'), im = dexImg(id); img.style.display = im ? 'block' : 'none'; if (im) img.src = im; orb.style.display = im ? 'none' : '';
+  const main = !ex; for (const el of [$('#v-detail .fact'), $('#v-detail .stats2')]) el.style.display = main ? '' : 'none'; $('#v-detail .dsec h2').style.display = main ? '' : 'none';
+  $('#det-no').textContent = `${no} · ${t('collectedOn')(p.date || '')}`; $('#det-name').textContent = dexName(id);
+  if (ex) { $('#det-tags').innerHTML = `<span>${t('nations')[ex.nation]}</span>`; $('#det-story').textContent = L(ex.note); return; }
+  orb.style.cssText = `--c1:${a.c[0]};--c2:${a.c[1]};--c3:${a.c[2]};` + (im ? 'display:none' : '');
   $('#det-tags').innerHTML = `<span>${t('nations')[id]}</span><span>${t('types')[id]}</span>${a.absent ? `<span>${t('elsewhere')}</span>` : ''}`;
   $('#det-story').textContent = (a.story[S.set.lang] || a.story.en).join(' '); $('#det-fun').textContent = L(a.fun);
   $('#det-quiz').textContent = p.quizN ? `${p.quiz || 0} / ${p.quizN}` : '—'; $('#det-puz').textContent = p.puz ? mm(p.puz) : '—';
 }
 $('#det-back').onclick = $('#det-dex').onclick = () => { setView('dex'); renderDex(); };
-$('#det-talk').onclick = () => { S.near = S.detailId; openChat(S.detailId); };
+$('#det-talk').onclick = () => { const ex = EXHMAP[S.detailId]; if (ex) { speak(L(ex.name) + '. ' + L(ex.note), null, NVOICE[ex.nation]); return; } S.near = S.detailId; openChat(S.detailId); };
 
 /* ------------------------------------------------------------------ TASTE CARD */
 function showCard() {
