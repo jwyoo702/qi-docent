@@ -258,14 +258,14 @@ import * as THREE from './vendor/three/three.module.js';
   addEventListener('keydown', e => { if (e.target.tagName === 'INPUT') return; if (e.code === 'KeyG') autoWalk(); });
   $('#autowalk').onclick = () => { unlockAudio(); autoWalk(); };
   window.WORLD_API = {
-    on: true, autoWalk,
+    on: true, autoWalk, distTo(id) { const a = STN[id]; return a ? Math.hypot(a.x - P.x, a.z - P.z) : 1e9; },
     release() { if (document.pointerLockElement) document.exitPointerLock(); },
     setPose(x, z, yaw, pitch) { place(x, z, yaw); if (pitch != null) P.pitch = pitch; },
     teleport(id) { if (!id) { place(0, 3, 0); P.pitch = 0; return; } const s = STAND[id], a = STN[id]; place(s[0], s[1], Math.atan2(-(a.x - s[0]), -(a.z - s[1]))); P.pitch = Math.atan2(ART_Y - EYE, Math.hypot(a.x - s[0], a.z - s[1])); log('teleport → ' + id); },
     teleportRoom(no) { const r = ROOMS.find(x => x.no === no); if (!r) return; place(20, r.z0 - 3, 0); P.pitch = 0; },
     state: () => ({ x: P.x, z: P.z, yaw: P.yaw, locked }), items: () => ITEMS.map(i => i.id),
   };
-  addEventListener('keydown', e => { if (e.target.tagName === 'INPUT') return; const k = e.code; keys[k] = true; if (k === 'KeyF') { S.manualLook = true; renderLab(); clearTimeout(window._flook); window._flook = setTimeout(() => { S.manualLook = false; renderLab(); }, 1600); log('F: looked at phone'); } if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(k) && S.view === 'agent' && e.target === document.body) e.preventDefault(); });
+  addEventListener('keydown', e => { if (e.target.tagName === 'INPUT') return; const k = e.code; keys[k] = true; if (S.view === 'chat' && ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(k)) miniChat(); if (k === 'KeyF') { S.manualLook = true; renderLab(); clearTimeout(window._flook); window._flook = setTimeout(() => { S.manualLook = false; renderLab(); }, 1600); log('F: looked at phone'); } if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(k) && S.view === 'agent' && e.target === document.body) e.preventDefault(); });
   addEventListener('keyup', e => { keys[e.code] = false; });
   canvas.addEventListener('mousedown', e => { if (S.view !== 'agent') return; unlockAudio(); if (!document.pointerLockElement && canvas.requestPointerLock) { try { canvas.requestPointerLock(); } catch (x) {} } });
   document.addEventListener('pointerlockchange', () => { locked = document.pointerLockElement === canvas; });
@@ -290,10 +290,11 @@ import * as THREE from './vendor/three/three.module.js';
     if (okState) { const cur = S.near; let want = cur; const dCur = cur && STN[cur] ? Math.hypot(STN[cur].x - P.x, STN[cur].z - P.z) : 1e9;
       if (cur && dCur < 10 && !(nearest !== cur && nd < 4.2 && dCur > nd + 3)) want = cur; else want = nd < 6.5 ? nearest : null;
       if (want !== cur) setNear(want); }
+    if (S.near && STN[S.near] && ['signal', 'guide', 'question'].includes(S.state) && Math.hypot(STN[S.near].x - P.x, STN[S.near].z - P.z) > 11) softWithdraw();
     const gz = !!(gazeId && S.near === gazeId && S.view === 'agent' && !document.hidden);
     if (gz !== S.worldGaze) { S.worldGaze = gz; log(gz ? 'view locked on artifact' : 'view left artifact'); renderLab(); }
     // free-browsing exhibits: look at one for ~1.6 s and QI introduces it
-    let best = null, ba = 1e9; const free = S.view === 'agent' && !gz && (!S.started || ['idle', 'observe', 'cooldown', 'quiet'].includes(S.state));
+    let best = null, ba = 1e9; const free = S.view === 'agent' && !gz && (!S.started || S.chatMini || ['idle', 'observe', 'cooldown', 'quiet'].includes(S.state));
     if (free) for (const it of ITEMS) { const d = Math.hypot(it.x - P.x, it.z - P.z); if (d > 7.5) continue; const ang = angTo(it.x, it.y, it.z); if (ang < .17 && ang < ba) { ba = ang; best = it; } }
     if (best && best.id === dwell.id) dwell.t += dt; else { dwell.id = best ? best.id : null; dwell.t = 0; }
     if (best) { S.stats.gaze[best.nation] = (S.stats.gaze[best.nation] || 0) + dt * 1000; if (dwell.t > 1.6 && (!shownAt[best.id] || performance.now() - shownAt[best.id] > 30000)) showItemCard(best.id); }
@@ -328,7 +329,7 @@ import * as THREE from './vendor/three/three.module.js';
   function updateHud() {
     const rn = roomName(); $('#rs-name').textContent = rn.name; $('#rs-sub').textContent = rn.sub;
     const nx = S.started && S.view === 'agent' ? nextPending() : null, tag = $('#nexttag');
-    if (nx) { const st = STN[nx], d = Math.round(Math.hypot(st.x - P.x, st.z - P.z)); if (d > 5) { tag.style.display = 'block'; tag.textContent = `➜ ${L(ART[nx].name)} · ${d} m`; } else tag.style.display = 'none'; } else tag.style.display = 'none';
+    if (nx) { const st = STN[nx], d = Math.round(Math.hypot(st.x - P.x, st.z - P.z)); if (d > 5) { tag.style.display = 'block'; tag.textContent = `${t('sugg')} ➜ ${L(ART[nx].name)} · ${d} m`; } else tag.style.display = 'none'; } else tag.style.display = 'none';
     const aw = $('#autowalk'); aw.style.display = (nx && Math.hypot(STN[nx].x - P.x, STN[nx].z - P.z) > 7 && !AW.on) ? 'block' : 'none'; aw.textContent = t('autoWalk');
     const hint = $('#ctrlhint'); const show = S.view === 'agent' && !locked; hint.style.opacity = show ? 1 : 0; const h = HINT[S.set.lang] || HINT.en; hint.innerHTML = `${h[0]}<small>${h[1]}</small>`;
     const wm = $('#worldmsg'); const need = S.state === 'guide' && !S.camOn && S.view === 'agent'; wm.classList.toggle('on', need); if (need) wm.textContent = t('tapHintW');

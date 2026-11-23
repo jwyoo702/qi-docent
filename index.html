@@ -102,6 +102,13 @@ input { font: inherit; color: inherit; }
 #timechip { font-size:12.5px; color:var(--mut); text-align:center; line-height:1.35; min-width:0; }
 #timechip b { color:var(--ink); font-size:14px; font-variant-numeric:tabular-nums; }
 #labopen { display:none; position:absolute; top:118px; right:20px; z-index:6; height:30px; padding:0 12px; border-radius:15px; background:#fff; box-shadow:0 4px 14px rgba(63,116,104,.13); font-size:12px; font-weight:600; }
+#nowplaying { display:none; position:absolute; left:20px; right:20px; top:122px; z-index:7; align-items:center; gap:6px; padding:10px 10px 10px 18px; border-radius:22px; background:rgba(255,255,255,.94); box-shadow:var(--shadow); backdrop-filter:blur(10px); }
+#phone[data-np="1"] #nowplaying { display:flex; animation:scrIn .35s ease both; }
+#nowplaying .npm { flex:1; min-width:0; } #nowplaying em { font-style:normal; font-size:11px; font-weight:700; color:var(--primary); letter-spacing:.3px; display:block; } #nowplaying b { display:block; font-size:14.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } #nowplaying span { font-size:12px; color:var(--mut); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.npbar { height:3px; border-radius:2px; background:var(--chip); margin-top:6px; overflow:hidden; } .npbar i { display:block; height:100%; width:0; background:var(--primary); transition:width .3s; }
+#nowplaying button { width:38px; height:38px; border-radius:50%; background:var(--chip); font-size:14px; font-weight:700; color:var(--primary); flex:none; }
+.donecard { flex-wrap:wrap; } .donecard .dcb { display:flex; gap:8px; margin-left:auto; } .donecard button.alt { background:var(--chip); color:var(--ink); }
+.skiplink { display:block; margin:10px auto 0; padding:8px 14px; font-size:14px; font-weight:600; color:var(--mut); text-decoration:underline; }
 #tz { position:absolute; left:0; right:0; top:var(--ty); padding:0 26px; display:flex; flex-direction:column; align-items:center; gap:10px; z-index:5; transition:top .9s cubic-bezier(.3,.7,.2,1); }
 #say { margin:0; font-size:22px; line-height:1.4; font-weight:600; text-align:center; letter-spacing:-.4px; min-height:31px; word-break:keep-all; transition:opacity .35s; }
 #sub { margin:0; font-size:13.5px; line-height:1.5; color:var(--mut); text-align:center; min-height:20px; word-break:keep-all; }
@@ -326,6 +333,7 @@ body.world #lab.open { display:block; }
       <button class="round" id="btn-settings" aria-label="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8h5M15 8h5M4 16h9M19 16h1"/><circle cx="12" cy="8" r="2.6"/><circle cx="16" cy="16" r="2.6"/></svg></button>
     </div>
     <button id="labopen" data-i18n="lab"></button>
+    <div id="nowplaying"><div class="npm"><em id="np-label"></em><b id="np-title"></b><span id="np-sub"></span><div class="npbar"><i id="np-prog"></i></div></div><button id="np-pp" aria-label="pause">❚❚</button><button id="np-open" aria-label="open">⤢</button><button id="np-x" aria-label="close">✕</button></div>
     <div id="tz">
       <p id="say"></p><p id="sub"></p>
       <div id="pane-time">
@@ -357,7 +365,7 @@ body.world #lab.open { display:block; }
         <button class="back" id="chat-back" aria-label="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
         <div class="morb" style="width:34px;height:34px"></div>
         <div class="ttl"><b>QI</b><span id="chat-sub"></span></div>
-        <button class="langchip" id="chat-lang">EN</button>
+        <button class="back" id="chat-min" aria-label="minimize"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><button class="langchip" id="chat-lang">EN</button>
       </div>
       <div class="tabs" id="tabs"><div class="on"><i></i><span data-i18n="tabStory"></span></div><div><i></i><span data-i18n="tabQuiz"></span></div><div><i></i><span data-i18n="tabPuzzle"></span></div></div>
     </div>
@@ -386,6 +394,7 @@ body.world #lab.open { display:block; }
     <div id="pgrid"></div>
     <div class="ptray"><h5 id="pz-left"></h5><div class="pcs" id="pz-pcs"></div></div>
     <div class="qfoot"><button class="btn primary" id="pz-finish" data-i18n="finish" disabled></button></div>
+    <button class="skiplink" id="pz-skip" data-i18n="skipPuzzle"></button>
   </section>
 
   <!-- ===== 6 · COLLECTED ===== -->
@@ -479,12 +488,13 @@ en: {
   simGo: n => `Demo · stand at ${n} and look`, simOn: n => `Demo · looking at ${n} ✓ (tap to stop)`,
   tapHint: 'Look at your phone — or tap the screen.',
   freeBtn: 'Just wander (no time limit)', freeTour: 'Free tour',
-  autoWalk: 'Auto-walk (G)', hiReply: "Hello! I'm QI, your museum docent. Tell me how long you'll stay, or just start walking.", whoAmI: "I'm QI. I notice where you linger in the museum and speak up at just the right moment.",
+  autoWalk: 'Auto-walk (G)',
+  later: 'Keep exploring', skipPuzzle: 'Skip the puzzle', sugg: 'Suggested', npDone: 'Story done · tap to continue', minimize: 'Listen while you walk', playing: 'Now telling', exploreFree: 'Walk freely. Linger on anything that catches your eye.', hiReply: "Hello! I'm QI, your museum docent. Tell me how long you'll stay, or just start walking.", whoAmI: "I'm QI. I notice where you linger in the museum and speak up at just the right moment.",
   nextIs: n => `Next is ${n}.`, noNext: "You've seen everything on today's course.", timeLeftMsg: m => `About ${m} minutes left.`, freeLeftMsg: 'No time limit today. Take your time.',
   quietOnMsg: "Okay. I'll stay quiet until you call me.", quietOffMsg: "Okay. I'll speak up again when you linger.", helpMsg: "Try saying: next, how much time is left, explain this, take me there, be quiet, or tell me how long you'll stay.",
   fallbackMsg: "Sorry, I didn't catch that. Try: next, time left, or explain this.", walking: 'On our way.', thanksMsg: "You're welcome!", byeMsg: 'Enjoy the museum. See you!',
   micDenied: 'The microphone is blocked. Please allow it in your browser settings.', notStarted: "Tell me how long you'll stay first.",
-  follow: n=>`Follow the glowing path to: ${n}`, followSub: 'WASD walk · mouse look · G auto-walk', tapHintW: 'Look at your phone — press F, or click the phone.',
+  follow: n=>`Suggested next: ${n}`, followSub: 'Walk freely · linger on anything you like · G auto-walk', tapHintW: 'Look at your phone — press F, or click the phone.',
   q: 'Curious about this one?', yes: "Yes, I'm curious", no: 'Not now', qHint: 'Nod, hold your gaze for 3s, or tap',
   fine: 'No problem. Take your time.', fineSub: "I'll speak up a little less", quietSay: "I'll stay quiet.", quietSub: 'Tap me if you get curious',
   tabStory: 'Story', tabQuiz: 'Quiz', tabPuzzle: 'Puzzle', chapter: (a, b) => `Story · ${a}/${b}`, narrOff: 'Story', storyDone: 'Story done · Ready for a quiz?', startQuiz: 'Start quiz', addDex: 'Add to Dex',
@@ -518,12 +528,13 @@ ko: {
   simGo: n => `시연 · ${n} 앞에서 바라보기`, simOn: n => `시연 · ${n} 바라보는 중 ✓ (눌러서 멈춤)`,
   tapHint: '폰을 보거나, 화면을 눌러 주세요.',
   freeBtn: '시간 상관없이 자유롭게 둘러볼래요', freeTour: '자유 관람',
-  autoWalk: '자동 이동 (G)', hiReply: '안녕하세요! 저는 박물관 도슨트 큐아이예요. 얼마나 보실지 알려 주시거나 그냥 걸어 보세요.', whoAmI: '저는 큐아이예요. 박물관에서 어디에 오래 머무는지 알아채고, 알맞은 때에 먼저 말을 걸어요.',
+  autoWalk: '자동 이동 (G)',
+  later: '계속 둘러볼래요', skipPuzzle: '퍼즐 건너뛰기', sugg: '추천', npDone: '이야기 끝 · 눌러서 이어가기', minimize: '걸으면서 듣기', playing: '설명 중', exploreFree: '자유롭게 걸어 보세요. 눈길이 가는 유물에 머물러 보세요.', hiReply: '안녕하세요! 저는 박물관 도슨트 큐아이예요. 얼마나 보실지 알려 주시거나 그냥 걸어 보세요.', whoAmI: '저는 큐아이예요. 박물관에서 어디에 오래 머무는지 알아채고, 알맞은 때에 먼저 말을 걸어요.',
   nextIs: n => `다음 유물: ${n}`, noNext: '오늘 코스를 모두 보셨어요.', timeLeftMsg: m => `약 ${m}분 남았어요.`, freeLeftMsg: '오늘은 시간 제한이 없어요. 천천히 보세요.',
   quietOnMsg: '알겠어요. 부르실 때까지 조용히 있을게요.', quietOffMsg: '알겠어요. 머무시면 다시 말을 걸게요.', helpMsg: "이렇게 말해 보세요: 다음, 남은 시간, 이거 설명해 줘, 데려가 줘, 조용히 해. 얼마나 있을지 알려 주셔도 돼요.",
   fallbackMsg: "잘 못 알아들었어요. '다음', '남은 시간', '이거 설명해 줘'라고 해 보세요.", walking: '같이 가요.', thanksMsg: '천만에요!', byeMsg: '즐거운 관람 되세요!',
   micDenied: '마이크가 막혀 있어요. 브라우저 설정에서 허용해 주세요.', notStarted: '먼저 얼마나 보실지 알려 주세요.',
-  follow: n=>`빛나는 길을 따라 ${n}(으)로 가 보세요`, followSub: 'WASD 걷기 · 마우스 시점 · G 자동 이동', tapHintW: '폰을 보세요 — F 키를 누르거나 폰을 눌러 주세요.',
+  follow: n=>`다음 추천: ${n}`, followSub: '자유롭게 둘러보세요 · 눈길 가는 곳에 머무르면 돼요 · G 자동 이동', tapHintW: '폰을 보세요 — F 키를 누르거나 폰을 눌러 주세요.',
   q: '이 유물이 궁금해요?', yes: '네, 궁금해요', no: '다음에', qHint: '끄덕이거나, 3초 바라보거나, 눌러 주세요',
   fine: '괜찮아요. 천천히 보세요.', fineSub: '다음엔 조금 덜 말 걸게요', quietSay: '조용히 있을게요.', quietSub: '궁금해지면 저를 눌러 주세요',
   tabStory: '이야기', tabQuiz: '퀴즈', tabPuzzle: '퍼즐', chapter: (a, b) => `이야기 · ${a}/${b}`, narrOff: '이야기', storyDone: '이야기 끝 · 퀴즈 풀어 볼까요?', startQuiz: '퀴즈 시작', addDex: '도감에 담기',
@@ -557,12 +568,13 @@ ja: {
   simGo: n => `デモ · ${n}の前で見つめる`, simOn: n => `デモ · ${n}を見つめ中 ✓（タップで停止）`,
   tapHint: 'スマホを見るか、画面をタップしてください。',
   freeBtn: '時間を決めず気ままに見たい', freeTour: '自由見学',
-  autoWalk: '自動移動 (G)', hiReply: 'こんにちは！博物館ドーセントのQIです。滞在時間を教えてください。歩き始めてもOKです。', whoAmI: 'QIです。博物館でどこに長く留まるかに気づいて、ちょうどいいタイミングで声をかけます。',
+  autoWalk: '自動移動 (G)',
+  later: 'このまま見て回る', skipPuzzle: 'パズルをスキップ', sugg: 'おすすめ', npDone: 'お話は終わり · タップで続ける', minimize: '歩きながら聞く', playing: '解説中', exploreFree: '自由に歩いてみてください。気になる展示の前で立ち止まってみましょう。', hiReply: 'こんにちは！博物館ドーセントのQIです。滞在時間を教えてください。歩き始めてもOKです。', whoAmI: 'QIです。博物館でどこに長く留まるかに気づいて、ちょうどいいタイミングで声をかけます。',
   nextIs: n => `次は${n}です。`, noNext: '今日のコースはすべて見終わりました。', timeLeftMsg: m => `あと約${m}分です。`, freeLeftMsg: '今日は時間制限がありません。ゆっくりどうぞ。',
   quietOnMsg: 'わかりました。呼ばれるまで静かにしています。', quietOffMsg: 'わかりました。立ち止まったらまた声をかけます。', helpMsg: 'こう話しかけてください：次、残り時間、これを説明して、連れて行って、静かにして。滞在時間を教えてもOKです。',
   fallbackMsg: 'うまく聞き取れませんでした。「次」「残り時間」「これを説明して」と言ってみてください。', walking: '一緒に行きましょう。', thanksMsg: 'どういたしまして！', byeMsg: 'どうぞ楽しんでください！',
   micDenied: 'マイクがブロックされています。ブラウザの設定で許可してください。', notStarted: 'まず滞在時間を教えてください。',
-  follow: n=>`光る道をたどって「${n}」へ行きましょう`, followSub: 'WASD 歩く · マウス 視点 · G 自動移動', tapHintW: 'スマホを見てください — Fキー、またはスマホをクリック。',
+  follow: n=>`おすすめの次：${n}`, followSub: '自由にご覧ください · 気になる所で立ち止まって · G 自動移動', tapHintW: 'スマホを見てください — Fキー、またはスマホをクリック。',
   q: 'この展示、気になりますか？', yes: 'はい、気になります', no: 'またあとで', qHint: 'うなずく、3秒見つめる、またはタップ',
   fine: '大丈夫です。ゆっくりどうぞ。', fineSub: '次は少し控えめにしますね', quietSay: '静かにしていますね。', quietSub: '気になったら私をタップしてください',
   tabStory: 'ストーリー', tabQuiz: 'クイズ', tabPuzzle: 'パズル', chapter: (a, b) => `ストーリー · ${a}/${b}`, narrOff: 'ストーリー', storyDone: 'お話は終わり · クイズに挑戦しますか？', startQuiz: 'クイズ開始', addDex: '図鑑に追加',
@@ -596,12 +608,13 @@ zh: {
   simGo: n => `演示 · 站在${n}前注视`, simOn: n => `演示 · 正在注视${n} ✓（点击停止）`,
   tapHint: '请看手机，或点击屏幕。',
   freeBtn: '不限时间，随意逛逛', freeTour: '自由参观',
-  autoWalk: '自动前往 (G)', hiReply: '你好！我是博物馆讲解员QI。告诉我你打算逛多久，或者直接开始走吧。', whoAmI: '我是QI。我会察觉你在博物馆里在哪里停留，并在合适的时候主动开口。',
+  autoWalk: '自动前往 (G)',
+  later: '继续参观', skipPuzzle: '跳过拼图', sugg: '推荐', npDone: '故事讲完了 · 点击继续', minimize: '边走边听', playing: '讲解中', exploreFree: '请自由行走，在感兴趣的展品前停留片刻。', hiReply: '你好！我是博物馆讲解员QI。告诉我你打算逛多久，或者直接开始走吧。', whoAmI: '我是QI。我会察觉你在博物馆里在哪里停留，并在合适的时候主动开口。',
   nextIs: n => `下一件是“${n}”。`, noNext: '今天的路线已经全部看完了。', timeLeftMsg: m => `大约还剩${m}分钟。`, freeLeftMsg: '今天没有时间限制，慢慢看。',
   quietOnMsg: '好的，在你叫我之前我会保持安静。', quietOffMsg: '好的，你停下来时我会再开口。', helpMsg: '可以这样说：下一个、还剩多久、讲讲这个、带我过去、安静点，或者告诉我你要逛多久。',
   fallbackMsg: '抱歉，我没听清。试试说“下一个”“还剩多久”或“讲讲这个”。', walking: '我们走吧。', thanksMsg: '不客气！', byeMsg: '祝你参观愉快！',
   micDenied: '麦克风被阻止了，请在浏览器设置中允许。', notStarted: '请先告诉我你要逛多久。',
-  follow: n=>`沿着发光的路走向“${n}”`, followSub: 'WASD行走 · 鼠标环顾 · G 自动前往', tapHintW: '请看手机——按F键，或点击手机。',
+  follow: n=>`推荐下一站：${n}`, followSub: '请自由参观 · 在喜欢的地方停留 · G 自动前往', tapHintW: '请看手机——按F键，或点击手机。',
   q: '对这件展品感兴趣吗？', yes: '是的，我想了解', no: '下次吧', qHint: '点头、注视3秒，或点击',
   fine: '没关系，慢慢看。', fineSub: '我之后会少打扰你一些', quietSay: '我会安静待着。', quietSub: '想了解时点一下我',
   tabStory: '故事', tabQuiz: '测验', tabPuzzle: '拼图', chapter: (a, b) => `故事 · ${a}/${b}`, narrOff: '故事', storyDone: '故事讲完了 · 要来做个测验吗？', startQuiz: '开始测验', addDex: '加入图鉴',
@@ -840,7 +853,21 @@ function setOrb(id) { const c = id ? ART[id].c : DEF; phone.style.setProperty('-
 function say(a, b = '') { const e = $('#say'); e.style.opacity = 0; setTimeout(() => { e.textContent = a; $('#sub').textContent = b; e.style.opacity = 1; }, 150); S.sayKey = null; }
 function setActions(list) { const box = $('#actions'); box.innerHTML = ''; list.forEach(o => { const b = document.createElement('button'); b.className = 'btn ' + (o.cls || ''); b.textContent = o.label; b.onclick = e => { e.stopPropagation(); unlockAudio(); o.fn(); }; box.appendChild(b); }); }
 function setState(s) { S.state = s; S.stateMs = 0; phone.dataset.state = s; $('#kState').textContent = s; log('state → ' + s); }
-function nextPending() { return S.course.find(id => !S.done.has(id) && eligible(id)); }
+function nextPending() {   // a *suggestion*: the nearest course artifact you have not seen yet (any order is fine)
+  const c = S.course.filter(id => !S.done.has(id) && eligible(id)); if (!c.length) return undefined;
+  if (!(S.world && window.WORLD_API && WORLD_API.distTo)) return c[0];
+  let best = c[0], bd = 1e9; for (const id of c) { const d = WORLD_API.distTo(id); if (d < bd) { bd = d; best = id; } }
+  if (S.rec && c.includes(S.rec) && WORLD_API.distTo(S.rec) <= bd * 1.4 + 3) best = S.rec;   // keep the suggestion steady
+  S.rec = best; return best;
+}
+function markSeen(id) {     // heard (part of) an artifact's story: it counts for the course and the Dex
+  if (!id || !ART[id]) return; S.done.add(id);
+  if (!S.prog[id]) S.prog[id] = { date: new Date().toLocaleDateString(S.set.lang === 'en' ? 'en-US' : S.set.lang, { month: 'short', day: 'numeric' }), seen: true, pts: 60 };
+  save(); renderCourse(); renderTime(); renderLab();
+}
+function softWithdraw() {   // the visitor simply walked away: no penalty, no learning
+  stopSpeak(); setActions([]); setSub('main'); phone.dataset.watch = '0'; phone.dataset.hold = '0'; setOrb(null); setState('cooldown'); S.near = null; renderLab(); say(...idleMsg()); log('walked away → QI stepped back (no penalty)');
+}
 function eligible(id) { return true; }
 function renderTime() {
   const el = $('#timechip'); if (!S.started) { el.innerHTML = ''; return; }
@@ -909,7 +936,6 @@ function setNear(id) {
   phone.dataset.watch = '0'; setOrb(null);
   if (!id) { setState('idle'); say(...idleMsg()); renderSim(); return; }
   S.last = id; log('near=' + id);
-  if (!S.course.includes(id)) { setState('idle'); say(t('notInCourse'), ''); return; }
   if (S.done.has(id)) { setState('cooldown'); say(L(ART[id].name), ''); const n = nextPending(); if (n) $('#sub').textContent = t('nextGo')(L(ART[n].name)); return; }
   if (S.stats.quiet) { setState('quiet'); say(t('quietSay'), t('quietSub')); return; }
   setState('observe'); phone.dataset.watch = '1'; say(L(ART[id].name), t('nations')[id]); renderSim();
@@ -956,14 +982,14 @@ function addMsg(cls, html, isText = true) { const d = document.createElement('di
 function setTab(i) { $$('#tabs div').forEach((d, k) => { d.classList.toggle('on', k === i); d.classList.toggle('done', k < i); }); }
 function openChat(id, replay) {
   const a = ART[id]; S.last = id; S.near = id; stopSpeak();
-  S.chat = { id, idx: 0, total: a.story.en.length, finished: false, timer: 0, dur: 0, playing: true };
+  S.chat = { id, idx: 0, total: a.story.en.length, finished: false, timer: 0, dur: 0, playing: true }; S.chatMini = false; phone.dataset.np = '0';
   setView('chat'); setOrb(id); setTab(0); $('#msgs').innerHTML = ''; setNarrOrb(); setPP(true); $('#narr-bar').style.width = '0'; $('#narr-time').textContent = '0:00';
   renderChatChrome(); addMsg('hint', `${EYE}<span>${L(a.hint)}</span>`, false); log('chat open: ' + id);
   setTimeout(() => narrateNext(S.chat), 700);
 }
 function setNarrOrb() { $$('#v-chat .morb, #narr-orb').forEach(o => o.style.cssText += ''); }
 function narrateNext(c) {
-  if (S.chat !== c || S.view !== 'chat') return; const a = ART[c.id], lines = a.story[S.set.lang] || a.story.en;
+  if (S.chat !== c || (S.view !== 'chat' && !S.chatMini)) return; const a = ART[c.id], lines = a.story[S.set.lang] || a.story.en;
   if (c.idx >= lines.length) return storyDone(c);
   const txt = lines[c.idx]; addMsg('qa', txt); renderChatChrome(); $('#narr-orb').classList.add('talk');
   if (c.idx === 0) { play(a.sound, .5); haptic(a.vib, a.shake * .5); }
@@ -972,10 +998,10 @@ function narrateNext(c) {
   speak(txt, () => { if (S.chat !== c) return; c.idx++; $('#narr-orb').classList.remove('talk'); setTimeout(() => narrateNext(c), 350); }, vp);
 }
 function storyDone(c) {
-  c.finished = true; $('#narr-bar').style.width = '100%'; setPP(false); renderChatChrome();
+  c.finished = true; $('#narr-bar').style.width = '100%'; setPP(false); renderChatChrome(); if (S.chatMini) { renderNP(); setTimeout(() => { if (S.chat === c && S.chatMini) leaveChat(); }, 30000); }
   const a = ART[c.id], d = document.createElement('div'); d.className = 'donecard';
-  const hasQuiz = a.quiz.length > 0; d.innerHTML = `<span>${hasQuiz ? t('storyDone') : ''}</span><button>${hasQuiz ? t('startQuiz') : t('addDex')}</button>`; if (!hasQuiz) d.querySelector('span').textContent = '✦';
-  d.querySelector('button').onclick = () => hasQuiz ? startQuiz(c.id) : collect(c.id, {}); $('#msgs').appendChild(d); $('#msgs').scrollTop = 1e6;
+  const hasQuiz = a.quiz.length > 0; d.innerHTML = `<span>${hasQuiz ? t('storyDone') : '✦'}</span><div class="dcb"><button class="alt" data-k="later">${t('later')}</button><button data-k="go">${hasQuiz ? t('startQuiz') : t('addDex')}</button></div>`;
+  d.querySelector('[data-k=go]').onclick = () => hasQuiz ? startQuiz(c.id) : collect(c.id, {}); d.querySelector('[data-k=later]').onclick = () => leaveChat(); $('#msgs').appendChild(d); $('#msgs').scrollTop = 1e6;
 }
 function setPP(play) { $('#pp-ic').innerHTML = play ? '<rect x="2" y="1" width="3.4" height="12" rx="1"/><rect x="8.6" y="1" width="3.4" height="12" rx="1"/>' : '<path d="M3 1.5v11l9-5.5z"/>'; S.chatPlaying = play; }
 $('#btn-pp').onclick = () => { const c = S.chat; if (!c) return; if (c.finished) { // replay
@@ -992,7 +1018,19 @@ function userAsk(text, forced) {
 $('#chatform').onsubmit = e => { e.preventDefault(); const v = $('#chatin').value.trim(); if (!v) return; $('#chatin').value = ''; unlockAudio(); userAsk(v); };
 $('#chat-lang').onclick = () => { const i = LANGS.indexOf(S.set.lang); setLang(LANGS[(i + 1) % LANGS.length]); };
 $('#chat-back').onclick = () => leaveChat();
-function leaveChat() { stopSpeak(); S.chat = null; backToAgent(); }
+function leaveChat() { const c = S.chat; if (c && (c.idx >= 1 || c.finished)) markSeen(c.id); stopSpeak(); S.chat = null; S.chatMini = false; phone.dataset.np = '0'; backToAgent(); }
+function renderNP() {
+  const c = S.chat; if (!c) return; const a = ART[c.id], lines = a.story[S.set.lang] || a.story.en;
+  $('#np-label').textContent = t('playing'); $('#np-title').textContent = L(a.name); $('#np-sub').textContent = c.finished ? t('npDone') : t('chapter')(Math.min(c.idx + 1, lines.length), lines.length);
+  $('#np-prog').style.width = (c.finished ? 100 : (c.idx / lines.length * 100 + 6)) + '%'; $('#np-pp').textContent = S.chatPlaying ? '❚❚' : '▶';
+}
+function miniChat() {   // keep the story playing, give the screen back so the visitor can keep walking
+  const c = S.chat; if (!c || S.view !== 'chat') return; S.chatMini = true; markSeen(c.id); setView('agent'); setSub('main'); setOrb(null); phone.dataset.np = '1'; phone.dataset.watch = '0'; setActions([]);
+  S.manualGaze = false; S.manualLook = false; setState('cooldown'); say(...idleMsg()); renderNP(); log('story minimized — keeps playing while you walk');
+}
+function expandChat() { if (!S.chat) return; S.chatMini = false; phone.dataset.np = '0'; setView('chat'); setOrb(S.chat.id); }
+$('#chat-min').onclick = miniChat; $('#np-open').onclick = expandChat; $('#np-x').onclick = () => leaveChat();
+$('#np-pp').onclick = () => { $('#btn-pp').click(); renderNP(); };
 function backToAgent() {
   setView('agent'); setOrb(null); setSub('main'); S.manualGaze = false; S.manualLook = false; S.camGaze = false; S.gazeMs = 0; setActions([]); phone.dataset.watch = '0'; phone.dataset.hold = '0';
   setState('cooldown'); const id = S.last; S.near = id; renderLab(); renderTime();
@@ -1042,6 +1080,7 @@ function placePiece(slot) {
   if (p.sel === slot) { p.placed[slot] = true; p.sel = null; play('ok', .8); renderPuzzle(); } else { play('no', .8); tiles[slot].classList.add('shake'); p.sec += 5; haptic([40], .3); setTimeout(() => tiles[slot] && tiles[slot].classList.remove('shake'), 300); }
 }
 $('#pz-back').onclick = () => { S.puz = null; setView('chat'); setTab(0); };
+$('#pz-skip').onclick = () => { const p = S.puz; if (!p) return; p.over = true; collect(p.id, { quiz: p.quizRight, quizN: ART[p.id].quiz.length }); };
 $('#pz-finish').onclick = () => { const p = S.puz; p.over = true; const secs = Math.round((Date.now() - p.t0) / 1000) + p.sec; collect(p.id, { quiz: p.quizRight, quizN: ART[p.id].quiz.length, puz: secs }); };
 
 /* ------------------------------------------------------------------ COLLECT / DEX */
@@ -1263,6 +1302,7 @@ $('#askform').onsubmit = e => { e.preventDefault(); const v = $('#askin').value.
 const DT = 100;
 setInterval(() => {
   if (sp.fbCb && !sp.paused) { sp.fbRemain -= DT; if (sp.fbRemain <= 0) { const f = sp.fbCb; sp.fbCb = null; f(); } }
+  { const c2 = S.chat; if (c2 && S.chatMini && S.view === 'agent') renderNP(); }
   const c = S.chat; if (c && S.view === 'chat' && c.cur && !c.finished) { const el = Math.min(c.dur, (c.idx > 0 ? ART[c.id].story[S.set.lang].slice(0, c.idx).reduce((a, s) => a + speechEst(s), 0) : 0) + (performance.now() - c.cur.start)); $('#narr-bar').style.width = Math.min(98, el / Math.max(1, (ART[c.id].story[S.set.lang] || []).reduce((a, s) => a + speechEst(s), 0)) * 100) + '%'; $('#narr-time').textContent = `${Math.floor(el / 60000)}:${String(Math.floor(el / 1000) % 60).padStart(2, '0')}`; }
   if (S.view === 'puzzle' && S.puz && !S.puz.over) $('#pz-time').textContent = mm(Math.round((Date.now() - S.puz.t0) / 1000) + S.puz.sec);
   if (!S.started || S.view !== 'agent') { $('#gazeBar').style.width = '0'; return; }
