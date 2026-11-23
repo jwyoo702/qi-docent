@@ -434,6 +434,7 @@ button:focus-visible, input:focus-visible { outline:2px solid var(--primary-mid)
 @media (prefers-reduced-motion:reduce) { .ico { animation:none; } }
 #itemcard { display:none !important; }
 .card-quiz .qimg { width:100%; margin:0; height:112px; flex:none; }
+.tile { box-shadow:inset 0 0 0 1px rgba(25,31,40,.08); background-color:#E8F3FF; } .tile.empty { background:#F2F4F6; box-shadow:inset 0 0 0 2px #D1D6DB; } .ptray .pc { box-shadow:0 0 0 1px rgba(25,31,40,.1); background-color:#E8F3FF; border-radius:10px; }
 </style>
 </head>
 <body>
@@ -533,7 +534,7 @@ button:focus-visible, input:focus-visible { outline:2px solid var(--primary-mid)
 </aside>
 <label id="hx" style="position:fixed;left:-99px;top:-99px;opacity:0;pointer-events:none" aria-hidden="true"><input type="checkbox" switch id="hxi"></label>
 
-<script src="exhibits.js?v=20261124a"></script>
+<script src="exhibits.js?v=20261124b"></script>
 <script>
 /* =====================================================================
    QI (큐아이) · Active Docent — core demo
@@ -1713,7 +1714,17 @@ async function handleAsk(text) {
 }
 
 /* ---- quiz as a card ---- */
-function prepSquare(id, cb) { const src = dexImg(id); if (!src || SQ[id]) return cb && cb(); const im = new Image(); im.onload = () => { try { const sz = Math.min(im.width, im.height), c = document.createElement('canvas'); c.width = c.height = 420; c.getContext('2d').drawImage(im, (im.width - sz) / 2, (im.height - sz) / 2, sz, sz, 0, 0, 420, 420); SQ[id] = c.toDataURL('image/jpeg', .86); } catch (e) {} cb && cb(); }; im.onerror = () => cb && cb(); im.src = src; }
+const COV = {};   // how much of each of the 9 tiles is actually artifact (alpha coverage) → missing pieces are picked from the busiest tiles
+function prepSquare(id, cb) {
+  const ic = iconImg(id), src = ic || dexImg(id); if (!src || SQ[id]) return cb && cb(); const im = new Image();
+  im.onload = () => { try { const c = document.createElement('canvas'); c.width = c.height = 420, g = c.getContext('2d');
+      if (ic) { g.fillStyle = '#E8F3FF'; g.fillRect(0, 0, 420, 420); const t0 = document.createElement('canvas'); t0.width = t0.height = 420; t0.getContext('2d').drawImage(im, 0, 0, 420, 420); const d = t0.getContext('2d').getImageData(0, 0, 420, 420).data, cv = new Array(9).fill(0);
+        for (let y = 0; y < 420; y += 3) for (let x = 0; x < 420; x += 3) if (d[(y * 420 + x) * 4 + 3] > 40) cv[Math.floor(y / 140) * 3 + Math.floor(x / 140)]++; COV[id] = cv; g.drawImage(im, 0, 0, 420, 420); }
+      else { const sz = Math.min(im.width, im.height); g.drawImage(im, (im.width - sz) / 2, (im.height - sz) / 2, sz, sz, 0, 0, 420, 420); }
+      SQ[id] = c.toDataURL('image/png'); } catch (e) {} cb && cb(); };
+  im.onerror = () => cb && cb(); im.src = src;
+}
+function pickMiss(id) { const cv = COV[id]; if (!cv) return [4, 6].sort(() => Math.random() - .5); const top = cv.map((v, k) => [v, k]).sort((x, y) => y[0] - x[0]).slice(0, 4).map(x => x[1]).sort(() => Math.random() - .5); return top.slice(0, 2); }
 function startQuiz(id) {
   prepSquare(id); stopSpeak(); S.quiz = { id, i: 0, sel: -1, right: 0, checked: false, done: false, qs: makeQuiz(id) }; addMsg('qa', t('quizLead')); speak(t('quizLead'), null, voiceOf(id)); S.quiz.card = put(mk('div', 'tcard card-quiz')); drawQuiz();
 }
@@ -1734,7 +1745,7 @@ function endQuiz() {
 
 /* ---- puzzle as a card ---- */
 function startPuzzle(id) {
-  stopSpeak(); const miss = [4, 6].sort(() => Math.random() - .5); S.puz = { id, miss, placed: {}, sel: null, t0: Date.now(), sec: 0, over: false }; addMsg('qa', t('puzzleLead')); S.puz.card = put(mk('div', 'tcard card-puz')); drawPuzzle(); prepSquare(id, () => { if (S.puz && S.puz.id === id && !S.puz.over) drawPuzzle(); });
+  stopSpeak(); S.puz = { id, miss: [4, 6], placed: {}, sel: null, t0: Date.now(), sec: 0, over: false }; addMsg('qa', t('puzzleLead')); S.puz.card = put(mk('div', 'tcard card-puz')); drawPuzzle(); prepSquare(id, () => { if (S.puz && S.puz.id === id && !S.puz.over) { S.puz.miss = pickMiss(id); drawPuzzle(); } });
 }
 const tileBg = (id, k) => { const r = Math.floor(k / 3), c = k % 3, sq = SQ[id]; return sq ? `background-image:url(${sq});background-size:300% 300%;background-position:${c * 50}% ${r * 50}%;` : `background:${['#D8CFB8', '#CBBF9F', '#E2DAC6'][(k + r) % 3]};`; };
 function drawPuzzle() {
@@ -1805,6 +1816,6 @@ $('#m-dex').onclick = openDex;
 setView('agent'); applyI18n(); renderStatus();
 
 </script>
-<script type="module" src="world.js?v=20261124a"></script>
+<script type="module" src="world.js?v=20261124b"></script>
 </body>
 </html>
