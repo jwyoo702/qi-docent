@@ -7,7 +7,7 @@
 브라우저에는 키가 절대 들어가지 않습니다. 앱은 /api/qi 로만 호출하고, 이 서버가 OpenAI 로 전달합니다.
 키가 없으면 /api/qi/health 가 ok:false 를 돌려주고, 앱은 기존 규칙 기반 답변으로 자동 전환됩니다.
 """
-import hmac, json, os, sys, time, threading, urllib.request, urllib.error
+import hmac, json, os, sys, time, threading, urllib.request, urllib.error, urllib.parse
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -150,8 +150,11 @@ class H(SimpleHTTPRequestHandler):
         origin = self.headers.get('Origin')
         if origin and origin.split('://', 1)[-1] != self.headers.get('Host'):   # 다른 사이트에서 몰래 부르는 요청 차단
             return self._json(403, {'error': 'forbidden origin'})
-        if CODE and not hmac.compare_digest(self.headers.get('X-QI-Code', '').encode('utf8', 'ignore'), CODE.encode('utf8')):
-            return self._json(401, {'error': 'access code required'})
+        if CODE:
+            got = urllib.parse.unquote(self.headers.get('X-QI-Code', '')).strip()
+            if not hmac.compare_digest(got.encode('utf8'), CODE.encode('utf8')):
+                print(f'[auth] code mismatch: got {len(got)} chars (ascii={got.isascii()}), expected {len(CODE)} chars (ascii={CODE.isascii()})', file=sys.stderr)   # 값은 기록하지 않고 길이만
+                return self._json(401, {'error': 'access code required'})
         ip = self.client_address[0]
         if TRUST_PROXY and self.headers.get('X-Forwarded-For'):
             ip = self.headers['X-Forwarded-For'].split(',')[0].strip()

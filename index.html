@@ -1701,7 +1701,7 @@ function factsFor(id) {
 }
 async function askLLM(text, id) {
   let ep = window.QI_LLM_ENDPOINT; try { ep = ep || localStorage.getItem('qi_llm'); } catch (x) {} if (!ep && LLM.ok) ep = '/api/qi'; if (!ep) return null; id = id || S.near || S.focus || S.last; if (LLM.needCode && !getCode()) return 'NEEDCODE';
-  try { const r = await fetch(ep, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-QI-Code': getCode() }, body: JSON.stringify({ text, lang: S.set.lang, current: id || '', facts: factsFor(id), history: LLM.hist.slice(-8) }) }); if (r.status === 401) { try { localStorage.removeItem('qi_code'); } catch (x) {} return 'NEEDCODE'; } if (!r.ok) return null; const j = await r.json(); if (j.reply) { LLM.hist.push({ role: 'user', content: text }, { role: 'assistant', content: j.reply }); return j.reply; } } catch (x) {} return null;
+  try { const r = await fetch(ep, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-QI-Code': encodeURIComponent(getCode()) }, body: JSON.stringify({ text, lang: S.set.lang, current: id || '', facts: factsFor(id), history: LLM.hist.slice(-8) }) }); if (r.status === 401) { try { localStorage.removeItem('qi_code'); } catch (x) {} return 'NEEDCODE'; } if (!r.ok) return null; const j = await r.json(); if (j.reply) { LLM.hist.push({ role: 'user', content: text }, { role: 'assistant', content: j.reply }); return j.reply; } } catch (x) {} return null;
 }
 async function llmAnswer(text, id) {
   const typing = addMsg('qa typing', '···'); stopSpeak(); const r = await askLLM(text, id); typing.remove();
