@@ -116,6 +116,14 @@ class H(SimpleHTTPRequestHandler):
     def do_POST(self):
         if not self.path.startswith('/api/qi'):
             return self._json(404, {'error': 'not found'})
+        try:
+            n = int(self.headers.get('Content-Length', '0'))
+        except ValueError:
+            n = 0
+        if n > 20000:
+            self.close_connection = True
+            return self._json(413, {'error': 'too large'})
+        raw = self.rfile.read(n) if n > 0 else b''   # 거절하더라도 본문을 먼저 읽어야 프록시(Render)가 502 로 오해하지 않음
         if not KEY:
             return self._json(503, {'error': 'OPENAI_API_KEY not set'})
         origin = self.headers.get('Origin')
@@ -130,10 +138,7 @@ class H(SimpleHTTPRequestHandler):
         if why:
             return self._json(429, {'error': why})
         try:
-            n = int(self.headers.get('Content-Length', '0'))
-            if n > 20000:
-                return self._json(413, {'error': 'too large'})
-            body = json.loads(self.rfile.read(n) or b'{}')
+            body = json.loads(raw or b'{}')
             return self._json(200, {'reply': call_openai(build_messages(body))})
         except urllib.error.HTTPError as e:
             detail = e.read().decode('utf8', 'ignore')[:300]
