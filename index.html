@@ -435,6 +435,7 @@ button:focus-visible, input:focus-visible { outline:2px solid var(--primary-mid)
 #itemcard { display:none !important; }
 .card-quiz .qimg { width:100%; margin:0; height:112px; flex:none; }
 .tile { box-shadow:inset 0 0 0 1px rgba(25,31,40,.08); background-color:#E8F3FF; } .tile.empty { background:#F2F4F6; box-shadow:inset 0 0 0 2px #D1D6DB; } .ptray .pc { box-shadow:0 0 0 1px rgba(25,31,40,.1); background-color:#E8F3FF; border-radius:10px; }
+.codein { width:100%; height:48px; border:1px solid var(--line); border-radius:14px; padding:0 16px; font-size:16px; background:#fff; margin:4px 0 8px; outline:none; } .codein:focus { border-color:var(--primary); }
 </style>
 </head>
 <body>
@@ -534,7 +535,7 @@ button:focus-visible, input:focus-visible { outline:2px solid var(--primary-mid)
 </aside>
 <label id="hx" style="position:fixed;left:-99px;top:-99px;opacity:0;pointer-events:none" aria-hidden="true"><input type="checkbox" switch id="hxi"></label>
 
-<script src="exhibits.js?v=20261124b"></script>
+<script src="exhibits.js?v=20261125a"></script>
 <script>
 /* =====================================================================
    QI (큐아이) · Active Docent — core demo
@@ -1690,19 +1691,23 @@ function userAsk(text, forced, noEcho, idOverride) {
     if (key && a) { S.asked = S.asked || {}; (S.asked[id] = S.asked[id] || new Set()).add(key); S.asks = S.asks || {}; S.asks[id] = (S.asks[id] || 0) + 1; if (S.asks[id] >= 2) addPiece(id, 'ask'); if (!(S.prog[id] && S.prog[id].date)) setTimeout(() => askChips(id, false), 500); } }, 650);
 }
 /* ---- AI answers (OpenAI via qi_server.py proxy; falls back to the curated rule-based answers when no key) ---- */
-const LLM = { ok: false, hist: [] };
-fetch('/api/qi/health').then(r => r.json()).then(j => { LLM.ok = !!j.ok; log('LLM ' + (LLM.ok ? 'on (' + j.model + ')' : 'off (no key)')); if (LLM.ok && S.started) addMsg('hint', t('llmOn')); }).catch(() => {});
+const LLM = { ok: false, hist: [], needCode: false };
+const getCode = () => { try { return localStorage.getItem('qi_code') || ''; } catch (x) { return ''; } };
+fetch('/api/qi/health').then(r => r.json()).then(j => { LLM.ok = !!j.ok; LLM.needCode = !!j.needCode; log('LLM ' + (LLM.ok ? 'on (' + j.model + ')' : 'off (no key)')); if (LLM.ok && S.started) addMsg('hint', t('llmOn')); }).catch(() => {});
 function llmOn() { let e = window.QI_LLM_ENDPOINT; try { e = e || localStorage.getItem('qi_llm'); } catch (x) {} return !!(LLM.ok || e); }
 function factsFor(id) {
   const e = EXHMAP[id], a = ART[id]; if (a) return [`Name: ${L(a.name)} (${a.name.en})`, `Room/kingdom: ${t('nations')[id] || a.nation}`, a.absent ? 'Note: this object is held at another institution; the museum shows a replica or panel.' : '', `Story: ${(a.story[S.set.lang] || a.story.en).join(' ')}`, `Who made it: ${L(a.who)}`, `Why it matters: ${L(a.why)}`, `In simple words: ${L(a.simple)}`, `Fun fact: ${L(a.fun)}`].filter(Boolean).join('\n');
   if (e) return [`Name: ${L(e.name)} (${e.name.en})`, `Kingdom: ${t('nations')[e.nation]}`, `Museum label note: ${L(e.note)}`].join('\n'); return '';
 }
 async function askLLM(text, id) {
-  let ep = window.QI_LLM_ENDPOINT; try { ep = ep || localStorage.getItem('qi_llm'); } catch (x) {} if (!ep && LLM.ok) ep = '/api/qi'; if (!ep) return null; id = id || S.near || S.focus || S.last;
-  try { const r = await fetch(ep, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text, lang: S.set.lang, current: id || '', facts: factsFor(id), history: LLM.hist.slice(-8) }) }); if (!r.ok) return null; const j = await r.json(); if (j.reply) { LLM.hist.push({ role: 'user', content: text }, { role: 'assistant', content: j.reply }); return j.reply; } } catch (x) {} return null;
+  let ep = window.QI_LLM_ENDPOINT; try { ep = ep || localStorage.getItem('qi_llm'); } catch (x) {} if (!ep && LLM.ok) ep = '/api/qi'; if (!ep) return null; id = id || S.near || S.focus || S.last; if (LLM.needCode && !getCode()) return 'NEEDCODE';
+  try { const r = await fetch(ep, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-QI-Code': getCode() }, body: JSON.stringify({ text, lang: S.set.lang, current: id || '', facts: factsFor(id), history: LLM.hist.slice(-8) }) }); if (r.status === 401) { try { localStorage.removeItem('qi_code'); } catch (x) {} return 'NEEDCODE'; } if (!r.ok) return null; const j = await r.json(); if (j.reply) { LLM.hist.push({ role: 'user', content: text }, { role: 'assistant', content: j.reply }); return j.reply; } } catch (x) {} return null;
 }
 async function llmAnswer(text, id) {
   const typing = addMsg('qa typing', '···'); stopSpeak(); const r = await askLLM(text, id); typing.remove();
+  if (r === 'NEEDCODE') { const TX = { en: ['Enter the access code to turn on AI answers.', 'Access code', 'Confirm'], ko: ['AI 답변을 쓰려면 접속 코드를 입력해 주세요.', '접속 코드', '확인'], ja: ['AI回答を使うにはアクセスコードを入力してください。', 'アクセスコード', '確認'], zh: ['请输入访问码以开启AI回答。', '访问码', '确认'] }[S.set.lang] || ['Enter the access code.', 'Code', 'OK'];
+    const c = mk('div', 'tcard card-nudge'); c.appendChild(mk('div', 'ntxt', esc(TX[0]))); const inp = mk('input', 'codein'); inp.type = 'password'; inp.placeholder = TX[1]; inp.autocomplete = 'off'; c.appendChild(inp);
+    const row = mk('div', 'acts'); row.appendChild(mkBtn(TX[2], 'primary', () => { const v = inp.value.trim(); if (!v) return; try { localStorage.setItem('qi_code', v); } catch (x) {} c.remove(); llmAnswer(text, id); })); c.appendChild(row); inp.onkeydown = e => { if (e.key === 'Enter') row.firstChild.click(); }; put(c); return; }
   if (!r) { if (id && ART[id]) return userAsk(text, undefined, true, id); return qiReply(t('fallbackMsg')); }
   addMsg('qa', r); speak(r, null, ART[id] ? ART[id].voice : EXHMAP[id] ? NVOICE[EXHMAP[id].nation] : undefined);
   if (isDexId(id)) { S.asks = S.asks || {}; S.asks[id] = (S.asks[id] || 0) + 1; if (S.asks[id] >= 2) addPiece(id, 'ask'); }
@@ -1816,6 +1821,6 @@ $('#m-dex').onclick = openDex;
 setView('agent'); applyI18n(); renderStatus();
 
 </script>
-<script type="module" src="world.js?v=20261124b"></script>
+<script type="module" src="world.js?v=20261125a"></script>
 </body>
 </html>

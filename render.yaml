@@ -1,0 +1,22 @@
+# Render 블루프린트: 앱(정적 파일) + AI 프록시를 한 서비스로 띄웁니다. 키와 코드는 Render 화면에서 직접 입력합니다(이 파일에는 없음).
+services:
+  - type: web
+    name: qi-docent
+    runtime: python
+    plan: free
+    buildCommand: echo "no build needed"
+    startCommand: python3 qi_server.py
+    healthCheckPath: /api/qi/health
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
+      - key: QI_TRUST_PROXY
+        value: "1"
+      - key: QI_DAILY_CAP
+        value: "300"
+      - key: QI_RATE_PER_MIN
+        value: "12"
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: QI_ACCESS_CODE
+        sync: false
