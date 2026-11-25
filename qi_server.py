@@ -28,7 +28,7 @@ KEY = os.environ.get('OPENAI_API_KEY', '')
 MODEL = os.environ.get('OPENAI_MODEL', 'gpt-4o-mini')
 PORT = int(os.environ.get('PORT', '8000'))
 HOST = os.environ.get('HOST', '127.0.0.1')              # 기본: 내 컴퓨터에서만 접속 가능 (같은 와이파이의 다른 사람은 못 씀)
-CODE = os.environ.get('QI_ACCESS_CODE', '')             # 설정하면 이 코드를 아는 사람만 AI 사용 (온라인 배포 시 필수)
+CODE = os.environ.get('QI_ACCESS_CODE', '').strip()             # 설정하면 이 코드를 아는 사람만 AI 사용 (온라인 배포 시 필수)
 TRUST_PROXY = os.environ.get('QI_TRUST_PROXY') == '1'   # Render 같은 호스팅 뒤에서는 1 (실제 접속자 주소를 X-Forwarded-For 에서 읽음)
 RATE = int(os.environ.get('QI_RATE_PER_MIN', '20'))     # 한 주소당 1분에 최대 요청 수
 DAILY = int(os.environ.get('QI_DAILY_CAP', '300'))      # 하루 전체 최대 요청 수 (넘으면 AI 답변만 멈춤)
@@ -150,7 +150,7 @@ class H(SimpleHTTPRequestHandler):
         origin = self.headers.get('Origin')
         if origin and origin.split('://', 1)[-1] != self.headers.get('Host'):   # 다른 사이트에서 몰래 부르는 요청 차단
             return self._json(403, {'error': 'forbidden origin'})
-        if CODE and not hmac.compare_digest(self.headers.get('X-QI-Code', ''), CODE):
+        if CODE and not hmac.compare_digest(self.headers.get('X-QI-Code', '').encode('utf8', 'ignore'), CODE.encode('utf8')):
             return self._json(401, {'error': 'access code required'})
         ip = self.client_address[0]
         if TRUST_PROXY and self.headers.get('X-Forwarded-For'):
