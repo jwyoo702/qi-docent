@@ -102,6 +102,7 @@ class H(SimpleHTTPRequestHandler):
         self.send_response(code)
         self.send_header('Content-Type', 'application/json; charset=utf-8')
         self.send_header('Content-Length', str(len(b)))
+        self.send_header('Connection', 'close')
         self.end_headers()
         self.wfile.write(b)
 
@@ -113,17 +114,37 @@ class H(SimpleHTTPRequestHandler):
             return self._json(404, {'error': 'not found'})                 # .env, .git, 서버 코드는 절대 내려주지 않음
         return super().do_GET()
 
-    def do_POST(self):
-        if not self.path.startswith('/api/qi'):
-            return self._json(404, {'error': 'not found'})
+    def _read_body(self):
+        """요청 본문을 항상 끝까지 읽는다 (Content-Length 또는 chunked). 너무 크면 None."""
+        if 'chunked' in self.headers.get('Transfer-Encoding', '').lower():
+            out = b''
+            while True:
+                line = self.rfile.readline(64).strip()
+                size = int(line.split(b';')[0] or b'0', 16)
+                if size == 0:
+                    while self.rfile.readline(64).strip():
+                        pass
+                    return out
+                if len(out) + size > 20000:
+                    self.close_connection = True
+                    return None
+                out += self.rfile.read(size)
+                self.rfile.readline(4)
         try:
             n = int(self.headers.get('Content-Length', '0'))
         except ValueError:
             n = 0
         if n > 20000:
             self.close_connection = True
+            return None
+        return self.rfile.read(n) if n > 0 else b''
+
+    def do_POST(self):
+        if not self.path.startswith('/api/qi'):
+            return self._json(404, {'error': 'not found'})
+        raw = self._read_body()
+        if raw is None:
             return self._json(413, {'error': 'too large'})
-        raw = self.rfile.read(n) if n > 0 else b''   # 거절하더라도 본문을 먼저 읽어야 프록시(Render)가 502 로 오해하지 않음
         if not KEY:
             return self._json(503, {'error': 'OPENAI_API_KEY not set'})
         origin = self.headers.get('Origin')
