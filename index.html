@@ -949,7 +949,7 @@ function speak(text, onend, prof) {
   // optional: a speech-synthesis service behind your own proxy (window.QI_TTS_ENDPOINT) → receives {text, lang, voice, prompt} and returns audio
   let ep = window.QI_TTS_ENDPOINT; try { ep = ep || localStorage.getItem('qi_tts'); } catch (e) {}
   if (ep && S.set.sound) {
-    fetch(ep, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-QI-Code': encodeURIComponent(getCode()) }, body: JSON.stringify({ text, lang: S.set.lang }) })
+    fetch(ep, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-QI-Code': encodeURIComponent(getCode()) }, body: JSON.stringify({ text, lang: S.set.lang, voice: prof.id || 'qi' }) })
       .then(r => { if (!r.ok) throw new Error('tts ' + r.status); return r.blob(); })
       .then(bl => { if (sp.id !== myId) return; const au = new Audio(URL.createObjectURL(bl)); sp.audio = au; au.onended = finish; au.onerror = () => { if (sp.id === myId) browser(); }; au.play().catch(() => { if (sp.id === myId) browser(); }); })
       .catch(() => { if (sp.id === myId) browser(); });

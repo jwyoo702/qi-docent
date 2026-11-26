@@ -34,7 +34,9 @@ RATE = int(os.environ.get('QI_RATE_PER_MIN', '20'))     # 한 주소당 1분에 
 DAILY = int(os.environ.get('QI_DAILY_CAP', '300'))      # 하루 전체 최대 요청 수 (넘으면 AI 답변만 멈춤)
 # ElevenLabs 음성 (모든 나라가 같은 목소리). 키는 .env 의 ELEVENLABS_API_KEY — 브라우저로는 절대 나가지 않음
 ELEVEN_KEY = os.environ.get('ELEVENLABS_API_KEY', '')
-ELEVEN_VOICE = os.environ.get('ELEVENLABS_VOICE_ID', 's3TPKV1kjDlVtZbl4Ksh')
+ELEVEN_VOICE = os.environ.get('ELEVENLABS_VOICE_ID', 's3TPKV1kjDlVtZbl4Ksh').strip()
+# 나라별 목소리: ELEVENLABS_VOICE_GOGU / BAEK / SILLA / GAYA (비어 있으면 위의 기본 목소리 사용)
+ELEVEN_VOICES = {k: os.environ.get('ELEVENLABS_VOICE_' + k.upper(), '').strip() for k in ('gogu', 'baek', 'silla', 'gaya')}
 ELEVEN_MODEL = os.environ.get('ELEVENLABS_MODEL', 'eleven_multilingual_v2')
 ELEVEN_BASE = os.environ.get('ELEVENLABS_BASE', 'https://api.elevenlabs.io')
 TTS_RATE = int(os.environ.get('QI_TTS_RATE_PER_MIN', '40'))
@@ -61,12 +63,13 @@ def allowed(ip, hits=None, day=None, rate=None, cap=None):
     return None
 
 
-def call_eleven(text):
-    key = hashlib.sha256((ELEVEN_VOICE + '|' + text).encode('utf8')).hexdigest()
+def call_eleven(text, who=''):
+    voice = ELEVEN_VOICES.get(who) or ELEVEN_VOICE                 # 나라에 맞는 목소리, 없으면 기본
+    key = hashlib.sha256((voice + '|' + text).encode('utf8')).hexdigest()
     if key in _tts_cache:
         return _tts_cache[key]
     req = urllib.request.Request(
-        f'{ELEVEN_BASE}/v1/text-to-speech/{ELEVEN_VOICE}?output_format=mp3_44100_64',
+        f'{ELEVEN_BASE}/v1/text-to-speech/{urllib.parse.quote(voice, safe="")}?output_format=mp3_44100_64',
         data=json.dumps({'text': text, 'model_id': ELEVEN_MODEL, 'voice_settings': {'stability': .5, 'similarity_boost': .75}}).encode(),
         headers={'Content-Type': 'application/json', 'Accept': 'audio/mpeg', 'xi-api-key': ELEVEN_KEY},
     )
@@ -107,10 +110,17 @@ def build_messages(body):
     return msgs
 
 
+def chat_payload(msgs):
+    """일반 모델(gpt-4o, gpt-4.1 …)과 추론 모델(gpt-5, o 시리즈)은 받는 항목이 달라서 모델 이름으로 나눈다."""
+    if MODEL.startswith(('gpt-5', 'o1', 'o3', 'o4')):
+        return {'model': MODEL, 'messages': msgs, 'max_completion_tokens': 1500}   # 추론 모델은 temperature 를 못 바꾸고, 생각하는 데도 토큰이 든다
+    return {'model': MODEL, 'messages': msgs, 'temperature': 0.5, 'max_tokens': 320}
+
+
 def call_openai(msgs):
     req = urllib.request.Request(
         'https://api.openai.com/v1/chat/completions',
-        data=json.dumps({'model': MODEL, 'messages': msgs, 'temperature': 0.5, 'max_tokens': 320}).encode(),
+        data=json.dumps(chat_payload(msgs)).encode(),
         headers={'Content-Type': 'application/json', 'Authorization': 'Bearer ' + KEY},
     )
     with urllib.request.urlopen(req, timeout=25) as r:
@@ -137,7 +147,7 @@ class H(SimpleHTTPRequestHandler):
 
     def do_GET(self):
         if self.path.startswith('/api/qi/health'):
-            return self._json(200, {'ok': bool(KEY), 'model': MODEL, 'needCode': bool(CODE), 'tts': bool(ELEVEN_KEY)})
+            return self._json(200, {'ok': bool(KEY), 'model': MODEL, 'needCode': bool(CODE), 'tts': bool(ELEVEN_KEY), 'voices': [k for k, v in ELEVEN_VOICES.items() if v]})
         p = self.path.split('?', 1)[0]
         if any(seg.startswith('.') for seg in p.split('/') if seg) or p.endswith(('.py', '.yaml', '.yml', '.example')):
             return self._json(404, {'error': 'not found'})                 # .env, .git, 서버 코드는 절대 내려주지 않음
@@ -223,10 +233,10 @@ class H(SimpleHTTPRequestHandler):
         if why:
             return self._json(429, {'error': why})
         try:
-            text = str((json.loads(raw or b'{}')).get('text', '')).strip()[:700]
+            body = json.loads(raw or b'{}'); text = str(body.get('text', '')).strip()[:700]; who = str(body.get('voice', ''))[:12]
             if not text:
                 return self._json(400, {'error': 'empty text'})
-            audio = call_eleven(text)
+            audio = call_eleven(text, who)
             self.send_response(200)
             self.send_header('Content-Type', 'audio/mpeg')
             self.send_header('Content-Length', str(len(audio)))
