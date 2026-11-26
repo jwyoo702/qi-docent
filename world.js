@@ -338,7 +338,7 @@ import * as THREE from './vendor/three/three.module.js';
   const angTo = (x, y, z) => { const cx = x - P.x, cy = y - EYE, cz = z - P.z, len = Math.hypot(cx, cy, cz); return Math.acos(Math.min(1, Math.max(-1, (FWD.x * cx + FWD.y * cy + FWD.z * cz) / len))); };
   function showItemCard(id) {   // no corner card any more: QI explains in the chat thread
     const e = EXHMAP[id]; if (!e) return; shownAt[id] = performance.now();
-    if (!S.prog[id]) { S.prog[id] = { date: new Date().toLocaleDateString(S.set.lang === 'en' ? 'en-US' : S.set.lang, { month: 'short', day: 'numeric' }), seen: true }; save(); log('seen: ' + id); }
+    if (!S.prog[id]) { S.prog[id] = { seen: true }; save(); log('seen: ' + id); }
     const fresh = !S.started; if (fresh) { try { startFree(); } catch (x) {} }          // looking at an exhibit before pressing Start: open the conversation first
     let tries = 0; const go = () => { if (window.qiIntroduce && qiIntroduce(id)) return; if (++tries < 14) setTimeout(go, 500); };
     if (fresh) { setTimeout(() => { try { stopSpeak(); } catch (x) {} go(); }, 900); } else go();

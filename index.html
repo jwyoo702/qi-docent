@@ -1,7 +1,8 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" translate="no">
 <head>
 <meta charset="utf-8">
+<meta name="google" content="notranslate">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#F2F4F6">
@@ -167,7 +168,7 @@ body:not(.demo) #simbar, body:not(.demo) #hud-lab, body:not(.demo) #labopen, bod
 
 /* ---------- sheets ---------- */
 .sheet { position:absolute; left:0; right:0; bottom:0; background:#fff; border-radius:30px 30px 0 0; padding:14px 24px 34px; z-index:40; transform:translateY(105%); transition:transform .45s cubic-bezier(.3,.7,.2,1); box-shadow:0 -10px 40px rgba(0,0,0,.14); max-height:84%; overflow:auto; }
-.sheet.open { transform:none; } .sheet h3 { margin:6px 0 14px; font-size:19px; letter-spacing:-.3px; } .grab { width:40px; height:4px; border-radius:2px; background:#ddd; margin:0 auto 8px; }
+.sheet.open { transform:none; } .sheet h3 { margin:6px 0 14px; font-size:19px; letter-spacing:-.3px; } .grab { position:sticky; top:-14px; z-index:3; height:26px; margin:-14px -24px 0; border-radius:inherit; background:linear-gradient(#D1D6DB,#D1D6DB) center 12px / 40px 4px no-repeat, #fff; }
 #scrim { position:absolute; inset:0; background:rgba(0,0,0,.28); opacity:0; pointer-events:none; transition:opacity .3s; z-index:39; } #scrim.on { opacity:1; pointer-events:auto; }
 .row { display:flex; align-items:center; justify-content:space-between; padding:13px 0; border-bottom:1px solid var(--line); gap:12px; font-size:15px; } .row:last-child { border-bottom:0; }
 .row small { display:block; color:var(--mut); font-size:12px; margin-top:2px; line-height:1.4; max-width:215px; }
@@ -346,7 +347,7 @@ button:focus-visible, input:focus-visible { outline:2px solid var(--primary-mid)
 .thead { height:56px; flex:none; display:flex; align-items:center; justify-content:space-between; padding:0 14px 0 var(--m); }
 .tw { display:flex; align-items:center; gap:10px; min-width:0; } .tav { width:40px; height:40px; flex:none; }
 .who b { display:block; font-size:17px; line-height:25px; font-weight:600; letter-spacing:-.2px; } .who span { display:block; font-size:12px; line-height:18px; color:var(--primary-strong); min-height:18px; }
-.tbtns { display:flex; } .ib { width:44px; height:44px; display:grid; place-items:center; border-radius:12px; flex:none; } .ib svg { width:24px; height:24px; } .ib:active { background:rgba(0,0,0,.05); }
+.tbtns { display:flex; align-items:center; } .ib { width:44px; height:44px; display:grid; place-items:center; border-radius:12px; flex:none; } .ib svg { width:24px; height:24px; } .ib:active { background:rgba(0,0,0,.05); }
 #phone[data-started="0"] .tw { visibility:hidden; }
 #hero { flex:1; display:none; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:0 var(--m); gap:20px; min-height:0; }
 #phone[data-started="0"] #hero { display:flex; } #phone[data-started="0"] #msgs, #phone[data-started="0"] #askform { display:none; } #phone[data-started="1"] #hero-foot { display:none; }
@@ -385,7 +386,7 @@ button:focus-visible, input:focus-visible { outline:2px solid var(--primary-mid)
 .step i { width:32px; height:32px; border-radius:50%; background:var(--chip); border:1.5px solid var(--line); display:grid; place-items:center; } .step.done i { background:var(--primary); border-color:var(--primary); } .step.done { color:var(--ink); } .card-prog p { margin:0; font-size:14px; line-height:21px; color:var(--mut); }
 .card-get { padding:24px; display:flex; flex-direction:column; align-items:center; gap:16px; text-align:center; } .card-get em { font-style:normal; font-size:12px; line-height:18px; font-weight:600; color:var(--primary-strong); } .card-get .art { width:200px; height:200px; border-radius:24px; background:var(--line); overflow:hidden; } .card-get .art img { width:100%; height:100%; object-fit:cover; display:block; }
 .card-get small { display:block; font-size:12px; line-height:18px; color:var(--mut); } .card-get p { margin:4px 0 0; font-size:14px; line-height:21px; color:var(--body); }
-.card-quiz { padding:20px; display:flex; flex-direction:column; gap:16px; } .card-quiz .qimg { width:100%; height:96px; border-radius:12px; object-fit:cover; background:var(--line); display:block; } .qh { display:flex; justify-content:space-between; align-items:center; font-size:12px; line-height:18px; color:var(--mut); } .qh em { font-style:normal; font-weight:600; color:var(--primary-strong); }
+.card-quiz { padding:20px; display:flex; flex-direction:column; gap:16px; } .card-quiz .qimg { width:100%; height:132px; border-radius:12px; object-fit:contain; background:#E8F3FF; display:block; } .qh { display:flex; justify-content:space-between; align-items:center; font-size:12px; line-height:18px; color:var(--mut); } .qh em { font-style:normal; font-weight:600; color:var(--primary-strong); }
 .opts { display:flex; flex-direction:column; gap:8px; } .opt { display:flex; align-items:center; gap:12px; height:48px; padding:0 16px; border-radius:12px; background:var(--chip); text-align:left; font-size:17px; letter-spacing:-.2px; } .opt i { font-style:normal; font-size:12px; font-weight:600; color:var(--mut); width:12px; } .opt.sel { background:var(--primary-soft); color:var(--primary-strong); } .opt.sel i { color:var(--primary); }
 .opt.ok { background:#E6F7EF; color:#027648; } .opt.ok i { color:var(--ok); } .opt.bad { background:#FFEEEE; color:#BC1B2A; } .opt.bad i { color:var(--danger); } .fbk { min-height:0; font-size:14px; font-weight:600; color:var(--mut); } .fbk:empty { display:none; }
 .qsum { display:flex; justify-content:space-between; align-items:center; font-size:14px; } .qsum em { font-style:normal; font-weight:600; color:var(--primary-strong); } .qsum b { font-size:17px; }
@@ -396,6 +397,15 @@ button:focus-visible, input:focus-visible { outline:2px solid var(--primary-mid)
 .card-col { display:flex; align-items:center; gap:16px; padding:16px; } .card-col .th { width:56px; height:56px; border-radius:12px; background:var(--line); flex:none; overflow:hidden; } .card-col .th img { width:100%; height:100%; object-fit:cover; display:block; } .card-col em { display:block; font-style:normal; font-size:12px; line-height:18px; font-weight:600; color:var(--primary-strong); } .card-col b { display:block; font-size:17px; line-height:25.5px; font-weight:600; } .card-col small { font-size:12px; color:var(--mut); }
 
 /* input bar */
+#btn-stop { display:none; align-items:center; gap:6px; height:32px; padding:0 12px 0 10px; margin-right:4px; border:0; border-radius:980px; background:#191F28; color:#fff; font-size:13px; line-height:19px; font-weight:600; font-family:inherit; cursor:pointer; } #btn-stop i { width:9px; height:9px; border-radius:2px; background:#fff; display:block; } #phone[data-speak="1"][data-started="1"] #btn-stop { display:flex; }
+/* ---------- dex detail = Figma "18 도감 상세" ---------- */
+#v-detail .topbar { position:relative; justify-content:flex-start; padding:0 24px 0 14px; } #v-detail .topbar .ib { position:relative; z-index:1; } #v-detail .dtitle { position:absolute; left:0; right:0; text-align:center; font-size:20px; line-height:29px; font-weight:600; letter-spacing:-.3px; color:var(--ink); pointer-events:none; }
+#v-detail .detbody { padding:8px var(--m) 8px; gap:16px; }
+#v-detail .dhero, #v-detail .dhero.ic { height:224px; flex:none; border-radius:20px; background:#E8F3FF; box-shadow:0 0 2px rgba(112,112,112,.3); padding:6px; box-sizing:border-box; }
+#v-detail .dhero .real { right:14px; bottom:14px; width:56px; height:56px; border-radius:14px; border:0; object-fit:contain; background:#fff; }
+#v-detail .dinfo { flex:none; background:#fff; border-radius:16px; padding:16px; display:flex; flex-direction:column; gap:6px; } #v-detail .dinfo .dmeta small { color:#6B7684; } #v-detail .dinfo .dsec { padding:8px 0; } #v-detail .dinfo .dsec h2 { display:none; }
+#v-detail #det-pieces { flex:none; border-radius:16px; padding:16px; gap:16px; } #v-detail #det-pieces b { font-size:17px; line-height:25.5px; letter-spacing:0; } #v-detail #det-pieces .cnt { padding:4px 12px; } #v-detail #det-pieces .steps { gap:0; } #v-detail #det-pieces .step { gap:6px; } #v-detail #det-pieces .step i { width:28px; height:28px; border:1px solid var(--line); background:var(--bg); } #v-detail #det-pieces .step.done i { background:var(--primary); border-color:var(--primary); } #v-detail #det-pieces .step i svg { width:14px; height:14px; } #v-detail #det-pieces > p { display:none; }
+#v-detail .dfoot { padding:8px var(--m) 8px; border-top:0; background:transparent; } #v-detail .dfoot .cta { height:56px; width:100%; border-radius:16px; }
 #askform { flex:none; padding:8px var(--m); display:flex; } .field { flex:1; height:52px; border-radius:16px; background:#fff; display:flex; align-items:center; padding:0 8px 0 18px; gap:8px; }
 #askin { flex:1; min-width:0; border:0; outline:0; background:transparent; font-size:17px; letter-spacing:-.2px; user-select:text; -webkit-user-select:text; } #askin::placeholder { color:var(--hint); }
 #sendbtn { display:none; width:36px; height:36px; border-radius:12px; background:var(--primary); color:#fff; place-items:center; flex:none; } #sendbtn.show { display:grid; } #sendbtn.show ~ #btn-mic { display:none; } #sendbtn svg, #btn-mic svg { width:18px; height:18px; }
@@ -425,15 +435,19 @@ button:focus-visible, input:focus-visible { outline:2px solid var(--primary-mid)
 #dexgrid { padding:0 0 24px; } .dx .im { height:auto; margin:0; aspect-ratio:1; } .dx { min-height:0; gap:4px; border:0; } .dx.lock, .dx.prog { background:#fff; border:0; }
 .dhero { margin:0; } .dsec { padding:0; } .dx small { font-size:12px; }
 .dx .im.ic { background:var(--bg); padding:8px; } .dx .im.ic .ico { animation:none; filter:drop-shadow(0 4px 5px rgba(25,31,40,.14)); }
+#v-dex .topbar { position:relative; justify-content:flex-start; padding:0 24px 0 14px; } #v-dex .topbar .ib { position:relative; z-index:1; } #v-dex .dtitle { position:absolute; left:0; right:0; text-align:center; font-size:20px; line-height:29px; font-weight:600; letter-spacing:-.3px; color:var(--ink); pointer-events:none; }
+#v-dex .dexbody h1, #v-dex .dexbody > p, #v-dex .dexbody > .pbar2, #v-dex #dex-game { display:none; } #v-dex .dexbody { padding:8px var(--m) 24px; gap:16px; }
+#dex-filters .chipx { height:auto; padding:8px 16px; font-size:14px; line-height:21px; font-weight:600; color:#4E5968; background:#fff; } #dex-filters .chipx.on { background:var(--primary); color:#fff; }
+#dexgrid { gap:12px; } #v-dex .dx { border-radius:16px; padding:8px; gap:4px; } #v-dex .dx .im { aspect-ratio:auto; height:90px; border-radius:12px; font-size:20px; line-height:29px; font-weight:600; } #v-dex .dx small { font-size:11px; line-height:16.5px; font-weight:500; color:#8B95A1; } #v-dex .dx b { font-size:12px; line-height:18px; font-weight:400; letter-spacing:0; color:var(--ink); } #v-dex .dx.lock b { color:#6B7684; } #v-dex .dx.lock .im, #v-dex .dx.prog .im { background:#F2F4F6; color:#8B95A1; } #v-dex .dx .im.ic { background:#E8F3FF; padding:8px; box-sizing:border-box; } #v-dex .dx .im img { object-fit:contain; } #v-dex .dx b { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } #v-dex .dx:not(.lock):not(.prog) .im { background:#E8F3FF; }
 .dhero.ic { background:var(--primary-soft); height:260px; padding:20px; position:relative; display:block; } .dhero.ic .ico { filter:drop-shadow(0 14px 16px rgba(25,31,40,.18)); }
 .dhero .real { position:absolute; right:14px; bottom:14px; width:56px; height:56px; border-radius:14px; border:2px solid #fff; object-fit:cover; box-shadow:0 2px 8px rgba(25,31,40,.12); }
 .card-art .stage { position:relative; height:200px; background:var(--primary-soft); padding:16px; box-sizing:border-box; } .card-art .stage .ico { position:relative; }
-.card-art .stage .real { position:absolute; right:12px; bottom:12px; width:48px; height:48px; border-radius:12px; border:2px solid #fff; object-fit:cover; box-shadow:0 2px 8px rgba(25,31,40,.12); }
+.card-art .stage .ico { width:100%; height:100%; object-fit:contain; } .card-art .stage .real { position:absolute; right:12px; bottom:12px; width:48px; height:48px; border-radius:12px; border:2px solid #fff; object-fit:contain; background:#fff; box-shadow:0 2px 8px rgba(25,31,40,.12); }
 .card-get .art.ic { background:var(--primary-soft); padding:14px; box-sizing:border-box; } .card-get .art.ic .ico { object-fit:contain; }
 .msg.chdiv img.icon { object-fit:contain; background:var(--primary-soft); padding:3px; box-sizing:border-box; }
 @media (prefers-reduced-motion:reduce) { .ico { animation:none; } }
 #itemcard { display:none !important; }
-.card-quiz .qimg { width:100%; margin:0; height:112px; flex:none; }
+.card-quiz .qimg { width:100%; margin:0; height:132px; padding:8px; box-sizing:border-box; object-fit:contain; background:#E8F3FF; flex:none; }
 .tile { box-shadow:inset 0 0 0 1px rgba(25,31,40,.08); background-color:#E8F3FF; } .tile.empty { background:#F2F4F6; box-shadow:inset 0 0 0 2px #D1D6DB; } .ptray .pc { box-shadow:0 0 0 1px rgba(25,31,40,.1); background-color:#E8F3FF; border-radius:10px; }
 .codein { width:100%; height:48px; border:1px solid var(--line); border-radius:14px; padding:0 16px; font-size:16px; background:#fff; margin:4px 0 8px; outline:none; } .codein:focus { border-color:var(--primary); }
 </style>
@@ -469,11 +483,11 @@ button:focus-visible, input:focus-visible { outline:2px solid var(--primary-mid)
   <section class="scr" id="v-agent">
     <header class="thead">
       <div class="tw"><div class="tav qiav"></div><div class="who"><b>QI · 큐아이</b><span id="hstat"></span></div></div>
-      <div class="tbtns"><button class="ib" id="btn-dex" aria-label="dex"><svg viewBox="0 0 24 24" fill="none" stroke="#191F28" stroke-width="1.8" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg></button><button class="ib" id="btn-settings" aria-label="settings"><svg viewBox="0 0 24 24" fill="none" stroke="#191F28" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button></div>
+      <div class="tbtns"><button type="button" id="btn-stop" aria-label="stop"><i></i><span data-i18n="stopTalk"></span></button><button class="ib" id="btn-dex" aria-label="dex"><svg viewBox="0 0 24 24" fill="none" stroke="#191F28" stroke-width="1.8" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg></button><button class="ib" id="btn-settings" aria-label="settings"><svg viewBox="0 0 24 24" fill="none" stroke="#191F28" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button></div>
     </header>
     <div id="hero"><div class="hav qiav"></div><h1 data-i18n="heroTitle"></h1><p data-i18n="heroSub"></p></div>
     <div id="msgs"></div>
-    <div id="hero-foot"><div class="chips" id="hero-chips"></div><button class="cta" id="btn-start" data-i18n="start"></button></div>
+    <div id="hero-foot"><button class="cta" id="btn-start" data-i18n="start"></button></div>
     <div id="simbar"><button id="btn-sim"></button></div>
     <button id="labopen" data-i18n="lab"></button>
     <form id="askform" autocomplete="off"><div class="field"><input id="askin" data-i18n-ph="ph" enterkeyhint="send"><button type="submit" id="sendbtn" aria-label="send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button><button type="button" id="btn-mic" aria-label="mic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/><path id="micslash" d="M4 4l16 16" style="display:none"/></svg></button></div></form>
@@ -482,16 +496,16 @@ button:focus-visible, input:focus-visible { outline:2px solid var(--primary-mid)
 
   <!-- ===== DEX ===== -->
   <section class="scr" id="v-dex">
-    <div class="topbar"><button class="ib" id="dex-back" aria-label="back"><svg viewBox="0 0 24 24" fill="none" stroke="#191F28" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button></div>
+    <div class="topbar"><b class="dtitle" data-i18n="dexTitle"></b><button class="ib" id="dex-back" aria-label="back"><svg viewBox="0 0 24 24" fill="none" stroke="#191F28" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button></div>
     <div class="dexbody"><h1 data-i18n="dexTitle"></h1><p id="dex-count"></p><div class="pbar2"><i id="dex-bar"></i></div><div id="dex-filters"></div><div id="dexgrid"></div></div>
   </section>
 
   <!-- ===== DETAIL ===== -->
   <section class="scr" id="v-detail">
-    <div class="topbar"><button class="ib" id="det-back" aria-label="back"><svg viewBox="0 0 24 24" fill="none" stroke="#191F28" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button></div>
+    <div class="topbar"><b class="dtitle" data-i18n="detailTitle"></b><button class="ib" id="det-back" aria-label="back"><svg viewBox="0 0 24 24" fill="none" stroke="#191F28" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button></div>
     <div class="detbody"><div class="dhero" id="det-hero"></div>
-      <div class="dmeta"><small id="det-no"></small><h1 id="det-name"></h1><div class="tagrow" id="det-tags"></div></div>
-      <div class="dsec"><h2 data-i18n="story3"></h2><p id="det-story"></p></div>
+      <div class="dinfo"><div class="dmeta"><small id="det-no"></small><h1 id="det-name"></h1><div class="tagrow" id="det-tags"></div></div>
+      <div class="dsec"><h2 data-i18n="story3"></h2><p id="det-story"></p></div></div>
       <div class="tcard card-prog" id="det-pieces"></div></div>
     <div class="dfoot"><button class="cta" id="det-talk" data-i18n="talkAgain"></button></div>
   </section>
@@ -509,8 +523,7 @@ button:focus-visible, input:focus-visible { outline:2px solid var(--primary-mid)
 </div>
   <div class="sheet" id="sheet-settings"><div class="grab"></div><h3 data-i18n="settings"></h3>
     <div class="row"><span data-i18n="lang"></span><span class="seg" id="seg-lang"></span></div>
-    <small id="voicenote" style="display:none"></small>
-    <div class="row" style="flex-direction:column;align-items:stretch;gap:8px"><span data-i18n="voiceCheck"><small data-i18n="voiceCheckd"></small></span><div id="voicecheck"></div></div>
+    
     <div class="row"><span data-i18n="freq"><small data-i18n="freqd"></small></span><span class="seg" id="seg-freq"><button data-v="0" data-i18n="low"></button><button data-v="1" data-i18n="mid"></button><button data-v="2" data-i18n="high"></button></span></div>
     <div class="row"><span data-i18n="sound"></span><button class="sw" id="sw-sound"></button></div>
     <div class="row"><span data-i18n="vib"></span><button class="sw" id="sw-vib"></button></div>
@@ -565,7 +578,7 @@ en: {
   freeBtn: 'Just wander (no time limit)', freeTour: 'Free tour',
   autoWalk: 'Auto-walk (G)', thread: 'Conversation', voiceCheck: 'Voice check', voiceCheckd: 'Which installed voice each character uses. Tap ▶ to listen.', noFemale: 'No female voice installed — pitch only', noMale: 'No male voice installed — pitch only', onlineVoice: 'Online voice: pitch and speed may be ignored',
   later: 'Keep exploring', skipPuzzle: 'Skip the puzzle', sugg: 'Suggested', npDone: 'Story done · tap to continue', minimize: 'Listen while you walk', playing: 'Now telling', exploreFree: 'Walk freely. Linger on anything that catches your eye.', hiReply: "Hello! I'm QI, your museum docent. Tell me how long you'll stay, or just start walking.", whoAmI: "I'm QI. I notice where you linger in the museum and speak up at just the right moment.",
-  nextIs: n => `Next is ${n}.`, noNext: "You've seen everything on today's course.", timeLeftMsg: m => `About ${m} minutes left.`, freeLeftMsg: 'No time limit today. Take your time.',
+  nextIs: n => `I'd suggest ${n} next.`, noNext: "You've seen everything on today's course.", timeLeftMsg: m => `About ${m} minutes left.`, freeLeftMsg: 'No time limit today. Take your time.',
   quietOnMsg: "Okay. I'll stay quiet until you call me.", quietOffMsg: "Okay. I'll speak up again when you linger.", helpMsg: "Try saying: next, how much time is left, explain this, take me there, be quiet, or tell me how long you'll stay.",
   fallbackMsg: "Sorry, I didn't catch that. Try: next, time left, or explain this.", walking: 'On our way.', thanksMsg: "You're welcome!", byeMsg: 'Enjoy the museum. See you!',
   micDenied: 'The microphone is blocked. Please allow it in your browser settings.', notStarted: "Tell me how long you'll stay first.",
@@ -605,7 +618,7 @@ ko: {
   freeBtn: '시간 상관없이 자유롭게 둘러볼래요', freeTour: '자유 관람',
   autoWalk: '자동 이동 (G)', thread: '대화', voiceCheck: '목소리 확인', voiceCheckd: '캐릭터마다 어떤 음성이 쓰이는지 보여 줘요. ▶로 들어 보세요.', noFemale: '여성 음성이 없어서 높낮이만 조절해요', noMale: '남성 음성이 없어서 높낮이만 조절해요', onlineVoice: '온라인 음성이라 높낮이·속도가 무시될 수 있어요',
   later: '계속 둘러볼래요', skipPuzzle: '퍼즐 건너뛰기', sugg: '추천', npDone: '이야기 끝 · 눌러서 이어가기', minimize: '걸으면서 듣기', playing: '설명 중', exploreFree: '자유롭게 걸어 보세요. 눈길이 가는 유물에 머물러 보세요.', hiReply: '안녕하세요! 저는 박물관 도슨트 큐아이예요. 얼마나 보실지 알려 주시거나 그냥 걸어 보세요.', whoAmI: '저는 큐아이예요. 박물관에서 어디에 오래 머무는지 알아채고, 알맞은 때에 먼저 말을 걸어요.',
-  nextIs: n => `다음 유물: ${n}`, noNext: '오늘 코스를 모두 보셨어요.', timeLeftMsg: m => `약 ${m}분 남았어요.`, freeLeftMsg: '오늘은 시간 제한이 없어요. 천천히 보세요.',
+  nextIs: n => `다음으로는 ${n}${josa(n, '을', '를')} 추천해요.`, noNext: '오늘 코스를 모두 보셨어요.', timeLeftMsg: m => `약 ${m}분 남았어요.`, freeLeftMsg: '오늘은 시간 제한이 없어요. 천천히 보세요.',
   quietOnMsg: '알겠어요. 부르실 때까지 조용히 있을게요.', quietOffMsg: '알겠어요. 머무시면 다시 말을 걸게요.', helpMsg: "이렇게 말해 보세요: 다음, 남은 시간, 이거 설명해 줘, 데려가 줘, 조용히 해. 얼마나 있을지 알려 주셔도 돼요.",
   fallbackMsg: "잘 못 알아들었어요. '다음', '남은 시간', '이거 설명해 줘'라고 해 보세요.", walking: '같이 가요.', thanksMsg: '천만에요!', byeMsg: '즐거운 관람 되세요!',
   micDenied: '마이크가 막혀 있어요. 브라우저 설정에서 허용해 주세요.', notStarted: '먼저 얼마나 보실지 알려 주세요.',
@@ -645,7 +658,7 @@ ja: {
   freeBtn: '時間を決めず気ままに見たい', freeTour: '自由見学',
   autoWalk: '自動移動 (G)', thread: '会話', voiceCheck: '音声の確認', voiceCheckd: 'キャラクターごとに使われている音声です。▶で聞けます。', noFemale: '女性の音声がないため、高さのみ調整します', noMale: '男性の音声がないため、高さのみ調整します', onlineVoice: 'オンライン音声は高さ・速度が無視されることがあります',
   later: 'このまま見て回る', skipPuzzle: 'パズルをスキップ', sugg: 'おすすめ', npDone: 'お話は終わり · タップで続ける', minimize: '歩きながら聞く', playing: '解説中', exploreFree: '自由に歩いてみてください。気になる展示の前で立ち止まってみましょう。', hiReply: 'こんにちは！博物館ドーセントのQIです。滞在時間を教えてください。歩き始めてもOKです。', whoAmI: 'QIです。博物館でどこに長く留まるかに気づいて、ちょうどいいタイミングで声をかけます。',
-  nextIs: n => `次は${n}です。`, noNext: '今日のコースはすべて見終わりました。', timeLeftMsg: m => `あと約${m}分です。`, freeLeftMsg: '今日は時間制限がありません。ゆっくりどうぞ。',
+  nextIs: n => `次は「${n}」がおすすめです。`, noNext: '今日のコースはすべて見終わりました。', timeLeftMsg: m => `あと約${m}分です。`, freeLeftMsg: '今日は時間制限がありません。ゆっくりどうぞ。',
   quietOnMsg: 'わかりました。呼ばれるまで静かにしています。', quietOffMsg: 'わかりました。立ち止まったらまた声をかけます。', helpMsg: 'こう話しかけてください：次、残り時間、これを説明して、連れて行って、静かにして。滞在時間を教えてもOKです。',
   fallbackMsg: 'うまく聞き取れませんでした。「次」「残り時間」「これを説明して」と言ってみてください。', walking: '一緒に行きましょう。', thanksMsg: 'どういたしまして！', byeMsg: 'どうぞ楽しんでください！',
   micDenied: 'マイクがブロックされています。ブラウザの設定で許可してください。', notStarted: 'まず滞在時間を教えてください。',
@@ -685,7 +698,7 @@ zh: {
   freeBtn: '不限时间，随意逛逛', freeTour: '自由参观',
   autoWalk: '自动前往 (G)', thread: '对话', voiceCheck: '语音检查', voiceCheckd: '显示每个角色使用的语音，点击▶试听。', noFemale: '没有女声，只能调整音高', noMale: '没有男声，只能调整音高', onlineVoice: '在线语音可能会忽略音高和语速',
   later: '继续参观', skipPuzzle: '跳过拼图', sugg: '推荐', npDone: '故事讲完了 · 点击继续', minimize: '边走边听', playing: '讲解中', exploreFree: '请自由行走，在感兴趣的展品前停留片刻。', hiReply: '你好！我是博物馆讲解员QI。告诉我你打算逛多久，或者直接开始走吧。', whoAmI: '我是QI。我会察觉你在博物馆里在哪里停留，并在合适的时候主动开口。',
-  nextIs: n => `下一件是“${n}”。`, noNext: '今天的路线已经全部看完了。', timeLeftMsg: m => `大约还剩${m}分钟。`, freeLeftMsg: '今天没有时间限制，慢慢看。',
+  nextIs: n => `接下来推荐“${n}”。`, noNext: '今天的路线已经全部看完了。', timeLeftMsg: m => `大约还剩${m}分钟。`, freeLeftMsg: '今天没有时间限制，慢慢看。',
   quietOnMsg: '好的，在你叫我之前我会保持安静。', quietOffMsg: '好的，你停下来时我会再开口。', helpMsg: '可以这样说：下一个、还剩多久、讲讲这个、带我过去、安静点，或者告诉我你要逛多久。',
   fallbackMsg: '抱歉，我没听清。试试说“下一个”“还剩多久”或“讲讲这个”。', walking: '我们走吧。', thanksMsg: '不客气！', byeMsg: '祝你参观愉快！',
   micDenied: '麦克风被阻止了，请在浏览器设置中允许。', notStarted: '请先告诉我你要逛多久。',
@@ -824,6 +837,7 @@ function load() {
   try { const j = JSON.parse(localStorage.getItem('qa_stats') || 'null'); if (j) { Object.assign(S.stats, j); S.stats.gaze = Object.assign({ gogu: 0, baek: 0, silla: 0, gaya: 0 }, j.gaze); } } catch (e) {}
   try { const s = JSON.parse(localStorage.getItem('qa_set') || 'null'); if (s) Object.assign(S.set, s); } catch (e) {}
   try { const p = JSON.parse(localStorage.getItem('qa_prog') || 'null'); if (p) S.prog = p; } catch (e) {}
+  for (const id of Object.keys(S.prog || {})) { const q = S.prog[id]; if (q && q.date && q.seen) { const pc = q.pieces || {}, n = ['listen', 'ask', 'quiz', 'puz'].filter(k => pc[k]).length; if (!(n >= 3 || (pc.quiz && pc.puz))) { delete q.date; delete q.pts; } } }   // old builds collected an exhibit just by looking at it
   const q = new URLSearchParams(location.search).get('lang'); if (q && LANGS.includes(q)) S.set.lang = q;
   else if (!localStorage.getItem('qa_set')) { // first launch: English, unless the device itself is set to Japanese/Chinese
     const nl = (navigator.languages && navigator.languages[0] || navigator.language || 'en').toLowerCase();
@@ -884,7 +898,7 @@ let VASSIGN = { key: '', map: {} };
 const VPROFILES = () => [['qi', QIVOICE], ['baek', NVOICE.baek], ['silla', NVOICE.silla], ['gogu', NVOICE.gogu], ['gaya', NVOICE.gaya]];
 const isFem = v => FEMALE.test(v.name) && !MALE.test(v.name), isMal = v => MALE.test(v.name);
 function assignVoices(lang) {   // explicit per-character picks first, then automatic: right gender, on-device when pitch/rate must change, no duplicates if avoidable
-  const by = (S.set.voiceBy && S.set.voiceBy[lang]) || {}, key = lang + '|' + VOICES.length + '|' + JSON.stringify(by); if (VASSIGN.key === key) return VASSIGN.map;
+  const by = {}, key = lang + '|' + VOICES.length + '|' + JSON.stringify(by); if (VASSIGN.key === key) return VASSIGN.map;
   const list = voicesFor(lang).slice().sort((a, b) => scoreVoice(b) - scoreVoice(a)), used = new Set(), map = {};
   for (const [id] of VPROFILES()) { const c = by[id] && list.find(v => v.voiceURI === by[id] || v.name === by[id]); if (c) { map[id] = c; used.add(c.voiceURI); } }
   for (const [id, pr] of VPROFILES()) {
@@ -910,7 +924,7 @@ function _renderVoiceCheck() {
     box.appendChild(row);
   }
 }
-function fillVoiceSelect() { $('#voicenote').textContent = voicesFor(S.set.lang).length ? '' : t('noVoice'); renderVoiceCheck(); }
+function fillVoiceSelect() { /* voices are fixed per nation: nothing to pick */ }
 const sentSplit = txt => (txt.match(/[^.!?。！？]+[.!?。！？]*/g) || [txt]).map(s => s.trim()).filter(Boolean);
 const speechEst = txt => Math.max(1400, txt.length * ({ en: 62, ko: 105, ja: 120, zh: 135 }[S.set.lang] || 90));
 let sp = { id: 0, fbRemain: 0, fbCb: null, paused: false };
@@ -935,7 +949,7 @@ function speak(text, onend, prof) {
   // optional: a speech-synthesis service behind your own proxy (window.QI_TTS_ENDPOINT) → receives {text, lang, voice, prompt} and returns audio
   let ep = window.QI_TTS_ENDPOINT; try { ep = ep || localStorage.getItem('qi_tts'); } catch (e) {}
   if (ep && S.set.sound) {
-    fetch(ep, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text, lang: S.set.lang, voice: prof.id || 'qi', prompt: VOICE_PROMPT[prof.id || 'qi'] || '' }) })
+    fetch(ep, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-QI-Code': encodeURIComponent(getCode()) }, body: JSON.stringify({ text, lang: S.set.lang }) })
       .then(r => { if (!r.ok) throw new Error('tts ' + r.status); return r.blob(); })
       .then(bl => { if (sp.id !== myId) return; const au = new Audio(URL.createObjectURL(bl)); sp.audio = au; au.onended = finish; au.onerror = () => { if (sp.id === myId) browser(); }; au.play().catch(() => { if (sp.id === myId) browser(); }); })
       .catch(() => { if (sp.id === myId) browser(); });
@@ -985,7 +999,7 @@ function nextPending() {   // a *suggestion*: the nearest course artifact you ha
 }
 function markSeen(id) {     // heard (part of) an artifact's story: it counts for the course and the Dex
   if (!id || !ART[id]) return; S.done.add(id);
-  if (!S.prog[id]) S.prog[id] = { date: new Date().toLocaleDateString(S.set.lang === 'en' ? 'en-US' : S.set.lang, { month: 'short', day: 'numeric' }), seen: true, pts: 60 };
+  S.prog[id] = S.prog[id] || {}; S.prog[id].seen = true;
   save(); renderCourse(); renderTime(); renderLab();
 }
 function softWithdraw() {   // the visitor simply walked away: no penalty, no learning
@@ -1072,7 +1086,7 @@ function setNear(id) {
   phone.dataset.watch = '0'; setOrb(null);
   if (!id) { setState('idle'); say(...idleMsg()); renderSim(); return; }
   S.last = id; log('near=' + id);
-  if (S.done.has(id)) { setState('cooldown'); say(L(ART[id].name), ''); const n = nextPending(); if (n) $('#sub').textContent = t('nextGo')(L(ART[n].name)); return; }
+  if (S.done.has(id)) { setState('cooldown'); say(L(ART[id].name), ''); return; }
   if (S.stats.quiet) { setState('quiet'); say(t('quietSay'), t('quietSub')); return; }
   setState('observe'); phone.dataset.watch = '1'; say(L(ART[id].name), t('nations')[id]); renderSim();
 }
@@ -1123,7 +1137,7 @@ function openThread() {   // the whole conversation with QI lives in one thread;
 }
 function openChat(id, replay) {
   const a = ART[id]; S.last = id; S.near = id; stopSpeak();
-  S.chat = { id, idx: 0, total: a.story.en.length, finished: false, timer: 0, dur: 0, playing: true }; S.chatMini = false; phone.dataset.np = '0';
+  S.focus = id; S.chat = { id, idx: 0, total: a.story.en.length, finished: false, timer: 0, dur: 0, playing: true }; S.chatMini = false; phone.dataset.np = '0';
   setView('chat'); setOrb(id); setTab(0); chatDivider(id); setNarrOrb(); setPP(true); $('#narr-bar').style.width = '0'; $('#narr-time').textContent = '0:00';
   renderChatChrome(); addMsg('hint', `${EYE}<span>${L(a.hint)}</span>`, false); log('chat open: ' + id);
   setTimeout(() => narrateNext(S.chat), 700);
@@ -1185,7 +1199,7 @@ function allSeenCheck() { if (S.course.every(x => S.done.has(x))) { say(t('allSe
 const SQ = {};   // square, centre-cropped copies of the artifact photos for the jigsaw
 function prepSquare(id, cb) { const src = dexImg(id); if (!src || SQ[id]) return cb && cb(); const im = new Image(); im.onload = () => { try { const sz = Math.min(im.width, im.height), c = document.createElement('canvas'); c.width = c.height = 420; c.getContext('2d').drawImage(im, (im.width - sz) / 2, (im.height - sz) / 2, sz, sz, 0, 0, 420, 420); SQ[id] = c.toDataURL('image/jpeg', .86); } catch (e) {} cb && cb(); }; im.onerror = () => cb && cb(); im.src = src; }
 function startQuiz(id) {
-  prepSquare(id); stopSpeak(); const a = ART[id]; S.quiz = { id, i: 0, sel: -1, right: 0, checked: false }; setView('quiz'); setTab(1); renderQuiz();
+  prepSquare(id); stopSpeak(); const a = ART[id]; S.focus = id; S.quiz = { id, i: 0, sel: -1, right: 0, checked: false }; setView('quiz'); setTab(1); renderQuiz();
   $('#quiz-bub').textContent = t('quizListen'); speak(t('quizListen'));
 }
 function renderQuiz() {
@@ -1389,7 +1403,9 @@ $('#btn-mic').onclick = toggleVoice; $('#chat-mic').onclick = toggleVoice;
 
 /* what QI understands by voice or text (4 languages) */
 const LANGREQ = [[/english|영어|英語|英语|英文/i, 'en'], [/korean|한국어|韓国語|韩语|韩文/i, 'ko'], [/japanese|일본어|日本語|日语|日文/i, 'ja'], [/chinese|중국어|中国語|中文|汉语|普通话/i, 'zh']];
+const josa = (w, a, b) => { const c = (w || '').trim().slice(-1).charCodeAt(0) - 0xAC00; return c >= 0 && c <= 11171 && c % 28 !== 0 ? a : b; };
 const RX = {
+  fac: /화장실|restroom|toilet|bathroom|washroom|lavatory|\bwc\b|식당|카페|레스토랑|\bcafe\b|café|restaurant|\bfood\b|배고|음식|\bshop\b|gift ?shop|기념품|엘리베이터|elevator|\blift\b|출구|입구|\bexit\b|entrance|주차|parking|물품 ?보관|locker|수유|wheelchair|휠체어|トイレ|レストラン|カフェ|お土産|出口|入口|エレベーター|洗手间|厕所|餐厅|咖啡|纪念品|出口|入口|电梯/i,
   greet: /^(hi|hello|hey|good (morning|afternoon|evening))\b|안녕|こんにちは|こんばんは|你好|您好/i,
   who: /who are you|your name|너 누구|누구(야|세요|니)|이름이|あなたは誰|名前は|你是谁|你叫什么/i,
   next: /\bnext\b|where (should|do) (i|we) go|다음|어디로|어디 가|次は|次の|どこ(へ|に)|下一个|去哪|下一件/i,
@@ -1418,6 +1434,7 @@ function converse(text) {
   if (RX.bye.test(x)) { qiReply(t('byeMsg')); return true; }
   if (RX.talk.test(x) && S.stats.quiet) { S.stats.quiet = false; S.stats.consec = 0; save(); renderLearn(); applyI18n(); qiReply(t('quietOffMsg')); return true; }
   if (RX.quiet.test(x)) { S.stats.quiet = true; save(); renderLearn(); applyI18n(); if (S.started && ['observe', 'signal', 'guide'].includes(S.state)) setState('quiet'); qiReply(t('quietOnMsg')); return true; }
+  if (RX.fac.test(x)) { if (llmOn()) return false; qiReply(t('facilityMsg')); return true; }   // facilities are not artifacts: never answer with "next artifact"
   if (!S.started) { if (RX.left.test(x) || RX.next.test(x) || RX.go.test(x) || RX.explain.test(x)) { qiReply(t('notStarted')); return true; } return false; }
   if (RX.left.test(x)) { qiReply(S.free ? t('freeLeftMsg') : t('timeLeftMsg')(Math.max(1, Math.round(S.remaining / 60)))); return true; }
   if (RX.go.test(x)) { if (S.world && window.WORLD_API && WORLD_API.autoWalk()) { qiReply(t('walking')); } else { const n = nextPending(); qiReply(n ? t('nextIs')(L(ART[n].name)) : t('noNext')); } return true; }
@@ -1440,6 +1457,12 @@ async function handleAsk(text) {
   const r = await askLLM(text); qiReply(r || t('fallbackMsg'));
 }
 $('#askin').oninput = e => $('#sendbtn').classList.toggle('show', e.target.value.trim().length > 0);
+$('#btn-stop').onclick = e => {   // stop talking, but keep the next-step chips at the bottom (re-show them if they were already used up)
+  e.stopPropagation(); stopSpeak(); S.intro = false; if (S.chat) S.chat.playing = false; addMsg('hint', t('stopped'));
+  const m = $('#msgs'), rows = m.querySelectorAll('.chips'), live = rows[rows.length - 1], id = curId();
+  if (live && live.isConnected && live.children.length) m.appendChild(live); else if (id && isDexId(id)) offerNext(id);
+  setTimeout(() => { m.scrollTop = m.scrollHeight; }, 40);
+};
 $('#askform').onsubmit = e => { e.preventDefault(); const v = $('#askin').value.trim(); if (!v) return; $('#askin').value = ''; $('#sendbtn').classList.remove('show'); unlockAudio(); handleAsk(v); };
 
 /* ------------------------------------------------------------------ main loops */
@@ -1527,31 +1550,31 @@ load(); renderSplashLang(); applyI18n(); setView('splash');
    QI v2 — ONE conversation thread (Figma "2차"). Everything the visitor does happens as messages/cards in #msgs.
    This block replaces the old orb screen, story screen, quiz screen, puzzle screen and result screen.
    ================================================================================================== */
-Object.assign(T.en, { llmOn: 'AI answers are on. Ask me anything about what you see.', chipMore: 'Tell me more', chipMade: 'Who made it, and why?', chipEasy: 'Explain it simply', thinking: 'Thinking…',
+Object.assign(T.en, { llmOn: 'AI answers are on. Ask me anything about what you see.', chipMore: 'Tell me more', chipMade: 'Who made it, and why?', chipEasy: 'Explain it simply', thinking: 'Thinking…', detailTitle: 'Dex entry', laterOk: 'Okay. Ask me anytime you are curious.', alreadyDex: 'Already in your Dex', facilityMsg: "I don't know exactly where facilities such as restrooms or cafés are. Please check the information desk or the floor map.", stopTalk: 'Stop', stopped: 'Paused. Ask me anything about this piece.', 
   heroTitle: 'Explore\nfreely', heroSub: "Linger on anything that catches your eye.\nI'll speak up first if you look for a while.", chipToday: 'What should I see today?', chipLang: 'English · 한국어', chipVoice: 'Ask by voice',
   todayReply: "Start wherever you like. Stay in front of a piece for a few seconds and I'll tell you its story.", stListening: 'Listening', stLooking: 'Looking at an artifact', stSpeaking: 'Speaking', stExplain: (n, m) => `Telling the story · ${n}/${m}`, stQuiz: 'Quiz time', stPuzzle: 'Puzzle time',
-  nudgeLead: "You've been looking a while", piecesLead: 'Collecting Dex pieces', piecesNote: 'Do any three of these four and it goes into your Dex.', step_listen: 'Listen', step_ask: 'Ask', step_quiz: 'Quiz', step_puz: 'Puzzle',
+  nudgeLead: "You've been looking a while", piecesLead: 'Collecting Dex pieces', piecesNote: 'Finish any three of these four, or both the quiz and the puzzle, and it goes into your Dex.', step_listen: 'Listen', step_ask: 'Ask', step_quiz: 'Quiz', step_puz: 'Puzzle',
   needPieces: 'You need 3 pieces to add this to your Dex.', gotPiece: n => `Got a piece · ${n} / 3`, pieceDone: 'You collected 3 pieces!', dexGot: 'Added to your Dex!', keepTalking: 'Keep chatting', chipQuizGo: 'Take the quiz', chipAskGo: 'Ask something', chipPuzzleGo: 'Solve the puzzle', storyAgain: 'Hear the story again',
   quizLead: 'Shall we try a quick quiz?', quizGood: (r, n) => `You got ${r} of ${n}!`, quizTry: "That one was tricky. Want to try the puzzle or ask me something?", puzzleLead: 'Want to fill in the missing pieces?', puzzleTitle: 'Find the 2 missing pieces', piecesLeftLabel: 'Pieces left', seeResult: 'See result',
   askLead: 'What would you like to know?', pieceN: n => `Piece ${n} / 3`, qLabel2: 'Quiz result', puzzleDone: 'Beautiful! The puzzle is complete.', tasteRow: 'Today\'s taste card' });
-Object.assign(T.ko, { llmOn: 'AI 답변이 켜졌어요. 보이는 건 뭐든 물어보세요.', chipMore: '더 알려줘요', chipMade: '누가 왜 만들었어요?', chipEasy: '쉽게 설명해 줘요', thinking: '생각하는 중…',
+Object.assign(T.ko, { llmOn: 'AI 답변이 켜졌어요. 보이는 건 뭐든 물어보세요.', chipMore: '더 알려줘요', chipMade: '누가 왜 만들었어요?', chipEasy: '쉽게 설명해 줘요', thinking: '생각하는 중…', detailTitle: '도감 상세', laterOk: '알겠어요. 궁금하면 언제든 말씀해 주세요.', alreadyDex: '이미 도감에 담긴 유물이에요', facilityMsg: '화장실이나 식당 같은 편의시설 위치는 제가 정확히 몰라요. 안내 데스크나 층별 안내도를 확인해 주세요.', stopTalk: '멈추기', stopped: '멈췄어요. 이 유물에 대해 궁금한 걸 물어보세요.', 
   heroTitle: '자유롭게\n둘러보세요', heroSub: '눈길이 가는 유물에 머물러 보세요.\n오래 보고 계시면 제가 먼저 말을 걸게요.', chipToday: '오늘 뭘 보면 좋아요?', chipLang: '한국어 · English', chipVoice: '말로 물어볼게요',
   todayReply: '마음 가는 곳부터 보세요. 유물 앞에 몇 초만 머물면 제가 이야기를 들려드릴게요.', stListening: '듣고 있어요', stLooking: '유물을 보고 있어요', stSpeaking: '말하는 중', stExplain: (n, m) => `설명 중 · ${n}/${m}`, stQuiz: '퀴즈 중', stPuzzle: '퍼즐 중',
-  nudgeLead: '한참 보고 계시네요', piecesLead: '도감 조각 모으는 중', piecesNote: '네 가지 중 세 가지를 하면 도감에 담겨요.', step_listen: '듣기', step_ask: '질문', step_quiz: '퀴즈', step_puz: '퍼즐',
-  needPieces: '도감에 담으려면 조각이 3개 필요해요.', gotPiece: n => `조각을 하나 모았어요 · ${n} / 3`, pieceDone: '조각 3개를 모았어요!', dexGot: '도감 획득!', keepTalking: '계속 이야기해요', chipQuizGo: '퀴즈 풀기', chipAskGo: '궁금한 걸 물어보기', chipPuzzleGo: '퍼즐 맞추기', storyAgain: '이야기 다시 듣기',
+  nudgeLead: '한참 보고 계시네요', piecesLead: '도감 조각 모으는 중', piecesNote: '네 가지 중 세 가지를 하거나, 퀴즈와 퍼즐을 모두 풀면 도감에 담겨요.', step_listen: '듣기', step_ask: '질문', step_quiz: '퀴즈', step_puz: '퍼즐',
+  needPieces: '도감에 담으려면 조각이 3개 필요해요.', gotPiece: n => `조각을 하나 모았어요 · ${n} / 3`, pieceDone: '조각 3개를 모았어요!', dexGot: '도감 획득!', keepTalking: '계속 대화하기', chipQuizGo: '퀴즈 풀기', chipAskGo: '궁금한 걸 물어보기', chipPuzzleGo: '퍼즐 맞추기', storyAgain: '이야기 다시 듣기',
   quizLead: '퀴즈 하나 풀어볼까요?', quizGood: (r, n) => `${n}문제 중 ${r}문제 맞혔어요!`, quizTry: '조금 어려웠죠? 퍼즐을 맞추거나 더 물어봐도 좋아요.', puzzleLead: '빠진 조각도 맞춰 볼까요?', puzzleTitle: '빠진 조각 2개를 찾아 주세요', piecesLeftLabel: '남은 조각', seeResult: '결과 보기',
   askLead: '어떤 게 궁금하세요?', pieceN: n => `조각 ${n} / 3`, qLabel2: '퀴즈 결과', puzzleDone: '멋져요! 퍼즐을 완성했어요.', tasteRow: '오늘의 취향 카드' });
-Object.assign(T.ja, { llmOn: 'AI回答がオンです。見ているものを何でも聞いてください。', chipMore: 'もっと教えて', chipMade: '誰がなぜ作ったの？', chipEasy: 'やさしく説明して', thinking: '考え中…',
+Object.assign(T.ja, { llmOn: 'AI回答がオンです。見ているものを何でも聞いてください。', chipMore: 'もっと教えて', chipMade: '誰がなぜ作ったの？', chipEasy: 'やさしく説明して', thinking: '考え中…', detailTitle: '図鑑の詳細', laterOk: 'わかりました。気になったらいつでもどうぞ。', alreadyDex: 'すでに図鑑に入っています', facilityMsg: 'トイレやレストランなどの場所は正確には分かりません。案内デスクやフロアマップでご確認ください。', stopTalk: '止める', stopped: '止めました。この展示について何でも聞いてください。', 
   heroTitle: '自由に\n見て回ろう', heroSub: '気になる展示の前で立ち止まってみてください。\nしばらく見ていると、私から声をかけます。', chipToday: '今日は何を見ようか？', chipLang: '日本語 · English', chipVoice: '声で聞いてみる',
   todayReply: '好きなところからどうぞ。展示の前で数秒立ち止まると、お話を始めます。', stListening: '聞いています', stLooking: '展示を見ています', stSpeaking: '話しています', stExplain: (n, m) => `解説中 · ${n}/${m}`, stQuiz: 'クイズ中', stPuzzle: 'パズル中',
-  nudgeLead: 'しばらく見ていますね', piecesLead: '図鑑のかけらを集め中', piecesNote: '4つのうち3つできると図鑑に入ります。', step_listen: '聞く', step_ask: '質問', step_quiz: 'クイズ', step_puz: 'パズル',
+  nudgeLead: 'しばらく見ていますね', piecesLead: '図鑑のかけらを集め中', piecesNote: '4つのうち3つ、またはクイズとパズルの両方を終えると図鑑に入ります。', step_listen: '聞く', step_ask: '質問', step_quiz: 'クイズ', step_puz: 'パズル',
   needPieces: '図鑑に入れるにはかけらが3つ必要です。', gotPiece: n => `かけらを1つ集めました · ${n} / 3`, pieceDone: 'かけらを3つ集めました！', dexGot: '図鑑ゲット！', keepTalking: 'このまま話す', chipQuizGo: 'クイズに挑戦', chipAskGo: '質問する', chipPuzzleGo: 'パズルをする', storyAgain: 'お話をもう一度',
   quizLead: 'クイズを1つ解いてみましょうか？', quizGood: (r, n) => `${n}問中${r}問正解！`, quizTry: '少し難しかったですね。パズルや質問もどうぞ。', puzzleLead: '足りないかけらも合わせてみますか？', puzzleTitle: '足りないかけらを2つ探してください', piecesLeftLabel: '残りのかけら', seeResult: '結果を見る',
   askLead: '何が気になりますか？', pieceN: n => `かけら ${n} / 3`, qLabel2: 'クイズ結果', puzzleDone: 'すてき！パズル完成です。', tasteRow: '今日の好みカード' });
-Object.assign(T.zh, { llmOn: 'AI回答已开启。看到什么都可以问我。', chipMore: '再多讲讲', chipMade: '是谁、为什么做的？', chipEasy: '讲得简单点', thinking: '思考中…',
+Object.assign(T.zh, { llmOn: 'AI回答已开启。看到什么都可以问我。', chipMore: '再多讲讲', chipMade: '是谁、为什么做的？', chipEasy: '讲得简单点', thinking: '思考中…', detailTitle: '图鉴详情', laterOk: '好的，想了解时随时告诉我。', alreadyDex: '已收录在图鉴中', facilityMsg: '洗手间、餐厅等设施的具体位置我不清楚，请向服务台询问或查看楼层导览图。', stopTalk: '停止', stopped: '已暂停。关于这件展品，想问什么都可以。', 
   heroTitle: '自由\n参观吧', heroSub: '在感兴趣的展品前停留一会儿。\n你看得久了，我会主动开口。', chipToday: '今天看什么好？', chipLang: '中文 · English', chipVoice: '语音提问',
   todayReply: '从你喜欢的地方开始吧。在展品前停留几秒，我就会给你讲它的故事。', stListening: '正在聆听', stLooking: '正在看展品', stSpeaking: '正在讲话', stExplain: (n, m) => `讲解中 · ${n}/${m}`, stQuiz: '答题中', stPuzzle: '拼图中',
-  nudgeLead: '你看了好一会儿', piecesLead: '正在收集图鉴碎片', piecesNote: '四项中完成三项，就能收进图鉴。', step_listen: '听', step_ask: '提问', step_quiz: '答题', step_puz: '拼图',
+  nudgeLead: '你看了好一会儿', piecesLead: '正在收集图鉴碎片', piecesNote: '四项中完成三项，或者答完题并完成拼图，就会收进图鉴。', step_listen: '听', step_ask: '提问', step_quiz: '答题', step_puz: '拼图',
   needPieces: '收进图鉴需要3个碎片。', gotPiece: n => `获得一个碎片 · ${n} / 3`, pieceDone: '集齐3个碎片！', dexGot: '获得图鉴！', keepTalking: '继续聊', chipQuizGo: '去答题', chipAskGo: '问点什么', chipPuzzleGo: '玩拼图', storyAgain: '再听一遍',
   quizLead: '来做道小测验吧？', quizGood: (r, n) => `${n}题答对了${r}题！`, quizTry: '有点难吧？可以试试拼图，或者继续问我。', puzzleLead: '要不要把缺的碎片拼上？', puzzleTitle: '请找出缺少的2块', piecesLeftLabel: '剩余碎片', seeResult: '查看结果',
   askLead: '你想知道什么？', pieceN: n => `碎片 ${n} / 3`, qLabel2: '答题结果', puzzleDone: '太棒了！拼图完成。', tasteRow: '今日喜好卡' });
@@ -1652,18 +1675,20 @@ function showProgress(id) { if (progEl[id]) progEl[id].remove(); const c = mk('d
 function refreshProgress(id) { if (progEl[id] && progEl[id].isConnected) fillProgress(progEl[id], id); }
 function addPiece(id, key) {
   if (!isDexId(id)) return; const p = S.prog[id] = S.prog[id] || {}; p.pieces = p.pieces || {}; const had = !!p.pieces[key]; p.pieces[key] = true; save(); refreshProgress(id); if (had) return; const n = pcount(id);
-  if (!p.date) { if (n >= 3) setTimeout(() => awardDex(id), 700); else if (key !== 'listen' || n > 1) addMsg('hint', t('gotPiece')(n)); }
+  if (!p.date) { if (n >= 3 || (p.pieces.quiz && p.pieces.puz)) setTimeout(() => awardDex(id), 700); else if (key !== 'listen' || n > 1) addMsg('hint', t('gotPiece')(n)); }
 }
-function offerNext(id) {
-  const p = S.prog[id] || {}; if (p.date) return; addMsg('qa', t('needPieces')); showProgress(id); const items = [];
-  if (!pcs(id).quiz) items.push([t('chipQuizGo'), () => startQuiz(id)]); if (!pcs(id).ask) { if (ART[id]) items.push([t('chipAskGo'), () => askChips(id, true)]); else if (llmOn()) items.push([t('chipAskGo'), () => { addMsg('me', t('chipMore')); llmAnswer(t('chipMore'), id); }]); } if (!pcs(id).puz) items.push([t('chipPuzzleGo'), () => startPuzzle(id)]);
-  if (items.length) chipRow(items);
+function offerNext(id, skip) {   // always leaves the visitor with something to tap — never a dead end (also after the Dex piece set is complete)
+  const p = S.prog[id] || {}; if (!p.date) showProgress(id); const pend = [], again = [];
+  const add = (k, label, fn) => { if (k === skip) return; (pcs(id)[k] ? again : pend).push([label, fn]); };
+  add('quiz', t('chipQuizGo'), () => startQuiz(id)); add('puz', t('chipPuzzleGo'), () => startPuzzle(id));
+  if (ART[id]) add('ask', t('chipAskGo'), () => askChips(id, true)); else if (llmOn()) add('ask', t('chipAskGo'), () => { addMsg('me', t('chipMore')); llmAnswer(t('chipMore'), id); });
+  const items = pend.concat(again); if (items.length) chipRow(items);
 }
 /* ---- every exhibit (not only the 4 course pieces) has quiz + puzzle + Dex pieces ---- */
 const voiceOf = id => ART[id] ? ART[id].voice : (EXHMAP[id] ? (NVOICE[EXHMAP[id].nation] || QIVOICE) : QIVOICE);
 const isDexId = id => !!(ART[id] || EXHMAP[id]);
 function makeQuiz(id) {                 // quiz built from the exhibit data itself (kingdom + name), so it is always accurate
-  if (ART[id]) return ART[id].quiz; const e = EXHMAP[id], KS = ['gogu', 'baek', 'gaya', 'silla'], LG = ['en', 'ko', 'ja', 'zh'];
+  if (ART[id] && ART[id].quiz && ART[id].quiz.length) return ART[id].quiz; const e = EXHMAP[id] || { id, nation: ART[id].nation, name: ART[id].name }, KS = ['gogu', 'baek', 'gaya', 'silla'], LG = ['en', 'ko', 'ja', 'zh'];
   const same = EXH.filter(x => x.id !== id && x.nation === e.nation), other = EXH.filter(x => x.id !== id && x.nation !== e.nation), pool = (same.length >= 2 ? same : same.concat(other)).sort(() => Math.random() - .5).slice(0, 2);
   const names = [e].concat(pool).sort(() => Math.random() - .5), q1 = { q: { en: 'Which kingdom made this?', ko: '이 유물은 어느 나라의 것일까요?', ja: 'これはどの国のものでしょう？', zh: '这件文物属于哪个国家？' }, o: {}, a: KS.indexOf(e.nation) };
   const q2 = { q: { en: 'What is this object called?', ko: '이 유물의 이름은 무엇일까요?', ja: 'この遺物の名前は？', zh: '这件文物叫什么？' }, o: {}, a: names.indexOf(e) };
@@ -1677,11 +1702,16 @@ function askChips(id, lead) {
 function awardDex(id) {
   const a = ART[id], e = EXHMAP[id], p = S.prog[id] = S.prog[id] || {}; if (p.date) return; const pts = 120 + (p.quiz || 0) * 20 + (pcs(id).puz ? 30 : 0), no = a ? a.no : dexIds().indexOf(id) + 1;
   p.date = new Date().toLocaleDateString(S.set.lang === 'en' ? 'en-US' : S.set.lang, { month: 'short', day: 'numeric' }); p.pts = pts; if (a) S.done.add(id); save(); if (a) { renderCourse(); renderTime(); } play('ok', 1); haptic([30, 40, 30], .3);
-  const msg = t('pieceDone'); addMsg('qa', msg); speak(msg, null, voiceOf(id)); const im = dexImg(id), c = mk('div', 'tcard card-get');
+  const msg = pcount(id) >= 3 ? t('pieceDone') : t('dexGot'); addMsg('qa', msg); speak(msg, null, voiceOf(id)); const im = dexImg(id), c = mk('div', 'tcard card-get');
   c.innerHTML = `<em>${esc(t('dexGot'))}</em><div class="art${iconImg(id) ? ' ic' : ''}">${iconImg(id) ? icoTag(id) : im ? `<img src="${im}" alt="">` : ''}</div><div><small>No. ${String(no).padStart(3, '0')} · ${esc(t('nations')[a ? id : e.nation])}</small><h3>${esc(dexName(id))}</h3><p>${esc(a ? t('types')[id] : t('nations')[e.nation])}</p></div>`;
   const row = mk('div', 'acts'); row.style.width = '100%'; row.appendChild(mkBtn(t('viewDex'), 'primary', () => openDex())); row.appendChild(mkBtn(t('keepTalking'), 'weak', () => { row.remove(); if (a) askChips(id, false); else if (llmOn()) { addMsg('me', t('chipMore')); llmAnswer(t('chipMore'), id); } })); c.appendChild(row); put(c);
 }
 
+function showCollected(id) {
+  const a = ART[id], e = EXHMAP[id], no = a ? a.no : dexIds().indexOf(id) + 1, im = dexImg(id), c = mk('div', 'tcard card-get');
+  c.innerHTML = `<em>${esc(t('alreadyDex'))}</em><div class="art${iconImg(id) ? ' ic' : ''}">${iconImg(id) ? icoTag(id) : im ? `<img src="${im}" alt="">` : ''}</div><div><small>No. ${String(no).padStart(3, '0')} · ${esc(t('nations')[a ? id : e.nation])}</small><h3>${esc(dexName(id))}</h3><p>${esc(a ? t('types')[id] : t('nations')[e.nation])}</p></div>`;
+  const row = mk('div', 'acts'); row.style.width = '100%'; row.appendChild(mkBtn(t('viewDex'), 'primary', () => openDex())); row.appendChild(mkBtn(t('keepTalking'), 'weak', () => { row.remove(); if (a) askChips(id, false); else if (llmOn()) { addMsg('me', t('chipMore')); llmAnswer(t('chipMore'), id); } })); c.appendChild(row); put(c);
+}
 /* ---- questions ---- */
 function userAsk(text, forced, noEcho, idOverride) {
   const id = idOverride || (S.chat ? S.chat.id : S.last), a = id && ART[id]; const dl = detectLang(text); if (dl && dl !== S.set.lang && !forced) setLang(dl, true);
@@ -1693,14 +1723,17 @@ function userAsk(text, forced, noEcho, idOverride) {
 /* ---- AI answers (OpenAI via qi_server.py proxy; falls back to the curated rule-based answers when no key) ---- */
 const LLM = { ok: false, hist: [], needCode: false };
 const getCode = () => { try { return localStorage.getItem('qi_code') || ''; } catch (x) { return ''; } };
-fetch('/api/qi/health').then(r => r.json()).then(j => { LLM.ok = !!j.ok; LLM.needCode = !!j.needCode; log('LLM ' + (LLM.ok ? 'on (' + j.model + ')' : 'off (no key)')); if (LLM.ok && S.started) addMsg('hint', t('llmOn')); }).catch(() => {});
+fetch('/api/qi/health').then(r => r.json()).then(j => { LLM.ok = !!j.ok; LLM.needCode = !!j.needCode; if (j.tts) window.QI_TTS_ENDPOINT = '/api/tts'; log('LLM ' + (LLM.ok ? 'on (' + j.model + ')' : 'off (no key)')); if (LLM.ok && S.started) addMsg('hint', t('llmOn')); }).catch(() => {});
 function llmOn() { let e = window.QI_LLM_ENDPOINT; try { e = e || localStorage.getItem('qi_llm'); } catch (x) {} return !!(LLM.ok || e); }
-function factsFor(id) {
+const curId = () => (S.chat && S.chat.id) || S.focus || S.near || S.last;   // the object QI is talking about right now
+const FOCUS_RULES = 'IMPORTANT RULES (they override anything above): (1) Talk ONLY about the CURRENT OBJECT. "this", "it" and "이거" mean the current object. Give information about the current object first, and only about it. (2) Never suggest, recommend or mention other objects, other kingdoms or what to see next, and never end with a question about another object or kingdom. If the visitor explicitly asks about another object, answer in one or two sentences and say you can tell more when they are standing in front of it. (3) At the end you may offer at most one short follow-up about the SAME object, or none. (4) If the visitor asks where a facility is (restroom, cafe, restaurant, shop, exit, elevator), say you do not know its exact location and point to the information desk or floor map; never invent locations or floors.';
+function factsFor(id) { return FOCUS_RULES + (id ? '\n' + factsRaw(id) : ''); }
+function factsRaw(id) {
   const e = EXHMAP[id], a = ART[id]; if (a) return [`Name: ${L(a.name)} (${a.name.en})`, `Room/kingdom: ${t('nations')[id] || a.nation}`, a.absent ? 'Note: this object is held at another institution; the museum shows a replica or panel.' : '', `Story: ${(a.story[S.set.lang] || a.story.en).join(' ')}`, `Who made it: ${L(a.who)}`, `Why it matters: ${L(a.why)}`, `In simple words: ${L(a.simple)}`, `Fun fact: ${L(a.fun)}`].filter(Boolean).join('\n');
   if (e) return [`Name: ${L(e.name)} (${e.name.en})`, `Kingdom: ${t('nations')[e.nation]}`, `Museum label note: ${L(e.note)}`].join('\n'); return '';
 }
 async function askLLM(text, id) {
-  let ep = window.QI_LLM_ENDPOINT; try { ep = ep || localStorage.getItem('qi_llm'); } catch (x) {} if (!ep && LLM.ok) ep = '/api/qi'; if (!ep) return null; id = id || S.near || S.focus || S.last; if (LLM.needCode && !getCode()) return 'NEEDCODE';
+  let ep = window.QI_LLM_ENDPOINT; try { ep = ep || localStorage.getItem('qi_llm'); } catch (x) {} if (!ep && LLM.ok) ep = '/api/qi'; if (!ep) return null; id = id || curId(); if (LLM.hid !== id) { LLM.hist = []; LLM.hid = id; } if (LLM.needCode && !getCode()) return 'NEEDCODE';
   try { const r = await fetch(ep, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-QI-Code': encodeURIComponent(getCode()) }, body: JSON.stringify({ text, lang: S.set.lang, current: id || '', facts: factsFor(id), history: LLM.hist.slice(-8) }) }); if (r.status === 401) { try { localStorage.removeItem('qi_code'); } catch (x) {} return 'NEEDCODE'; } if (!r.ok) return null; const j = await r.json(); if (j.reply) { LLM.hist.push({ role: 'user', content: text }, { role: 'assistant', content: j.reply }); return j.reply; } } catch (x) {} return null;
 }
 async function llmAnswer(text, id) {
@@ -1714,7 +1747,7 @@ async function llmAnswer(text, id) {
 }
 async function handleAsk(text) {
   const isLangReq = LANGREQ.some(([rx]) => rx.test(text)); const dl = detectLang(text); if (dl && dl !== S.set.lang && !isLangReq) setLang(dl, true); if (!S.started) startFree();
-  addMsg('me', text); if (converse(text)) return; const id = S.chat ? S.chat.id : (S.near || S.focus || S.last); if (llmOn()) return llmAnswer(text, id); if (id && ART[id]) return userAsk(text, undefined, true, id);
+  addMsg('me', text); if (converse(text)) return; const id = curId(); if (llmOn()) return llmAnswer(text, id); if (id && ART[id]) return userAsk(text, undefined, true, id);
   const r = await askLLM(text); qiReply(r || t('fallbackMsg'));
 }
 
@@ -1734,7 +1767,7 @@ function startQuiz(id) {
   prepSquare(id); stopSpeak(); S.quiz = { id, i: 0, sel: -1, right: 0, checked: false, done: false, qs: makeQuiz(id) }; addMsg('qa', t('quizLead')); speak(t('quizLead'), null, voiceOf(id)); S.quiz.card = put(mk('div', 'tcard card-quiz')); drawQuiz();
 }
 function drawQuiz() {
-  const z = S.quiz, q = z.qs[z.i], n = z.qs.length, im = dexImg(z.id), c = z.card; z.sel = -1; z.checked = false;
+  const z = S.quiz, q = z.qs[z.i], n = z.qs.length, im = iconImg(z.id) || dexImg(z.id), c = z.card; z.sel = -1; z.checked = false;
   c.innerHTML = `${im ? `<img class="qimg" src="${im}" alt="">` : ''}<div class="qh"><em>${esc(t('qLabel')(z.i + 1))}</em><span>${z.i + 1} / ${n}</span></div><h3>${esc(L(q.q))}</h3><div class="opts"></div><div class="fbk"></div>`;
   const box = c.querySelector('.opts'), cta = mkBtn(t('check'), 'primary block', () => {
     if (z.checked) { z.i++; z.i >= n ? endQuiz() : drawQuiz(); return; } z.checked = true; const ok = z.sel === q.a; if (ok) z.right++;
@@ -1744,13 +1777,13 @@ function drawQuiz() {
 }
 function endQuiz() {
   const z = S.quiz, n = z.qs.length; z.done = true; z.card.innerHTML = `<div class="qsum"><em>${esc(t('qLabel2'))}</em><b>${z.right} / ${n}</b></div>`; z.card.style.padding = '16px 20px';
-  const p = S.prog[z.id] = S.prog[z.id] || {}; p.quiz = Math.max(z.right, p.quiz || 0); p.quizN = n; save(); const msg = z.right > 0 ? t('quizGood')(z.right, n) : t('quizTry'); addMsg('qa', msg); speak(msg, null, voiceOf(z.id)); if (z.right > 0) addPiece(z.id, 'quiz');
-  setTimeout(() => { if (!(S.prog[z.id] && S.prog[z.id].date)) offerNext(z.id); }, 1200);
+  const p = S.prog[z.id] = S.prog[z.id] || {}, had = !!p.date; p.quiz = Math.max(z.right, p.quiz || 0); p.quizN = n; save(); const msg = z.right > 0 ? t('quizGood')(z.right, n) : t('quizTry'); addMsg('qa', msg); speak(msg, null, voiceOf(z.id)); if (z.right > 0) addPiece(z.id, 'quiz');
+  setTimeout(() => { if (had && pcs(z.id).quiz && pcs(z.id).puz) showCollected(z.id); else if (had || !(S.prog[z.id] && S.prog[z.id].date)) offerNext(z.id, z.right > 0 ? 'quiz' : undefined); }, 1000);
 }
 
 /* ---- puzzle as a card ---- */
 function startPuzzle(id) {
-  stopSpeak(); S.puz = { id, miss: [4, 6], placed: {}, sel: null, t0: Date.now(), sec: 0, over: false }; addMsg('qa', t('puzzleLead')); S.puz.card = put(mk('div', 'tcard card-puz')); drawPuzzle(); prepSquare(id, () => { if (S.puz && S.puz.id === id && !S.puz.over) { S.puz.miss = pickMiss(id); drawPuzzle(); } });
+  stopSpeak(); S.focus = id; S.puz = { id, miss: [4, 6], placed: {}, sel: null, t0: Date.now(), sec: 0, over: false }; addMsg('qa', t('puzzleLead')); S.puz.card = put(mk('div', 'tcard card-puz')); drawPuzzle(); prepSquare(id, () => { if (S.puz && S.puz.id === id && !S.puz.over) { S.puz.miss = pickMiss(id); drawPuzzle(); } });
 }
 const tileBg = (id, k) => { const r = Math.floor(k / 3), c = k % 3, sq = SQ[id]; return sq ? `background-image:url(${sq});background-size:300% 300%;background-position:${c * 50}% ${r * 50}%;` : `background:${['#D8CFB8', '#CBBF9F', '#E2DAC6'][(k + r) % 3]};`; };
 function drawPuzzle() {
@@ -1765,26 +1798,36 @@ function placePiece(slot) {
   if (p.sel === slot) { p.placed[slot] = true; p.sel = null; play('ok', .8); if (p.miss.every(k => p.placed[k])) return endPuzzle(true); drawPuzzle(); } else { play('no', .8); tiles[slot].classList.add('shake'); p.sec += 5; haptic([40], .3); setTimeout(() => tiles[slot] && tiles[slot].classList.remove('shake'), 300); }
 }
 function endPuzzle(done) {
-  const p = S.puz; if (!p || p.over) return; p.over = true; const secs = Math.round((Date.now() - p.t0) / 1000) + p.sec; p.card.innerHTML = `<div class="qsum"><em>${esc(t('tabPuzzle'))}</em><b>${done ? mm(secs) : '—'}</b></div>`; p.card.style.padding = '16px 20px';
+  const p = S.puz; if (!p || p.over) return; p.over = true; const had = !!(S.prog[p.id] && S.prog[p.id].date); const secs = Math.round((Date.now() - p.t0) / 1000) + p.sec; p.card.innerHTML = `<div class="qsum"><em>${esc(t('tabPuzzle'))}</em><b>${done ? mm(secs) : '—'}</b></div>`; p.card.style.padding = '16px 20px';
   if (done) { const pr = S.prog[p.id] = S.prog[p.id] || {}; pr.puz = Math.min(secs, pr.puz || 1e9); save(); addMsg('qa', t('puzzleDone')); addPiece(p.id, 'puz'); }
-  setTimeout(() => { if (!(S.prog[p.id] && S.prog[p.id].date)) offerNext(p.id); }, 1200);
+  setTimeout(() => { if (had && done && pcs(p.id).quiz && pcs(p.id).puz) showCollected(p.id); else if (had || !(S.prog[p.id] && S.prog[p.id].date)) offerNext(p.id, done ? 'puz' : undefined); }, 1000);
 }
 function finishQuiz() {} function renderQuiz() {} function renderPuzzle() {} function collect(id) { awardDex(id); }
 
 /* ---- free-browsing exhibits: QI introduces them with a photo card ---- */
 function exhibitMenu(id) {   // what to do next with this exhibit: quiz / puzzle / ask (AI) — collecting it in the Dex needs 3 of the 4 pieces
-  const p = S.prog[id] || {}; const items = [];
-  if (!p.date) showProgress(id);
+  const p = S.prog[id] || {}; if (!p.date) showProgress(id); menuChips(id);
+}
+function menuChips(id) {
+  const items = [];
   items.push([t('chipQuizGo'), () => startQuiz(id)], [t('chipPuzzleGo'), () => startPuzzle(id)]);
   if (llmOn()) items.push([t('chipMore'), () => { addMsg('me', t('chipMore')); llmAnswer(t('chipMore'), id); }], [t('chipMade'), () => { addMsg('me', t('chipMade')); llmAnswer(t('chipMade'), id); }]);
   chipRow(items);
 }
-function qiIntroduce(id) {
+function qiIntroduce(id) {   // first look at any exhibit: QI asks first ("curious?"), explains only on yes, then the Dex-pieces card + next-step chips
   const e = EXHMAP[id]; if (!e || !S.started || S.view !== 'agent') return false; if (!['idle', 'observe', 'cooldown', 'quiet'].includes(S.state) || (S.speaking && !S.intro)) return false;
-  const tok = S.introTok = (S.introTok || 0) + 1; S.intro = true; const c = mk('div', 'tcard card-art');
-  c.innerHTML = `<div class="stage">${icoTag(id)}<img class="real" src="${EXH_IMG(id)}" alt=""></div><div class="body"><div class="tag"><b>${esc(t('nations')[e.nation])}</b></div><h3>${esc(L(e.name))}</h3><p>${esc(L(e.note))}</p></div>`; put(c);
-  S.focus = id; exhibitMenu(id);
-  speak(L(e.name) + '. ' + L(e.note), () => { if (S.introTok === tok) S.intro = false; addPiece(id, 'listen'); }, NVOICE[e.nation] || QIVOICE); log('QI introduced free exhibit: ' + id); return true;
+  const p = S.prog[id] = S.prog[id] || {}, heard = !!(p.pieces && p.pieces.listen); p.asked = true; save(); S.focus = id; S.intro = false; const c = mk('div', 'tcard card-art');
+  c.innerHTML = `<div class="stage">${icoTag(id)}<img class="real" src="${EXH_IMG(id)}" alt=""></div><div class="body"><div class="tag"><b>${esc(t('nations')[e.nation])}</b></div><h3>${esc(L(e.name))}</h3></div>`; put(c);
+  if (heard) offerNext(id, 'listen'); else askCurious(id);
+  log('QI met free exhibit: ' + id); return true;
+}
+function askCurious(id) {
+  const c = mk('div', 'tcard card-nudge'); c.appendChild(mk('div', 'ntxt', esc(t('q')))); const row = mk('div', 'acts');
+  row.appendChild(mkBtn(t('no'), 'weak', () => { c.remove(); stopSpeak(); const m = t('laterOk'); addMsg('qa', m); speak(m, null, voiceOf(id)); })); row.appendChild(mkBtn(t('yes'), 'primary', () => { c.remove(); stopSpeak(); explainFree(id); })); c.appendChild(row); put(c); speak(t('q'), null, voiceOf(id));
+}
+function explainFree(id) {
+  const e = EXHMAP[id]; if (!e) return; S.focus = id; const tok = S.introTok = (S.introTok || 0) + 1; S.intro = true; const txt = L(e.note); addMsg('qa', txt);
+  speak(L(e.name) + '. ' + txt, () => { if (S.introTok === tok) S.intro = false; addPiece(id, 'listen'); setTimeout(() => offerNext(id, 'listen'), 500); }, voiceOf(id));
 }
 
 /* ---- Dex screen + detail ---- */
@@ -1806,7 +1849,7 @@ function renderDetail(id) {
   if (!id) return; const ex = EXHMAP[id], a = ART[id], p = S.prog[id] || {}, ids = dexIds(), no = 'No. ' + String(ids.indexOf(id) + 1).padStart(3, '0'), im = dexImg(id);
   { const ic = iconImg(id), h = $('#det-hero'); h.className = 'dhero' + (ic ? ' ic' : ''); h.innerHTML = ic ? icoTag(id) + (im ? `<img class="real" src="${im}" alt="">` : '') : im ? `<img src="${im}" alt="">` : ''; } $('#det-no').textContent = `${no} · ${t('collectedOn')(p.date || '')}`; $('#det-name').textContent = dexName(id);
   $('#det-tags').innerHTML = ex ? `<span>${esc(t('nations')[ex.nation])}</span>` : `<span>${esc(t('nations')[id])}</span><span>${esc(t('types')[id])}</span>${a.absent ? `<span>${esc(t('elsewhere'))}</span>` : ''}`;
-  $('#det-story').textContent = ex ? L(ex.note) : (a.story[S.set.lang] || a.story.en).join('\n'); const pc = $('#det-pieces'); pc.style.display = ''; fillProgress(pc, id);
+  $('#det-story').textContent = ex ? L(ex.note).replace(/([.!?。！？])\s+/g, '$1\n') : (a.story[S.set.lang] || a.story.en).join('\n'); const pc = $('#det-pieces'); pc.style.display = ''; fillProgress(pc, id);
 }
 function talkAbout(id) {
   setView('agent'); const ex = EXHMAP[id]; if (ex) { S.focus = id; chatDivider(id); addMsg('qa', L(ex.note)); speak(L(ex.name) + '. ' + L(ex.note), null, NVOICE[ex.nation]); exhibitMenu(id); return; }
@@ -1821,6 +1864,6 @@ $('#m-dex').onclick = openDex;
 setView('agent'); applyI18n(); renderStatus();
 
 </script>
-<script type="module" src="world.js?v=20261125a"></script>
+<script type="module" src="world.js?v=20261126a"></script>
 </body>
 </html>
